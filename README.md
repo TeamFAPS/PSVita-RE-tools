@@ -1,2 +1,2 @@
 # PSVita-RE-tools
-A bundle of RE tools for analizing and modding PSVita OS
+A bundle of RE tools for analyzing and modding PSVita OS
