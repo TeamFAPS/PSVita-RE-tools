@@ -17,7 +17,9 @@ I REPEAT, THESE TOOLS DO NOT PROVIDE ANYTHING NEW!
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
 
 
+Description of the tools:
 --------------------------------------------------------------------------------
+
 
 - USB logging solution - by dots_tb
 
