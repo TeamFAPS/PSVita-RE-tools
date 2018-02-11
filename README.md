@@ -23,7 +23,6 @@ Provided Tools Include (for now):
 
 
 - USB logging solution - by dots_tb
---------------------------------------------------------------------------------
 A nerfed usbhostfs with the pspsh commands removed, this is really just used for “dependable logging” which is fast and runs in the background.
 This mod just adds stdout which allows for easy debugging whether it a kernel plugin, user plugin, or homebrew application.
 	+Adds USB stdout
@@ -32,6 +31,8 @@ This mod just adds stdout which allows for easy debugging whether it a kernel pl
 	+Stops MTP driver from running
 	-Everything psp2shell related?
 *Credits: Cpasjuste whom ported usbhostfs to vita
+
+--------------------------------------------------------------------------------
 
 
 - VitaDecompilerMod – by dots_tb
