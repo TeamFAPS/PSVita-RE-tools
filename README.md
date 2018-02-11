@@ -16,7 +16,7 @@ I REPEAT, THESE TOOLS DO NOT PROVIDE ANYTHING NEW!
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
 
 
-
+--------------------------------------------------------------------------------
 
 - USB logging solution - by dots_tb
 
@@ -53,37 +53,45 @@ Free alternative to IDA, we added a few features such as:
 	
 *Credits: TheFlow for original VitaDecompiler and prxtool's original devs
 
+--------------------------------------------------------------------------------
 
 - vita-unmake-fself – by dots_tb
---------------------------------------------------------------------------------
+
 Decompresses a unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
 
+--------------------------------------------------------------------------------
 
 - That Hooker Got NIDS – by dots_tb
---------------------------------------------------------------------------------
+
 A tool that hooks specified NIDS automatically. 
 *Credits: xerpi for base code used, TheFlow for db.yml parsing
 
+--------------------------------------------------------------------------------
 
 - RebuildElf – by CelesteBlue
---------------------------------------------------------------------------------
+
 A PC tool that rebuilds ELF from segments
+
 *Credits: zecoxao for the tutorial
 
+--------------------------------------------------------------------------------
 
 - vDump –
---------------------------------------------------------------------------------
+
 Dumps modules in a variety of ways (NOTE: NOT GAMES, THIS DOES NOT ENABLE PIRACY).
+
 *Credits: zecoxao for vitadump(old/new), st4rk for alternative kernel dump, xerpi for both.
 
+--------------------------------------------------------------------------------
 
 - nids.txt / db.yml -
---------------------------------------------------------------------------------
+
 Some lists of functions names / NIDs / libraries / modules to be used with IDA, VitaDecompiler or other tools that will come later.
 
-
+--------------------------------------------------------------------------------
 
 Using the Tools:
+--------------------------------------------------------------------------------
 
 
 - Usbhostfs:
