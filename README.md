@@ -17,8 +17,6 @@ I REPEAT, THESE TOOLS DO NOT PROVIDE ANYTHING NEW!
 
 
 
-Provided Tools Include (for now):
-
 
 - USB logging solution - by dots_tb
 
@@ -36,15 +34,23 @@ This mod just adds stdout which allows for easy debugging whether it a kernel pl
 
 
 - VitaDecompilerMod – by dots_tb
---------------------------------------------------------------------------------
+
 Free alternative to IDA, we added a few features such as:
+
 	+More strings, including data section.
+
 	+ELF and SELF support
+
 	+Decompression
+
 	+Fixed issues with NIDS being improperly found
+
 	+Includes offsets and vaddr
+
 	+Automatic entry point
+
 	+There might be more?
+	
 *Credits: TheFlow for original VitaDecompiler and prxtool's original devs
 
 
