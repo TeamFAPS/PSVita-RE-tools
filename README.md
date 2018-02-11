@@ -21,17 +21,22 @@ I REPEAT, THESE TOOLS DO NOT PROVIDE ANYTHING NEW!
 - USB logging solution - by dots_tb
 
 A nerfed usbhostfs with the pspsh commands removed, this is really just used for “dependable logging” which is fast and runs in the background.
+
 This mod just adds stdout which allows for easy debugging whether it a kernel plugin, user plugin, or homebrew application.
 
-+Adds USB stdout
-+Works on Windows now/Compiles on windows
-+Upgraded usb lib to libusb1.0
-+Stops MTP driver from running
--Everything psp2shell related?
+	+Adds USB stdout
+
+	+Works on Windows now/Compiles on windows
+
+	+Upgraded usb lib to libusb1.0
+
+	+Stops MTP driver from running
+
+	-Everything psp2shell related?
+
 *Credits: Cpasjuste whom ported usbhostfs to vita
 
 --------------------------------------------------------------------------------
-
 
 - VitaDecompilerMod – by dots_tb
 
@@ -63,7 +68,8 @@ Decompresses a unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF
 
 - That Hooker Got NIDS – by dots_tb
 
-A tool that hooks specified NIDS automatically. 
+A tool that hooks specified NIDS automatically.
+
 *Credits: xerpi for base code used, TheFlow for db.yml parsing
 
 --------------------------------------------------------------------------------
@@ -94,18 +100,27 @@ Using the Tools:
 --------------------------------------------------------------------------------
 
 
-- Usbhostfs:
+- Usbhostfs usage :
+
 (WARNING – This mod may not work on testkits or devkits)
+
 (WARNING – We have not tested with Vitashell’s USB mode)
+
 (WARNING – Many errors will occur, do not use when using the vita for daily use)
 
 Required Dependencies:
+
 	Windows: mingw-w64-x86_64-libusb, mingw-w64-x86_64-readline
+	
 	(Use mingw64 to run, not msys?)
+	
 	Linux: libusb-1.0-0, readline (their dev packages)
+
 	
 	First you must compile everything, we may provide a Windows x86_64 binary due to the complexity of its compilation. (This includes the plugin (root folder), usbhost_pc, and pspsh).
+	
 The compiled plugin is a kernel plugin and should go under the kernel section of the config.txt included with Taihen. (You may use a plugin launcher such as the one xerpi has made)
+
 When you are sure the plugin is running*, follow the next steps according to the operating system:
 
 Linux:
@@ -113,24 +128,34 @@ Linux:
 
 Windows:
 	1. Plugin the vita into the pc.
+	
 	2. Download the program “Zadig”. This will provide generic USB drivers for the vita.
+	
 	3. In Zadig, make sure that “Options>List All Devices” is checked.
+	
 	4. In the dropdown menu, select the “PS Vita”. Make sure it is not the Type B driver, this means that the plugin is not running. 
+
 	5. In the dropdown menu in which the green arrow is pointing, select “libusb-win32”.
 	6. Install the driver.
+	
 	7. Unplug then restart the vita.
+	
 	8. Open the mingw64.exe included with msys (it is in the installation path). Make sure all the dependencies are installed listed above. (You may want to use Administration privileges)
+	
 	9. Be sure the plugin is running on the vita and plug it in to the PC. (You may ignore the -7 errors returned)
+	
 	10. Run usbhostfs_pc using mingw64.exe
+
 	11. Run pspsh.exe using mingw64.exe
 	
-	*NOTE: You can check the “ux0:dump/psp2shell.txt” for logs that have not been sent through USB, make sure the folder exists first.
+*NOTE: You can check “ux0:dump/psp2shell.txt” for logs that have not been sent through USB, make sure the folder exists first.
 	
 To check if it works, a simple way is to open Molecular Shell and activate FTP.
 
 You should now have USB logging.
 
 Use in your application you wish to log:
+
 	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
 
 
