@@ -21,6 +21,8 @@ Description of the tools:
 --------------------------------------------------------------------------------
 
 
+
+
 - USB logging solution - by dots_tb
 
 A nerfed usbhostfs with the pspsh commands removed, this is really just used for “dependable logging” which is fast and runs in the background.
@@ -103,6 +105,8 @@ Using the Tools:
 --------------------------------------------------------------------------------
 
 
+
+
 - Usbhostfs usage :
 
 (WARNING – This mod may not work on testkits or devkits)
@@ -163,6 +167,7 @@ Use in your application you wish to log:
 
 	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
 
+--------------------------------------------------------------------------------
 
 - VitaDecompilerMod usage :
 
@@ -180,40 +185,56 @@ Each function has a virtual address and offset displayed next to it. This offset
 
 Most strings or values are accompanied by a g_text_addr which gives you the original address. The address is then checked repeatedly until a non-address is found. 
 
+--------------------------------------------------------------------------------
 
-- vita-unmake-fself
+- vita-unmake-fself usage :
 
 Dependencies: zlib
 
 	Run: ./vita-unmake-fself binary
+
 (You most likely will be able to drag-and-drop also)
+
 The output will be produced in the same folder with .elf appended on to the end of the original file name.
 
+--------------------------------------------------------------------------------
 
-- That Hooker got NID
+- That Hooker Got NIDs usage :
 
 Dependencies: zlib, libyaml
 
 	Run: ./THGN binary <all/library_name/exports/imports> <kernel/user> db.yml <sys:1/0>
-	
-All: Every NID will be hooked. This will try to hook as an export at first, then attempt hook it as an import.
-Library_name: Every NID of a library (such as “SceCtrl”) within the module specified will be hooked. This will try to hook as an export at first, then attempt hook it as an import.
-Exports: Every export NID will be hooked.
-Imports: Every import NID will be hooked.
-Kernel: The generated code will work in kernel space.
-User: The generated code will work in user space.
-Sys: You may choose 1 or 0 to enable or disable syscall mode. You may omit this argument. Some functions will not log unless it enters syscall mode. If you do not see anything within your logs, you may try this option. Try not to use it.
 
+Options :
+
+	All: Every NID will be hooked. This will try to hook as an export at first, then attempt hook it as an import.
+
+	Library_name: Every NID of a library (such as “SceCtrl”) within the module specified will be hooked. This will try to hook as an export at first, then attempt hook it as an import.
+
+	Exports: Every export NID will be hooked.
+
+	Imports: Every import NID will be hooked.
+
+	Kernel: The generated code will work in kernel space.
+
+	User: The generated code will work in user space.
+
+	Sys: You may choose 1 or 0 to enable or disable syscall mode. You may omit this argument. Some functions will not log unless it enters syscall mode. If you do not see anything within your logs, you may try this option. Try not to use it.
+
+--------------------------------------------------------------------------------
 
 - vDump usage :
+
 Everything is contained within the vpk. Follow the onscreen instructions provided in the application.
+
 
 Methods:
 
-VitaDump(old) – Only works with user mode modules, this method dumps the sections out of memory.
+	VitaDump(old) – Only works with user mode modules, this method dumps the sections out of memory.
 
-VitaDump(new) – MAKE SURE YOU RUN THE KPLUGIN (scroll down to kplugin and hit X to enable it). This method uses system functions to decrypt segments of SYSTEM applications.
+	VitaDump(new) – MAKE SURE YOU RUN THE KPLUGIN (scroll down to kplugin and hit X to enable it). This method uses system functions to decrypt segments of SYSTEM applications.
 
+--------------------------------------------------------------------------------
 
 - ELF-builder usage :
 
@@ -229,6 +250,8 @@ The output .elf are valid for RE and they can be rebuilded to SELF if needed usi
 
 Please read the provided README.txt for How to use informations.
 
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 Further thanks:
 --------------------------------------------------------------------------------
