@@ -10,7 +10,8 @@ This toolkit provides tools that aid in the development of vita homebrew and plu
 What it won’t do :
 These tools are solely used to aid in homebrew development. It probably will NOT produce a major hack. It will not magically make you a vita god. It will not automatically hack the vita. These tools are purely tools, most of them already existed in some form or another.
 
-THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS AND DOES NOT GIVE YOU ANYTHING YOU ALL DID NOT HAVE. 
+THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS AND DOES NOT GIVE YOU ANYTHING YOU ALL DID NOT HAVE.
+
 I REPEAT, THESE TOOLS DO NOT PROVIDE ANYTHING NEW!
 
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
@@ -118,15 +119,17 @@ Required Dependencies:
 
 	
 	First you must compile everything, we may provide a Windows x86_64 binary due to the complexity of its compilation. (This includes the plugin (root folder), usbhost_pc, and pspsh).
-	
+
 The compiled plugin is a kernel plugin and should go under the kernel section of the config.txt included with Taihen. (You may use a plugin launcher such as the one xerpi has made)
 
 When you are sure the plugin is running*, follow the next steps according to the operating system:
 
 Linux:
+
 	You may just run “usbhostfs_pc” in SUPER USER mode. Then run pspsh and connect the vita.
 
 Windows:
+
 	1. Plugin the vita into the pc.
 	
 	2. Download the program “Zadig”. This will provide generic USB drivers for the vita.
@@ -159,20 +162,25 @@ Use in your application you wish to log:
 	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
 
 
-- VitaDecompiler:
+- VitaDecompilerMod usage :
 
 Dependencies:
-VitaDecompiler requires capstone (a disassembler) libraries and libyaml. (capstone must be compiled from source on Windows. Make sure you install the *.a and header files to the right directories.
+
+VitaDecompiler requires capstone (a disassembler) libraries and libyaml. (capstone must be compiled from source on Windows). Make sure you install the *.a and header files to the right directories.
 
 	Run: ./vitadecompiler binary db.yml > output.c
 	
 Interpreting the Output:
+
 The top section is a printed NIDS table which gives the exports and imports of a module. This information will provide the offsets, virtual address, NID, library name, library NID, and the NID Name (or generated name).
-Each function has a virtual address and offset displayed next to it. This offset given (if not for a function that has a NID) maybe hooked with Taihen. 
+
+Each function has a virtual address and offset displayed next to it. This offset given (if not for a function that has a NID) maybe hooked with Taihen.
+
 Most strings or values are accompanied by a g_text_addr which gives you the original address. The address is then checked repeatedly until a non-address is found. 
 
 
 - vita-unmake-fself
+
 Dependencies: zlib
 
 	Run: ./vita-unmake-fself binary
@@ -181,6 +189,7 @@ The output will be produced in the same folder with .elf appended on to the end 
 
 
 - That Hooker got NID
+
 Dependencies: zlib, libyaml
 
 	Run: ./THGN binary <all/library_name/exports/imports> <kernel/user> db.yml <sys:1/0>
@@ -194,22 +203,31 @@ User: The generated code will work in user space.
 Sys: You may choose 1 or 0 to enable or disable syscall mode. You may omit this argument. Some functions will not log unless it enters syscall mode. If you do not see anything within your logs, you may try this option. Try not to use it.
 
 
-- vDump:
+- vDump usage :
 Everything is contained within the vpk. Follow the onscreen instructions provided in the application.
 
 Methods:
+
 VitaDump(old) – Only works with user mode modules, this method dumps the sections out of memory.
+
 VitaDump(new) – MAKE SURE YOU RUN THE KPLUGIN (scroll down to kplugin and hit X to enable it). This method uses system functions to decrypt segments of SYSTEM applications.
 
 
-- ELF-builder:
+- ELF-builder usage :
+
 To reverse PSVita, you need some dumps of the PSVita modules. These dumps are either memory dumps (St4rk's vitadump) or decrypted SELF (zecoxao's vitadump).
+
 Now you also have a ALL IN ONE solution : VDump. But in case you want to decrypt quickly a lot of SELFs, you will keep using zecoxao's vitadump.
+
 zecoxao's vitadump outputs only compressed segments. But to reverse, you have to use decompressed segment, or better : ELF file format.
+
 So when you have segments and want to transform them into an ELF, use this tool.
+
 The output .elf are valid for RE and they can be rebuilded to SELF if needed using vita-make-fself.
+
 Please read the provided README.txt for How to use informations.
 
 
 Further thanks:
+
 zecoxao, xerpi, Team_molecule, TheFlow, Freakler, sys(yasen), Nkekev, SilicaAndPina, mr.gas, MajorTom, motoharu
