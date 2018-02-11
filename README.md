@@ -1,10 +1,8 @@
 # PSVita ReverseEngineering Tools
 by @dots_tb and @CelesteBlue123 and other devs if they add their tools there
 
+
 Every tool provided here will be licensed under GPLv2 unless stated otherwise.
-
-
-================================================================================
 
 What is that ?
 This toolkit provides tools that aid in the development of vita homebrew and plugins. By providing tools that speed up development through automation of processes.
@@ -23,13 +21,15 @@ Provided Tools Include (for now):
 
 
 - USB logging solution - by dots_tb
+
 A nerfed usbhostfs with the pspsh commands removed, this is really just used for “dependable logging” which is fast and runs in the background.
 This mod just adds stdout which allows for easy debugging whether it a kernel plugin, user plugin, or homebrew application.
-	+Adds USB stdout
-	+Works on Windows now/Compiles on windows
-	+Upgraded usb lib to libusb1.0
-	+Stops MTP driver from running
-	-Everything psp2shell related?
+
++Adds USB stdout
++Works on Windows now/Compiles on windows
++Upgraded usb lib to libusb1.0
++Stops MTP driver from running
+-Everything psp2shell related?
 *Credits: Cpasjuste whom ported usbhostfs to vita
 
 --------------------------------------------------------------------------------
