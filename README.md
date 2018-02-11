@@ -229,5 +229,5 @@ Please read the provided README.txt for How to use informations.
 
 
 Further thanks:
-
+--------------------------------------------------------------------------------
 zecoxao, xerpi, Team_molecule, TheFlow, Freakler, sys(yasen), Nkekev, SilicaAndPina, mr.gas, MajorTom, motoharu
