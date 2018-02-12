@@ -237,9 +237,9 @@ Installation:
 	Ex: app0:/Media/level0 -> iop-decrypt:/Media/level0
 NOTE: an opened device with the file decrypted must be currently opened in order for this to work.
 
---------------------------------------------------------------------------------
+
+
 --------------------------------------------------------------------------------
 
-Further thanks:
---------------------------------------------------------------------------------
+# Further thanks:
 zecoxao, xerpi, Team_molecule, TheFlow, Freakler, sys(yasen), Nkekev, SilicaAndPina, mr.gas, MajorTom, motoharu
