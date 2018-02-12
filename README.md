@@ -70,9 +70,9 @@ A tool that hooks specified NIDS automatically.
 
 --------------------------------------------------------------------------------
 
-RebuildElf – by @CelesteBlue-dev
+ELF-rebuilder – by @CelesteBlue-dev
 ---
-A PC tool that rebuilds ELF from segments
+A PC tool that rebuilds ELF from decrypted modules' segments.
 
 *Credits: zecoxao for the tutorial
 
@@ -94,12 +94,13 @@ Some lists of functions names / NIDs / libraries / modules to be used with IDA, 
 
 ioPlus 0.1, 0.2 – by @dots-tb
 ---
-Fast, simpler, and efficient alternative to kuio (3x smaller). It allows elevated IO permissions of user applications and plugins using the original sceIo functions. This includes reading, writing, opening, and folder management within applications such as official games. It may also include getting stats, not sure.
+Fast, simpler, and efficient alternative to kuio (by @Rinnegatamante) (3x smaller). It allows elevated IO permissions of user applications and plugins using the original sceIo functions. This includes reading, writing, opening, and folder management within applications such as official games. It may also include getting stats, not sure.
+
 Version 0.2 is much more inefficient, but supports decryption of files within devices that may open such as PFS devices. (WARNING THIS PLUGIN MAY BYPASS SAFE-MODE)
 
 --------------------------------------------------------------------------------
 
-Using the Tools:
+# Using the Tools:
 --------------------------------------------------------------------------------
 
 
@@ -235,7 +236,9 @@ Please read the provided README.txt for How to use informations.
 ioPlus 0.1/0.2 usage:
 ---
 Installation:
-	The application is a kernel plugin and must be added to the TaiHen configuration under the kernel section. Once installed, you may use that standard sceIo functions such as sceIoOpen in user plugins and applications as normal.
+
+	The application is a kernel plugin and must be added to the taihen configuration under the *KERNEL section. Once installed, you may use that standard sceIo functions such as sceIoOpen in user plugins and applications as normal.
+	
 	Using decryption on ioPlus 0.2: To use decryption, change the device to “iop-decrypt:”. 
 	Ex: app0:/Media/level0 -> iop-decrypt:/Media/level0
 NOTE: an opened device with the file decrypted must be currently opened in order for this to work.
