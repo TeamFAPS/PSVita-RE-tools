@@ -8,7 +8,7 @@ What is that ?
 This toolkit provides tools that aid in the development of vita homebrews and plugins. By providing tools that speed up development through automation of processes and gives a more friendly view into complex things of PSVita OS.
 
 What it won’t do :
-These tools are solely used to aid in homebrew development. It probably will NOT produce a major hack. It will not magically make you a vita god. It will not automatically hack the vita. These tools are purely tools, most of them already existed in some form or another.
+These tools are solely used to aid in homebrew / plugins / hacks development. It probably will not produce a major hack. It will not magically make you a vita god. It will not automatically hack the vita. These tools are purely tools, most of them already existed in some form or another.
 
 THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS AND DOES NOT GIVE YOU ANYTHING YOU ALL DID NOT HAVE.
 
@@ -23,7 +23,7 @@ USB logging solution - by @dots_tb
 ---
 A nerfed usbhostfs with the pspsh commands removed, this is really just used for “dependable logging” which is fast and runs in the background.
 
-This mod just adds stdout which allows for easy debugging whether it a kernel plugin, user plugin, or homebrew application.
+This mod just adds stdout which allows for easy debugging whether it a kernel plugin, user plugin, or application.
 
 	+ Adds USB stdout
 	+ Works on Windows now/Compiles on windows
@@ -37,7 +37,9 @@ This mod just adds stdout which allows for easy debugging whether it a kernel pl
 
 VitaDecompilerMod – by @dots_tb
 ---
-Free alternative to IDA, we added a few features such as:
+Free alternative to IDA. It has a great pseudo-C decompilation that offers a quick view thanks to text file exporting.
+
+Compared to original @TheFlow's version we added a few features such as:
 
 	+ More strings, including data section.
 	+ ELF and SELF support
@@ -53,7 +55,7 @@ Free alternative to IDA, we added a few features such as:
 
 vita-unmake-fself – @by dots_tb
 ---
-Decompresses a unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
+Decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
 
 --------------------------------------------------------------------------------
 
@@ -65,9 +67,9 @@ A tool that hooks specified NIDS automatically.
 
 --------------------------------------------------------------------------------
 
-ELF-rebuilder – by @CelesteBlue-dev
+ELF-builder – by @CelesteBlue-dev
 ---
-A PC tool that rebuilds ELF from decrypted modules' segments.
+A PC tool that rebuilds ELF from decrypted modules' segments. To be used after using zecoxao's vitadump or vDump.
 
 *Credits: zecoxao for the tutorial
 
@@ -75,7 +77,7 @@ A PC tool that rebuilds ELF from decrypted modules' segments.
 
 vDump
 ---
-Dumps easily user/kernel modules in a variety of ways(NOTE: NOT GAMES, THIS DOES NOT ENABLE PIRACY).
+Dumps easily user/kernel modules in a variety of ways (NOTE: NOT GAMES, THIS DOES NOT ENABLE PIRACY).
 
 *Credits: zecoxao for vitadump(old/new), st4rk for alternative kernel dump, xerpi for both.
 
@@ -101,11 +103,13 @@ Version 0.2 is much more inefficient, but supports decryption of files within de
 Usbhostfs usage :
 ---
 WARNINGS
+
 	– This mod may not work on testkits or devkits
 	– We have not tested with Vitashell’s USB mode
 	– Many errors will occur, do not use when using the vita for daily use
 
 Dependencies:
+
 	Windows: mingw-w64-x86_64-libusb, mingw-w64-x86_64-readline
 	
 		(Use mingw64 to run, not msys)
@@ -206,9 +210,9 @@ Everything is contained within the vpk. Follow the onscreen instructions provide
 
 Methods:
 
-	VitaDump(old) – Only works with user mode modules, this method dumps the sections out of memory.
+	VitaDump (old) – Only works with user mode modules, this method dumps the sections out of memory.
 
-	VitaDump(new) – MAKE SURE YOU RUN THE KPLUGIN (scroll down to kplugin and hit X to enable it). This method uses system functions to decrypt segments of SYSTEM applications.
+	VitaDump (new) – MAKE SURE YOU RUN THE KPLUGIN (scroll down to kplugin and hit X to enable it). This method uses system functions to decrypt segments of SYSTEM applications.
 
 --------------------------------------------------------------------------------
 
@@ -223,18 +227,19 @@ zecoxao's vitadump outputs only compressed segments. But to reverse, you have to
 So when you have segments and want to transform them into an ELF, use this tool.
 
 The output .elf are valid for RE and they can be rebuilded to SELF if needed using vita-make-fself.
-
-Please read the provided README.txt for How to use informations.
+\nPlease read the provided README.txt for How to use informations.
 
 
 ioPlus 0.1/0.2 usage:
 ---
 Installation:
 
-	The application is a kernel plugin and must be added to the taihen configuration under the *KERNEL section. Once installed, you may use that standard sceIo functions such as sceIoOpen in user plugins and applications as normal.
+The application is a kernel plugin and must be added to the taihen config.txt under the *KERNEL section. Once installed, you may use the standard sceIo functions such as sceIoOpen in user plugins and applications as normal.
 	
-	Using decryption on ioPlus 0.2: To use decryption, change the device to “iop-decrypt:”. 
+Using decryption on ioPlus 0.2: to use decryption, change the device to “iop-decrypt:”.
+
 	Ex: app0:/Media/level0 -> iop-decrypt:/Media/level0
+
 NOTE: an opened device with the file decrypted must be currently opened in order for this to work.
 
 
