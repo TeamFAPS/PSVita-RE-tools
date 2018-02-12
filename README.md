@@ -47,21 +47,17 @@ Compared to original @TheFlow's version we added a few features such as:
 	+ Automatic entry point
 	+ There might be more ?
 
-* Credits: TheFlow for original VitaDecompiler and prxtool's original devs
+* Credits: TheFloW for original VitaDecompiler and prxtool's original devs
 
 vita-unmake-fself – @by dots_tb
 ---
 Decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
 
---------------------------------------------------------------------------------
-
 That Hooker Got NIDS – by @dots_tb
 ---
 A tool that hooks specified NIDS automatically.
 
-*Credits: xerpi for base code used, TheFlow for db.yml parsing
-
---------------------------------------------------------------------------------
+* Credits: xerpi for base code used, TheFlow for db.yml parsing
 
 ELF-builder – by @CelesteBlue-dev
 ---
@@ -69,21 +65,15 @@ A PC tool that rebuilds ELF from decrypted modules' segments. To be used after u
 
 * Credits: zecoxao for the tutorial
 
---------------------------------------------------------------------------------
-
 vDump
 ---
 Dumps easily user/kernel modules in a variety of ways (NOTE: NOT GAMES, THIS DOES NOT ENABLE PIRACY).
 
-* Credits: zecoxao for vitadump(old/new), st4rk for alternative kernel dump, xerpi for both.
-
---------------------------------------------------------------------------------
+* Credits: zecoxao for vitadump (new), st4rk for vitadump (old), xerpi for both.
 
 nids.txt / db.yml
 ---
 Some lists of functions names / NIDs / libraries / modules to be used with IDA, VitaDecompiler or other tools that will come later.
-
---------------------------------------------------------------------------------
 
 ioPlus 0.1, 0.2 – by @dots-tb
 ---
