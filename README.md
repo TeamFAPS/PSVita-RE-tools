@@ -1,6 +1,5 @@
 # PSVita Reverse Engineering Tools
-by @dots_tb and @CelesteBlue-dev (and other devs if they add their tools there)
-
+by @dots-tb and @CelesteBlue-dev (and other devs if they add their tools there)
 
 Every tool provided here will be licensed under GPLv2 unless stated otherwise.
 
@@ -12,12 +11,9 @@ These tools are solely used to aid in homebrew / plugins / hacks development. It
 
 THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS AND DOES NOT GIVE YOU ANYTHING YOU ALL DID NOT HAVE.
 
-
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
 
-
 # Description of the tools
-
 
 USB logging solution - by @dots_tb
 ---
@@ -35,7 +31,7 @@ This mod just adds stdout which allows for easy debugging whether it a kernel pl
 
 VitaDecompilerMod – by @dots_tb
 ---
-Free alternative to IDA. It has a great pseudo-C decompilation that offers a quick view thanks to text file exporting.
+A FREE alternative to IDA . It has a great pseudo-C decompilation that offers a quick view thanks to text file exporting.
 
 Compared to original @TheFlow's version we added a few features such as:
 
@@ -51,11 +47,13 @@ Compared to original @TheFlow's version we added a few features such as:
 
 vita-unmake-fself – @by dots_tb
 ---
-Decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
+A PC tool that decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
+
+This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use vDump or any dumping tool to first get a unencrypted SELF.
 
 That Hooker Got NIDS – by @dots_tb
 ---
-A tool that hooks specified NIDS automatically.
+A PC tool that hooks specified NIDS automatically.
 
 * Credits: xerpi for base code used, TheFlow for db.yml parsing
 
@@ -67,7 +65,7 @@ A PC tool that rebuilds ELF from decrypted modules' segments. To be used after u
 
 vDump
 ---
-Dumps easily user/kernel modules in a variety of ways (NOTE: NOT GAMES, THIS DOES NOT ENABLE PIRACY).
+A PSVita homebrew that dumps easily user/kernel modules in a variety of ways (NOTE: NOT GAMES, THIS DOES NOT ENABLE PIRACY).
 
 * Credits: zecoxao for vitadump (new), st4rk for vitadump (old), xerpi for both.
 
@@ -77,7 +75,7 @@ Some lists of functions names / NIDs / libraries / modules to be used with IDA, 
 
 ioPlus 0.1, 0.2 – by @dots-tb
 ---
-Fast, simpler, and efficient alternative to kuio (by @Rinnegatamante) (3x smaller). It allows elevated IO permissions of user applications and plugins using the original sceIo functions. This includes reading, writing, opening, and folder management within applications such as official games. It may also include getting stats, not sure.
+A PSVita kernel plugin that allows more IO operations in userland. Fast, simpler, and efficient alternative to kuio (by @Rinnegatamante) (3x smaller). It allows elevated IO permissions of user applications and plugins using the original sceIo functions. This includes reading, writing, opening, and folder management within applications such as official games. It may also include getting stats, not sure.
 
 Version 0.2 is much more inefficient, but supports decryption of files within devices that may open such as PFS devices. (WARNING THIS PLUGIN MAY BYPASS SAFE-MODE)
 
@@ -85,14 +83,13 @@ Version 0.2 is much more inefficient, but supports decryption of files within de
 
 # Using the Tools
 
-
 usbhostfs usage
 ---
 WARNINGS:
 
-	– This mod may not work on testkits or devkits
+	– This may not work on testkits or devkits
 	– We have not tested with Vitashell’s USB mode
-	– Many errors will occur, do not use when using the vita for daily use
+	– Many errors will occur, do not use this plugin when using the vita for daily use
 
 Dependencies:
 
@@ -103,11 +100,11 @@ Dependencies:
 	Linux: libusb-1.0-0, readline (their dev packages)
 
 	
-	First you must compile everything, we may provide a Windows x86_64 binary due to the complexity of its compilation (this includes the plugin (root folder), usbhost_pc, and pspsh).
+First you must compile everything, we may provide a Windows x86_64 binary due to the complexity of its compilation (this includes the plugin (root folder), usbhost_pc, and pspsh).
 
 The compiled plugin is a kernel plugin and should go under the *KERNEL section of the config.txt included with taihen. (You may use a plugin launcher such as the one xerpi has made)
 
-When you are sure the plugin is running*, follow the next steps according to your OS:
+When you are sure that the plugin is running, follow the next steps according to your OS:
 
 - Linux:
 	You may just run “usbhostfs_pc” in SUPER USER mode. Then run pspsh and connect the vita.
@@ -125,11 +122,11 @@ When you are sure the plugin is running*, follow the next steps according to you
 	10. Run usbhostfs_pc using mingw64.exe
 	11. Run pspsh.exe using mingw64.exe
 	
-NOTE: You can check “ux0:dump/psp2shell.txt” for logs that have not been sent through USB, make sure the folder exists first.
+NOTE: You can check “ux0:dump/psp2shell.txt” for logs that have not been sent through USB (make sure the “ux0:dump/" folder exists first).
 	
-To check if it works, a simple way is to open Molecular Shell and activate FTP. You should now have USB logging.
+To check if it works, a simple way is to open MolecularShell and activate FTP. You should now have USB logging.
 
-Use in your application you wish to log:
+In the application you wish to log use:
 
 	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
 
@@ -145,7 +142,7 @@ VitaDecompiler requires capstone (a disassembler) libraries and libyaml. (On Win
 	
 Interpreting the output:
 
-The top section is a printed NIDS table which gives the exports and imports of a module. This information will provide the offsets, virtual address, NID, library name, library NID, and the NID Name (or generated name).
+The top section is a printed NIDS table which gives the exports and imports of a module. This information will provide the offsets, virtual address, NID, library name, library NID, and the NID name (or generated name).
 
 Each function has a virtual address and offset displayed next to it. This offset given (if not for a function that has a NID) maybe hooked with Taihen.
 
@@ -157,9 +154,9 @@ vita-unmake-fself usage
 ---
 Dependencies: zlib
 
-	Run: ./vita-unmake-fself binary
+	Run: ./vita-unmake-fself input-fself
 
-(You most likely will be able to drag-and-drop also)
+	(you most likely will be able to drag-and-drop also)
 
 The output will be produced in the same folder with .elf appended on to the end of the original file name.
 
@@ -211,7 +208,7 @@ zecoxao's vitadump outputs only compressed segments. But to reverse, you have to
 
 So when you have segments and want to transform them into an ELF, use this tool.
 
-The output .elf are valid for RE and they can be rebuilded into SELF if needed using vita-make-fself.
+The output .elf are valid for RE and they can also be rebuilded into SELF using vita-make-fself.
 \nPlease read the provided README.txt for How to use informations.
 
 
@@ -219,15 +216,13 @@ ioPlus 0.1/0.2 usage
 ---
 Installation:
 
-The application is a kernel plugin and must be added to the taihen config.txt under the *KERNEL section. Once installed, you may use the standard sceIo functions such as sceIoOpen in user plugins and applications as normal.
+This is a kernel plugin and so it must be added to the taihen config.txt under the *KERNEL section. Once installed, you may use the standard sceIo functions such as sceIoOpen in user plugins and applications as normal.
 	
-Using decryption on ioPlus 0.2: to use decryption, change the device to “iop-decrypt:”.
+Using PFS decryption on ioPlus 0.2: to use decryption, use the “iop-decrypt:” device.
 
 	Ex: app0:/Media/level0 -> iop-decrypt:/Media/level0
 
 NOTE: an opened device with the file decrypted must be currently opened in order for this to work.
-
-
 
 --------------------------------------------------------------------------------
 
