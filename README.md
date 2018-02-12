@@ -7,7 +7,7 @@ Every tool provided here will be licensed under GPLv2 unless stated otherwise.
 What is that ?
 This toolkit provides tools that aid in the development of vita homebrews and plugins. By providing tools that speed up development through automation of processes and gives a more friendly view into complex things of PSVita OS.
 
-What it won’t do :
+What it won’t do:
 These tools are solely used to aid in homebrew / plugins / hacks development. It probably will not produce a major hack. It will not magically make you a vita god. It will not automatically hack the vita. These tools are purely tools, most of them already existed in some form or another.
 
 THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS AND DOES NOT GIVE YOU ANYTHING YOU ALL DID NOT HAVE.
@@ -193,7 +193,6 @@ vDump usage
 ---
 Everything is contained within the vpk. Follow the onscreen instructions provided in the application.
 
-
 Methods:
 
 	VitaDump (old) – Only works with user mode modules, this method dumps the sections out of memory.
@@ -206,13 +205,13 @@ ELF-builder usage
 ---
 To reverse PSVita, you need some dumps of the PSVita modules. These dumps are either memory dumps (St4rk's vitadump) or decrypted SELF (zecoxao's vitadump).
 
-Now you also have a ALL IN ONE solution : VDump. But in case you want to decrypt quickly a lot of SELFs, you will keep using zecoxao's vitadump.
+Now you also have a ALL IN ONE solution: vDump. But in case you want to decrypt quickly a lot of SELFs, you will keep using zecoxao's vitadump.
 
 zecoxao's vitadump outputs only compressed segments. But to reverse, you have to use decompressed segment, or better : ELF file format.
 
 So when you have segments and want to transform them into an ELF, use this tool.
 
-The output .elf are valid for RE and they can be rebuilded to SELF if needed using vita-make-fself.
+The output .elf are valid for RE and they can be rebuilded into SELF if needed using vita-make-fself.
 \nPlease read the provided README.txt for How to use informations.
 
 
