@@ -16,8 +16,7 @@ THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS 
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
 
 
-Description of the tools:
---------------------------------------------------------------------------------
+# Description of the tools:
 
 
 USB logging solution - by @dots_tb
@@ -101,7 +100,6 @@ Version 0.2 is much more inefficient, but supports decryption of files within de
 --------------------------------------------------------------------------------
 
 # Using the Tools:
---------------------------------------------------------------------------------
 
 
 Usbhostfs usage :
