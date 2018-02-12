@@ -16,7 +16,7 @@ THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS 
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
 
 
-# Description of the tools:
+# Description of the tools
 
 
 USB logging solution - by @dots_tb
@@ -24,16 +24,11 @@ USB logging solution - by @dots_tb
 A nerfed usbhostfs with the pspsh commands removed, this is really just used for “dependable logging” which is fast and runs in the background.
 
 This mod just adds stdout which allows for easy debugging whether it a kernel plugin, user plugin, or homebrew application.
-
-	+Adds USB stdout
-
-	+Works on Windows now/Compiles on windows
-
-	+Upgraded usb lib to libusb1.0
-
-	+Stops MTP driver from running
-
-	-Everything psp2shell related?
+	+ Adds USB stdout
+	+ Works on Windows now/Compiles on windows
+	+ Upgraded usb lib to libusb1.0
+	+ Stops MTP driver from running
+	- Everything psp2shell related?
 
 *Credits: Cpasjuste whom ported usbhostfs to vita
 
@@ -99,7 +94,7 @@ Version 0.2 is much more inefficient, but supports decryption of files within de
 
 --------------------------------------------------------------------------------
 
-# Using the Tools:
+# Using the Tools
 
 
 Usbhostfs usage :
