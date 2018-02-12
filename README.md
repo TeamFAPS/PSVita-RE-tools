@@ -4,9 +4,11 @@ by @dots-tb and @CelesteBlue-dev (and other devs if they add their tools there)
 Every tool provided here will be licensed under GPLv2 unless stated otherwise.
 
 What is that ?
+
 This toolkit provides tools that aid in the development of vita homebrews and plugins. By providing tools that speed up development through automation of processes and gives a more friendly view into complex things of PSVita OS.
 
 What it won’t do:
+
 These tools are solely used to aid in homebrew / plugins / hacks development. It probably will not produce a major hack. It will not magically make you a vita god. It will not automatically hack the vita. These tools are purely tools, most of them already existed in some form or another.
 
 THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS AND DOES NOT GIVE YOU ANYTHING YOU ALL DID NOT HAVE.
