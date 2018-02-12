@@ -31,9 +31,7 @@ This mod just adds stdout which allows for easy debugging whether it a kernel pl
 	+ Stops MTP driver from running
 	- Everything psp2shell related?
 
-*Credits: Cpasjuste whom ported usbhostfs to vita
-
---------------------------------------------------------------------------------
+* Credits: Cpasjuste whom ported usbhostfs to vita
 
 VitaDecompilerMod – by @dots_tb
 ---
@@ -49,9 +47,7 @@ Compared to original @TheFlow's version we added a few features such as:
 	+ Automatic entry point
 	+ There might be more ?
 
-*Credits: TheFlow for original VitaDecompiler and prxtool's original devs
-
---------------------------------------------------------------------------------
+* Credits: TheFlow for original VitaDecompiler and prxtool's original devs
 
 vita-unmake-fself – @by dots_tb
 ---
@@ -71,7 +67,7 @@ ELF-builder – by @CelesteBlue-dev
 ---
 A PC tool that rebuilds ELF from decrypted modules' segments. To be used after using zecoxao's vitadump or vDump.
 
-*Credits: zecoxao for the tutorial
+* Credits: zecoxao for the tutorial
 
 --------------------------------------------------------------------------------
 
@@ -79,7 +75,7 @@ vDump
 ---
 Dumps easily user/kernel modules in a variety of ways (NOTE: NOT GAMES, THIS DOES NOT ENABLE PIRACY).
 
-*Credits: zecoxao for vitadump(old/new), st4rk for alternative kernel dump, xerpi for both.
+* Credits: zecoxao for vitadump(old/new), st4rk for alternative kernel dump, xerpi for both.
 
 --------------------------------------------------------------------------------
 
@@ -100,9 +96,9 @@ Version 0.2 is much more inefficient, but supports decryption of files within de
 # Using the Tools
 
 
-Usbhostfs usage :
+usbhostfs usage
 ---
-WARNINGS
+WARNINGS:
 
 	– This mod may not work on testkits or devkits
 	– We have not tested with Vitashell’s USB mode
@@ -117,11 +113,11 @@ Dependencies:
 	Linux: libusb-1.0-0, readline (their dev packages)
 
 	
-	First you must compile everything, we may provide a Windows x86_64 binary due to the complexity of its compilation. (This includes the plugin (root folder), usbhost_pc, and pspsh).
+	First you must compile everything, we may provide a Windows x86_64 binary due to the complexity of its compilation (this includes the plugin (root folder), usbhost_pc, and pspsh).
 
 The compiled plugin is a kernel plugin and should go under the *KERNEL section of the config.txt included with taihen. (You may use a plugin launcher such as the one xerpi has made)
 
-When you are sure the plugin is running*, follow the next steps according to the operating system:
+When you are sure the plugin is running*, follow the next steps according to your OS:
 
 - Linux:
 	You may just run “usbhostfs_pc” in SUPER USER mode. Then run pspsh and connect the vita.
@@ -139,7 +135,7 @@ When you are sure the plugin is running*, follow the next steps according to the
 	10. Run usbhostfs_pc using mingw64.exe
 	11. Run pspsh.exe using mingw64.exe
 	
-*	NOTE: You can check “ux0:dump/psp2shell.txt” for logs that have not been sent through USB, make sure the folder exists first.
+NOTE: You can check “ux0:dump/psp2shell.txt” for logs that have not been sent through USB, make sure the folder exists first.
 	
 To check if it works, a simple way is to open Molecular Shell and activate FTP. You should now have USB logging.
 
@@ -149,15 +145,15 @@ Use in your application you wish to log:
 
 --------------------------------------------------------------------------------
 
-VitaDecompilerMod usage :
+VitaDecompilerMod usage
 ---
 Dependencies:
 
-VitaDecompiler requires capstone (a disassembler) libraries and libyaml. (capstone must be compiled from source on Windows). Make sure you install the *.a and header files to the right directories.
+VitaDecompiler requires capstone (a disassembler) libraries and libyaml. (On Windows, capstone must be compiled from sources). Make sure you install the *.a and header files to the right directories.
 
 	Run: ./vitadecompiler binary db.yml > output.c
 	
-Interpreting the Output:
+Interpreting the output:
 
 The top section is a printed NIDS table which gives the exports and imports of a module. This information will provide the offsets, virtual address, NID, library name, library NID, and the NID Name (or generated name).
 
@@ -167,7 +163,7 @@ Most strings or values are accompanied by a g_text_addr which gives you the orig
 
 --------------------------------------------------------------------------------
 
-vita-unmake-fself usage :
+vita-unmake-fself usage
 ---
 Dependencies: zlib
 
@@ -179,13 +175,13 @@ The output will be produced in the same folder with .elf appended on to the end 
 
 --------------------------------------------------------------------------------
 
-That Hooker Got NIDs usage :
+That Hooker Got NIDs usage
 ---
 Dependencies: zlib, libyaml
 
 	Run: ./THGN binary <all/library_name/exports/imports> <kernel/user> db.yml <sys:1/0>
 
-Options :
+Options:
 
 	All: Every NID will be hooked. This will try to hook as an export at first, then attempt hook it as an import.
 
@@ -203,7 +199,7 @@ Options :
 
 --------------------------------------------------------------------------------
 
-vDump usage :
+vDump usage
 ---
 Everything is contained within the vpk. Follow the onscreen instructions provided in the application.
 
@@ -216,7 +212,7 @@ Methods:
 
 --------------------------------------------------------------------------------
 
-ELF-builder usage :
+ELF-builder usage
 ---
 To reverse PSVita, you need some dumps of the PSVita modules. These dumps are either memory dumps (St4rk's vitadump) or decrypted SELF (zecoxao's vitadump).
 
@@ -230,7 +226,7 @@ The output .elf are valid for RE and they can be rebuilded to SELF if needed usi
 \nPlease read the provided README.txt for How to use informations.
 
 
-ioPlus 0.1/0.2 usage:
+ioPlus 0.1/0.2 usage
 ---
 Installation:
 
@@ -246,5 +242,5 @@ NOTE: an opened device with the file decrypted must be currently opened in order
 
 --------------------------------------------------------------------------------
 
-# Further thanks:
+# Further thanks
 zecoxao, xerpi, Team_molecule, TheFlow, Freakler, sys(yasen), Nkekev, SilicaAndPina, mr.gas, MajorTom, motoharu
