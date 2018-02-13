@@ -7,7 +7,7 @@ What is that ?
 
 This toolkit provides tools that aid in the development of vita homebrews and plugins. By providing tools that speed up development through automation of processes and gives a more friendly view into complex things of PSVita OS.
 
-These tools aided in the development of plugins such as: NoAVLS, ReStore, and ReNpDrm
+These tools aided in the development of plugins such as: NoAVLS, ReStore and ReNpDrm and many RE things that helped in Wiki and vitasdk improvements.
 
 What it won’t do:
 
