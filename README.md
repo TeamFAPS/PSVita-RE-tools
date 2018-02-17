@@ -39,7 +39,7 @@ A FREE alternative to IDA . It has a great pseudo-C decompilation that offers a 
 
 Compared to original @TheFlow's version we added a few features such as:
 
-	+ More strings, including data section.
+	+ More strings, including data section. (Homebrew strings now work)
 	+ ELF and SELF support
 	+ Decompression
 	+ Fixed issues with NIDS being improperly found
@@ -142,7 +142,14 @@ Dependencies:
 
 VitaDecompiler requires capstone (a disassembler) libraries and libyaml. (On Windows, capstone must be compiled from sources). Make sure you install the *.a and header files to the right directories.
 
-	Run: ./vitadecompiler binary db.yml > output.c
+	Run: ./vitadecompiler binary db.yml
+	
+It will create 4 files:
+	
+	<binary>.c (The decompiled code)
+	<binary>.nids.txt (A detailed list of imports and exports)
+	<binary>.yml (a db_lookup or exports in yml format)
+	<binary>.h (Prototypes/list of all functions in the source code.
 	
 Interpreting the output:
 
