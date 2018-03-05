@@ -19,7 +19,7 @@ THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS 
 
 # Description of the tools
 
-USB logging solution - by @dots_tb
+USB logging solution - by @dots-tb
 ---
 A nerfed usbhostfs with the pspsh commands removed, this is really just used for “dependable logging” which is fast and runs in the background.
 
@@ -33,31 +33,31 @@ This mod just adds stdout which allows for easy debugging whether it a kernel pl
 
 * Credits: Cpasjuste whom ported usbhostfs to vita
 
-VitaDecompilerMod – by @dots_tb
+VitaDecompilerMod – by @dots-tb
 ---
-A FREE alternative to IDA . It has a great pseudo-C decompilation that offers a quick view thanks to text file exporting.
+A FREE alternative to IDA. It has a great pseudo-C decompilation that offers a quick view thanks to text file exporting.
 
 Compared to original @TheFlow's version we added a few features such as:
 
-	+ More strings (EVEN MORE), including data section. (Homebrew strings now work)
-	+ Generates .c, .h, nids, and db_lookup(.yml)
-	+ ELF and SELF support
-	+ Decompression
+	+ More strings (EVEN MORE), including data section. (homebrew strings now work)
+	+ Generates .c, .h, .txt (NIDs), and db_lookup (<module_name>.yml)
+	+ ELF and fSELF support
+	+ Compressed fSELF support
 	+ Fixed issues with NIDS being improperly found
 	+ Includes offsets and vaddr
-	+ Automatic entry point
-	+ Automatic entry point location for badly generated ELFs.
+	+ Automatic entry point (no need to specify the module name)
+	+ Automatic entry point location (for badly generated ELFs)
 	+ There might be more ?
 
 * Credits: TheFloW for original VitaDecompiler and prxtool's original devs
 
-vita-unmake-fself – @by dots_tb
+vita-unmake-fself – @by dots-tb
 ---
 A PC tool that decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
 
 This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use vDump or any dumping tool to first get a unencrypted SELF.
 
-That Hooker Got NIDS – by @dots_tb
+That Hooker Got NIDS – by @dots-tb
 ---
 A PC tool that hooks specified NIDS automatically.
 
@@ -240,4 +240,4 @@ NOTE: an opened device with the file decrypted must be currently opened in order
 --------------------------------------------------------------------------------
 
 # Further thanks
-zecoxao, xerpi, Team_molecule, TheFlow, Freakler, sys(yasen), Nkekev, SilicaAndPina, mr.gas, MajorTom, motoharu
+zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFlow, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh
