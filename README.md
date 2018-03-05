@@ -39,12 +39,14 @@ A FREE alternative to IDA . It has a great pseudo-C decompilation that offers a 
 
 Compared to original @TheFlow's version we added a few features such as:
 
-	+ More strings, including data section. (Homebrew strings now work)
+	+ More strings (EVEN MORE), including data section. (Homebrew strings now work)
+	+ Generates .c, .h, nids, and db_lookup(.yml)
 	+ ELF and SELF support
 	+ Decompression
 	+ Fixed issues with NIDS being improperly found
 	+ Includes offsets and vaddr
 	+ Automatic entry point
+	+ Automatic entry point location for badly generated ELFs.
 	+ There might be more ?
 
 * Credits: TheFloW for original VitaDecompiler and prxtool's original devs
@@ -157,7 +159,7 @@ The top section is a printed NIDS table which gives the exports and imports of a
 
 Each function has a virtual address and offset displayed next to it. This offset given (if not for a function that has a NID) maybe hooked with Taihen.
 
-Most strings or values are accompanied by a g_text_addr which gives you the original address. The address is then checked repeatedly until a non-address is found. 
+Most strings or values are accompanied by a s_text/s_data which gives you the original address. The address is then checked repeatedly until a non-address is found. 
 
 --------------------------------------------------------------------------------
 
