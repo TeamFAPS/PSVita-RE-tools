@@ -45,7 +45,7 @@ Compared to original @TheFlow's version we added a few features such as:
 	+ Compressed fSELF support
 	+ Fixed issues with NIDS being improperly found
 	+ Includes offsets and vaddr
-	+ Automatic entry point (no need to specify the module name)
+	+ Automatic entry point (the entry point is retrieved properly from ELF header)
 	+ Automatic entry point location (for badly generated ELFs)
 	+ There might be more ?
 
