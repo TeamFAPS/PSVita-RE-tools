@@ -47,6 +47,7 @@ Compared to original @TheFlow's version we added a few features such as:
 	+ Includes offsets and vaddr
 	+ Automatic entry point (the entry point is retrieved properly from ELF header)
 	+ Automatic entry point location (for badly generated ELFs)
+	+ Relocation support
 	+ There might be more ?
 
 * Credits: TheFloW for original VitaDecompiler and prxtool's original devs
