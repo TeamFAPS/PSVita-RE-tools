@@ -97,8 +97,7 @@ Install ShipLog.skprx in taiHEN config.txt under *KERNEL and install ShipLog.vpk
 - Network:
 
 	1. Open the ShipLog application and configure the network configuration. Make sure you enable net logging. Be sure to save your configuration.
-	2. Type: nc -l -p <port>
-	NOTE: The network configuration page will mention the command to type.
+	2. Type the command mentioned on the network configuration page.
 	3. Reboot the vita.
 	4. The netcat instance should show logs when the vita initializes shell/connects to network.
 
