@@ -17,21 +17,19 @@ THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS 
 
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
 
-# Description of the tools
+## Description of the tools
 
-USB logging solution - by @dots-tb
+ShipLog v2.0 - by @dots-tb
 ---
-A nerfed usbhostfs with the pspsh commands removed, this is really just used for “dependable logging” which is fast and runs in the background.
+A complete logging solution for any homebrew, user plugin, kernel plugin.
 
-This mod just adds stdout which allows for easy debugging whether it a kernel plugin, user plugin, or application.
+It can outputs logs to :
+- Network: very fast, real time solution, stable
+- File: deprecated in favor of Network, but practical when you don't have a PC or smartphone near you
+- USB: removed because it causes problem with Shell and CMA (Content Manager Assistant), it is fast but not stable
+- UART: not added yet because we don't have UART
 
-	+ Adds USB stdout
-	+ Works on Windows now/Compiles on windows
-	+ Upgraded usb lib to libusb1.0
-	+ Stops MTP driver from running
-	- Everything psp2shell related?
-
-* Credits: Cpasjuste whom ported usbhostfs to vita
+* Credits: xerpi, psxdev, Cpasjuste for their works on logging solutions
 
 VitaDecompilerMod – by @dots-tb
 ---
@@ -56,7 +54,7 @@ vita-unmake-fself – @by dots-tb
 ---
 A PC tool that decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
 
-This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use vDump or any dumping tool to first get a unencrypted SELF.
+This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use vDump or any dumping tool to first get a unencrypted SELF. Read SELF2ELF documentation for more informations.
 
 That Hooker Got NIDS – by @dots-tb
 ---
@@ -88,7 +86,7 @@ Version 0.2 is much more inefficient, but supports decryption of files within de
 
 --------------------------------------------------------------------------------
 
-# Using the Tools
+## Using the Tools
 
 usbhostfs usage
 ---
@@ -228,17 +226,26 @@ The output .elf are valid for RE and they can also be rebuilded into SELF using 
 
 ioPlus 0.1/0.2 usage
 ---
-Installation:
+### Installation:
 
 This is a kernel plugin and so it must be added to the taihen config.txt under the *KERNEL section. Once installed, you may use the standard sceIo functions such as sceIoOpen in user plugins and applications as normal.
-	
+
+#### ioPlus 0.2 only:
+
 Using PFS decryption on ioPlus 0.2: to use decryption, use the “iop-decrypt:” device.
 
-	Ex: app0:/Media/level0 -> iop-decrypt:/Media/level0
+	Ex: to open app0:/Media/level0 ----> iop-decrypt:/Media/level0
 
 NOTE: an opened device with the file decrypted must be currently opened in order for this to work.
 
+### Building:
+
+	mkdir build
+	cd build
+	cmake ..
+	make all
+
 --------------------------------------------------------------------------------
 
-# Further thanks
+## Further thanks
 zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFlow, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh
