@@ -88,52 +88,30 @@ Version 0.2 is much more inefficient, but supports decryption of files within de
 
 ## Using the Tools
 
-usbhostfs usage
+ShipLog v2.0 usage
 ---
-WARNINGS:
 
-	– This may not work on testkits or devkits
-	– We have not tested with Vitashell’s USB mode
-	– Many errors will occur, do not use this plugin when using the vita for daily use
+### Usage:
 
-Dependencies:
-
-	Windows: mingw-w64-x86_64-libusb, mingw-w64-x86_64-readline
-	
-		(Use mingw64 to run, not msys)
-	
-	Linux: libusb-1.0-0, readline (their dev packages)
-
-	
-First you must compile everything, we may provide a Windows x86_64 binary due to the complexity of its compilation (this includes the plugin (root folder), usbhost_pc, and pspsh).
-
-The compiled plugin is a kernel plugin and should go under the *KERNEL section of the config.txt included with taihen. (You may use a plugin launcher such as the one xerpi has made)
-
-When you are sure that the plugin is running, follow the next steps according to your OS:
-
-- Linux:
-	You may just run “usbhostfs_pc” in SUPER USER mode. Then run pspsh and connect the vita.
-
-- Windows:
-	1. Plugin the vita into the pc.
-	2. Download the program “Zadig”. This will provide generic USB drivers for the vita.
-	3. In Zadig, make sure that “Options>List All Devices” is checked.
-	4. In the dropdown menu, select the “PS Vita”. Make sure it is not the Type B driver, this means that the plugin is not running. 
-	5. In the dropdown menu in which the green arrow is pointing, select “libusb-win32”.
-	6. Install the driver.
-	7. Unplug then restart the vita.
-	8. Open the mingw64.exe included with msys (it is in the installation path). Make sure all the dependencies are installed listed above. (You may want to use Administration privileges)
-	9. Be sure the plugin is running on the vita and plug it in to the PC. (You may ignore the -7 errors returned)
-	10. Run usbhostfs_pc using mingw64.exe
-	11. Run pspsh.exe using mingw64.exe
-	
-NOTE: You can check “ux0:dump/psp2shell.txt” for logs that have not been sent through USB (make sure the “ux0:dump/" folder exists first).
-	
-To check if it works, a simple way is to open MolecularShell and activate FTP. You should now have USB logging.
+Install ShipLog.skprx in taiHEN config.txt under *KERNEL and install ShipLog.vpk.
 
 In the application you wish to log use:
 
 	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
+
+- Network:
+
+On PC, run the command given by ShipLog app.
+
+- File:
+
+check ux0:data/logs.txt
+
+### Building:
+
+	./build.sh
+
+It builds ShipLog.skprx and ShipLog.vpk.
 
 --------------------------------------------------------------------------------
 
