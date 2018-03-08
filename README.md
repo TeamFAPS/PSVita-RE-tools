@@ -167,7 +167,7 @@ vita-unmake-fself usage
 
 ### Usage:
 
-	Run: ./vita-unmake-fself input_fself
+	Run: ./vita-unmake-fself.exe input_fself
 
 	(you most likely will be able to drag-and-drop also)
 
@@ -177,12 +177,15 @@ The output will be produced in the same folder with .elf appended on to the end 
 
 Dependencies: zlib
 
-	make
+	make install
 
 --------------------------------------------------------------------------------
 
 That Hooker Got NIDs usage
 ---
+
+### Usage:
+
 Dependencies: zlib, libyaml
 
 	Run: ./THGN binary <all/library_name/exports/imports> <kernel/user> db.yml <sys:1/0>
