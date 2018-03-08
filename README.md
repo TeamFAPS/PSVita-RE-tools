@@ -1,7 +1,7 @@
 # PSVita Reverse Engineering Tools
 by @dots-tb and @CelesteBlue-dev (and other devs if they add their tools there)
 
-Every tool provided here will be licensed under GPLv2 unless stated otherwise.
+Every tool provided here will be licensed under GPLv3.0 unless stated otherwise.
 
 What is that ?
 
