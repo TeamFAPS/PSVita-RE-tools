@@ -164,13 +164,20 @@ Most strings or values are accompanied by a s_text/s_data which gives you the or
 
 vita-unmake-fself usage
 ---
-Dependencies: zlib
 
-	Run: ./vita-unmake-fself input-fself
+### Usage:
+
+	Run: ./vita-unmake-fself input_fself
 
 	(you most likely will be able to drag-and-drop also)
 
 The output will be produced in the same folder with .elf appended on to the end of the original file name.
+
+### Building:
+
+Dependencies: zlib
+
+	make
 
 --------------------------------------------------------------------------------
 
