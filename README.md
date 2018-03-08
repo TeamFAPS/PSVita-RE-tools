@@ -107,6 +107,8 @@ Install ShipLog.skprx in taiHEN config.txt under *KERNEL and install ShipLog.vpk
 	2. Reboot the vita.
 	3. Check ux0:data/logs.txt for new logs.
 	
+	NOTE: This method may ware down your memory card and is slow. This method is only recommended when tested material may crash the system, preventing the dumping of logs.
+	
 - Dumping the buffer
 
 	1. Open the ShipLog application and select dump logs to disk.
