@@ -21,15 +21,14 @@ THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS 
 
 ShipLog v2.0 - by @dots-tb
 ---
-A complete logging solution for any homebrew, user plugin, kernel plugin.
+A complete logging solution for any homebrew, user plugin, kernel plugin. It can use network or file logging.
 
-It can outputs logs to :
-- Network: very fast, real time solution, stable
-- File: deprecated in favor of Network, but practical when you don't have a PC or smartphone near you
-- USB: removed because it causes problem with Shell and CMA (Content Manager Assistant), it is fast but not stable
-- UART: not added yet because we don't have UART
+	+ Added kernel network, removed user plugin dependency
+	+ Added ability to select which logging methods.
+	- Removed all user plugin dependency
+	- USB removed because it causes problem with Shell and CMA (Content Manager Assistant), it is fast but not stable
 
-* Credits: xerpi, psxdev, Cpasjuste for their works on logging solutions
+* Credits: xerpi, psxdev for their works on logging solutions.  Cpasjuste for net.
 
 VitaDecompilerMod – by @dots-tb
 ---
@@ -93,19 +92,30 @@ ShipLog v2.0 usage
 
 ### Usage:
 
-Install ShipLog.skprx in taiHEN config.txt under *KERNEL and install ShipLog.vpk.
-
-In the application you wish to log use:
-
-	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
+Install ShipLog.skprx in taiHEN config.txt under *KERNEL and install ShipLog.vpk. You must reboot the Vita with the kernel plugin installed to open the configuration app. Logs are stored in a buffer and must be obtained using one of the following methods:
 
 - Network:
 
-On PC, run the command given by ShipLog app.
+	1. Open the ShipLog application and configure the network configuration. Make sure you enable net logging. Be sure to save your configuration.
+	2. Type: nc -l -p <port>
+	NOTE: The network configuration page will mention the command to type.
+	3. Reboot the vita.
+	4. The netcat instance should show logs when the vita initializes shell/connects to network.
 
 - File:
+	
+	1. Open the ShipLog application and enable file logging. Make sure you save the configuration.
+	2. Reboot the vita.
+	3. Check ux0:data/logs.txt for new logs.
+	
+- Dumping the buffer
 
-check ux0:data/logs.txt
+	1. Open the ShipLog application and select dump logs to disk.
+	2. Check ux0:data/logs.txt for new logs.
+	
+In the application you wish to log use:
+
+	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
 
 ### Building:
 
