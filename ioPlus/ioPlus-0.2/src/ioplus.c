@@ -167,9 +167,9 @@ int module_start(SceSize argc, const void *args) {
 	hooks_uid[2] = taiHookFunctionExportForKernel(KERNEL_PID, &ref_hooks[2], "SceIofilemgr", TAI_ANY_LIBRARY, 0xFFFB4D76, _sceIoRmdir_patched);
 	hooks_uid[3] = taiHookFunctionExportForKernel(KERNEL_PID, &ref_hooks[3], "SceIofilemgr", TAI_ANY_LIBRARY, 0x78955C65, _sceIoRemove_patched);
 	
-	hooks_uid[4] = taiHookFunctionExportForKernel(KERNEL_PID, &ref_hooks[0], "SceIofilemgr", TAI_ANY_LIBRARY, 0xC3D34965, ksceIoOpenForPid_patched);
+	hooks_uid[4] = taiHookFunctionExportForKernel(KERNEL_PID, &ref_hooks[4], "SceIofilemgr", TAI_ANY_LIBRARY, 0xC3D34965, ksceIoOpenForPid_patched);
 	
-	hooks_uid[5] = taiHookFunctionExportForKernel(KERNEL_PID, &ref_hooks[4], "SceFios2Kernel", TAI_ANY_LIBRARY, 0x0F456345,  SceFios2KernelForDriver_0F456345);
+	hooks_uid[5] = taiHookFunctionExportForKernel(KERNEL_PID, &ref_hooks[5], "SceFios2Kernel", TAI_ANY_LIBRARY, 0x0F456345,  SceFios2KernelForDriver_0F456345);
 	
 	return SCE_KERNEL_START_SUCCESS;
 }
