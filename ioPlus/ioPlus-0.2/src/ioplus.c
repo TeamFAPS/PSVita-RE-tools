@@ -43,7 +43,7 @@ static int ksceIoOpenForPid_patched(SceUID pid, const char *filename, int flag, 
 			continue;
 		}
 	}
-	if ((ret = TAI_CONTINUE(int, ref_hooks[0], pid, filename, flag, mode)) < 0
+	if ((ret = TAI_CONTINUE(int, ref_hooks[4], pid, filename, flag, mode)) < 0
 	&& (ret = ksceIoOpen(filename, flag, mode)) < 0
 	&& !memcmp(DECRYPT_KEYWORD, filename, sizeof(DECRYPT_KEYWORD) - 1)) { // try original function
 		char new_path[128];
@@ -53,7 +53,7 @@ static int ksceIoOpenForPid_patched(SceUID pid, const char *filename, int flag, 
 			memset(new_path, 0, sizeof(new_path));
 			memcpy(new_path, devices[i].v_name, devices[i].name_len);
 			strncat(new_path, strchr(filename, ':') + 1, sizeof(new_path) - 1);
-			if ((ret = TAI_CONTINUE(int, ref_hooks[0], devices[i].pid, new_path, flag, mode)) >= 0)
+			if ((ret = TAI_CONTINUE(int, ref_hooks[4], devices[i].pid, new_path, flag, mode)) >= 0)
 				break;
 		}
 	}
@@ -138,7 +138,7 @@ static int _sceIoRemove_patched(const char *filename, sceIoRemoveOpt* opt) {
 static int SceFios2KernelForDriver_0F456345(SceUID pid, int r2, char *old_path, char *new_path, int r5) {
 	int ret, state, currentSlot = -1;
 	ENTER_SYSCALL(state);
-	ret = TAI_CONTINUE(int, ref_hooks[4], pid, r2, old_path, new_path, r5);
+	ret = TAI_CONTINUE(int, ref_hooks[5], pid, r2, old_path, new_path, r5);
 	if (!memcmp("PD", new_path, 2)) {
 		uint32_t device_len = strchr(old_path, ':') - old_path + 1, pd_len = strchr(new_path, ':') - new_path + 1;
 		for (int i=0; i < MAX_DEVICES; i++) {
