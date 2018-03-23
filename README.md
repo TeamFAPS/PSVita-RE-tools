@@ -30,6 +30,12 @@ A complete logging solution for any homebrew, user plugin, kernel plugin. It can
 
 * Credits: xerpi, psxdev for their works on logging solutions.  Cpasjuste for net.
 
+That Hooker Got NIDS – by @dots-tb
+---
+A PC tool that hooks specified NIDS automatically.
+
+* Credits: xerpi for base code used, TheFlow for db.yml parsing, yasen for the name ideas
+
 VitaDecompilerMod – by @dots-tb
 ---
 A FREE alternative to IDA. It has a great pseudo-C decompilation that offers a quick view thanks to text file exporting.
@@ -55,12 +61,6 @@ A PC tool that decompresses an unencrypted SELF file (skprx, suprx, self, eboot.
 
 This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use vDump or any dumping tool to first get a unencrypted SELF. Read SELFtoELF documentation for more informations.
 
-That Hooker Got NIDS – by @dots-tb
----
-A PC tool that hooks specified NIDS automatically.
-
-* Credits: xerpi for base code used, TheFlow for db.yml parsing
-
 PSVita-ELF-builder – by @CelesteBlue-dev
 ---
 A PC tool that rebuilds ELF from decrypted modules' segments. To be used after using vitaDecrypt or vDump.
@@ -73,7 +73,7 @@ A PSVita homebrew that dumps easily user/kernel modules in a variety of ways (NO
 
 * Credits: zecoxao for vitadump (new), st4rk for vitadump (old), xerpi for both.
 
-nids.txt / db.yml
+psvitalibdoc
 ---
 Some lists of functions names / NIDs / libraries / modules to be used with IDA, VitaDecompiler or other tools that will come later.
 
@@ -126,6 +126,33 @@ It builds ShipLog.skprx and ShipLog.vpk.
 
 --------------------------------------------------------------------------------
 
+That Hooker Got NIDs usage
+---
+
+### Usage:
+
+Dependencies: zlib, libyaml
+
+	Run: ./THGN binary <all/library_name/exports/imports> <kernel/user> db.yml <sys:1/0>
+
+Options:
+
+	All: Every NID will be hooked. This will try to hook as an export at first, then attempt hook it as an import.
+
+	Library_name: Every NID of a library (such as “SceCtrl”) within the module specified will be hooked. This will try to hook as an export at first, then attempt hook it as an import.
+
+	Exports: Every export NID will be hooked.
+
+	Imports: Every import NID will be hooked.
+
+	Kernel: The generated code will work in kernel space.
+
+	User: The generated code will work in user space.
+
+	Sys: You may choose 1 or 0 to enable or disable syscall mode. You may omit this argument. Some functions will not log unless it enters syscall mode. If you do not see anything within your logs, you may try this option. Try not to use it.
+
+--------------------------------------------------------------------------------
+
 VitaDecompilerMod usage
 ---
 Dependencies:
@@ -170,33 +197,6 @@ Dependencies: zlib
 
 --------------------------------------------------------------------------------
 
-That Hooker Got NIDs usage
----
-
-### Usage:
-
-Dependencies: zlib, libyaml
-
-	Run: ./THGN binary <all/library_name/exports/imports> <kernel/user> db.yml <sys:1/0>
-
-Options:
-
-	All: Every NID will be hooked. This will try to hook as an export at first, then attempt hook it as an import.
-
-	Library_name: Every NID of a library (such as “SceCtrl”) within the module specified will be hooked. This will try to hook as an export at first, then attempt hook it as an import.
-
-	Exports: Every export NID will be hooked.
-
-	Imports: Every import NID will be hooked.
-
-	Kernel: The generated code will work in kernel space.
-
-	User: The generated code will work in user space.
-
-	Sys: You may choose 1 or 0 to enable or disable syscall mode. You may omit this argument. Some functions will not log unless it enters syscall mode. If you do not see anything within your logs, you may try this option. Try not to use it.
-
---------------------------------------------------------------------------------
-
 vDump usage
 ---
 Everything is contained within the vpk. Follow the onscreen instructions provided in the application.
@@ -221,6 +221,7 @@ The output .elf are valid for RE and they can also be rebuilded into SELF using 
 
 Please read the provided README.md for Usage informations.
 
+--------------------------------------------------------------------------------
 
 ioPlus 0.1/0.2 usage
 ---
@@ -246,4 +247,4 @@ NOTE: an opened device with the file decrypted must be currently opened in order
 --------------------------------------------------------------------------------
 
 ## Further thanks
-zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFlow, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh
+zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh
