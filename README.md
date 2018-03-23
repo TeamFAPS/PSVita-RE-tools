@@ -53,7 +53,7 @@ vita-unmake-fself – @by dots-tb
 ---
 A PC tool that decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
 
-This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use vDump or any dumping tool to first get a unencrypted SELF. Read SELF2ELF documentation for more informations.
+This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use vDump or any dumping tool to first get a unencrypted SELF. Read SELFtoELF documentation for more informations.
 
 That Hooker Got NIDS – by @dots-tb
 ---
@@ -61,11 +61,11 @@ A PC tool that hooks specified NIDS automatically.
 
 * Credits: xerpi for base code used, TheFlow for db.yml parsing
 
-ELF-builder – by @CelesteBlue-dev
+PSVita-ELF-builder – by @CelesteBlue-dev
 ---
-A PC tool that rebuilds ELF from decrypted modules' segments. To be used after using zecoxao's vitadump or vDump.
+A PC tool that rebuilds ELF from decrypted modules' segments. To be used after using vitaDecrypt or vDump.
 
-* Credits: zecoxao for the tutorial
+* Credits: zecoxao for the tutorial (how to rebuild ELF from decrypted segments and original SELF)
 
 vDump
 ---
@@ -209,18 +209,17 @@ Methods:
 
 --------------------------------------------------------------------------------
 
-ELF-builder usage
+PSVita-ELF-builder usage
 ---
-To reverse PSVita, you need some dumps of the PSVita modules. These dumps are either memory dumps (St4rk's vitadump) or decrypted SELF (zecoxao's vitadump).
+To reverse PSVita, you need some dumps of the PSVita modules. These dumps are either memory dumps (St4rk's vitadump) or decrypted SELF (vitaDecrypt).
 
-Now you also have a ALL IN ONE solution: vDump. But in case you want to decrypt quickly a lot of SELFs, you will keep using zecoxao's vitadump.
+Now you also have a ALL IN ONE solution: vDump. But in case you want to decrypt quickly a lot of SELFs, you will keep using vitaDecrypt.
 
-zecoxao's vitadump outputs only compressed segments. But to reverse, you have to use decompressed segment, or better : ELF file format.
-
-So when you have segments and want to transform them into an ELF, use this tool.
+vitaDecrypt outputs only compressed decrypted segments. But you have to decompress these segments, or better, convert to ELF file format. This is the aim of this tool.
 
 The output .elf are valid for RE and they can also be rebuilded into SELF using vita-make-fself.
-\nPlease read the provided README.txt for How to use informations.
+
+Please read the provided README.md for Usage informations.
 
 
 ioPlus 0.1/0.2 usage
