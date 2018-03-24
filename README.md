@@ -65,7 +65,7 @@ PSVita-ELF-builder – by @CelesteBlue-dev
 ---
 A PC tool that rebuilds ELF from decrypted modules' segments. To be used after using vitaDecrypt or vDump.
 
-* Credits: zecoxao for the tutorial (how to rebuild ELF from decrypted segments and original SELF)
+* Credits: zecoxao for the tutorial (how to rebuild ELF from decrypted segments and original SELF), vitasdk for vita-make-fself
 
 vDump
 ---
