@@ -1,6 +1,6 @@
 # PSVita-ELF-rebuilder by CelesteBlue
 
-Credits: zecoxao for the method to rebuild ELF from segments
+Credits: zecoxao for the method to rebuild ELF from segments, vitasdk for vita-make-fself
 
 ## Usage :
 
