@@ -125,6 +125,7 @@ PSVita-ELF-builder vs0-/app/NPXS10063/eboot.bin ux0-/dump/out/vs0-/app/NPXS10063
 PSVita-ELF-builder vs0-/app/NPXS10065/eboot.bin ux0-/dump/out/vs0-/app/NPXS10065_eboot.bin
 PSVita-ELF-builder vs0-/app/NPXS10065/grief_report_dialog.suprx ux0-/dump/out/vs0-/app/NPXS10065_grief_report_dialog.suprx
 PSVita-ELF-builder vs0-/app/NPXS10068/eboot.bin ux0-/dump/out/vs0-/app/NPXS10068_eboot.bin
+PSVita-ELF-builder vs0-/app/NPXS10069/eboot.bin ux0-/dump/out/vs0-/app/NPXS10069_eboot.bin
 PSVita-ELF-builder vs0-/app/NPXS10072/eboot.bin ux0-/dump/out/vs0-/app/NPXS10072_eboot.bin
 PSVita-ELF-builder vs0-/app/NPXS10072/email_engine.suprx ux0-/dump/out/vs0-/app/NPXS10072_email_engine.suprx
 PSVita-ELF-builder vs0-/app/NPXS10073/eboot.bin ux0-/dump/out/vs0-/app/NPXS10073_eboot.bin
