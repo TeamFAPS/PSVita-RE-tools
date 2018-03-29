@@ -1,4 +1,5 @@
 rm BATCH_MAKE_FSELF.BAT
+rm module_info_backup_list.txt
 
 PSVita-ELF-builder os0-/psp2bootconfig.skprx ux0-/dump/out/os0-/psp2bootconfig.skprx
 PSVita-ELF-builder os0-/psp2config_dolce.skprx ux0-/dump/out/os0-/psp2config_dolce.skprx
