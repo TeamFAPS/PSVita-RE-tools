@@ -181,7 +181,7 @@ int zlib_decompress(const char *inputFile_path, const char *outputFile_path) {
 }
 
 
-int makeElf(char* originalPath, char* segmentsPath, char* outputPath) {
+int makeElf(const char* originalPath, const char* segmentsPath, const char* outputPath) {
 
 	// PRELIMINARY PART : CHECK INPUT FILES EXISTENCE
 	
@@ -267,7 +267,7 @@ int makeElf(char* originalPath, char* segmentsPath, char* outputPath) {
 	fseek(foriginal, offset, SEEK_SET);
 	lSize = 0x30;
 	buffer = (char*) malloc(sizeof(char)*lSize); // Allocate memory to contain the good size.
-	fread (buffer, sizeof(char), lSize, foriginal);
+	fread(buffer, sizeof(char), lSize, foriginal);
 	fwrite(buffer, sizeof(char), lSize, foutputelf);
 	
 	// Copy second part of the header
@@ -276,23 +276,16 @@ int makeElf(char* originalPath, char* segmentsPath, char* outputPath) {
 	fseek(foriginal, offset, SEEK_SET);
 	lSize = firstSegmentOffset - 0x3C;
 	buffer = (char*) malloc(sizeof(char)*lSize); // Allocate memory to contain the good size.
-	fread (buffer, sizeof(char), lSize, foriginal);
+	fread(buffer, sizeof(char), lSize, foriginal);
 	fwrite(buffer, sizeof(char), lSize, foutputelf);
 	printf("2nd part length : %X\n", lSize);
 	
 	// AUTHENTICATION ID BACKUP
 	uint64_t authid;
 	rewind(foriginal);
-	offset = 0x80;
-	fseek(foriginal, offset, SEEK_SET);
-	fread (&authid, sizeof(char), 8, foriginal);
+	fseek(foriginal, 0x80, SEEK_SET);
+	fread(&authid, sizeof(char), sizeof(uint64_t), foriginal);
 	printf("AUTH ID : %llX\n", authid);
-	FILE *fmakefselfbat;
-	fmakefselfbat = fopen("BATCH_MAKE_FSELF.BAT", "a");
-	char text[256];
-	sprintf(text, "\nvita-make-fself -c -a 0x%llX %s %s.self", authid, outputPath, outputPath);
-	fwrite(text, sizeof(char), strlen(text), fmakefselfbat);
-	fclose(fmakefselfbat);
 	
 	fclose(foriginal); // No need for the original SELF/SPRX file anymore
 	
@@ -336,7 +329,7 @@ int makeElf(char* originalPath, char* segmentsPath, char* outputPath) {
 		
 		// Read current uncompressed segment
 		buffer = (char*) malloc(sizeof(char)*currentSegmentSize);// allocate memory to contain the whole file.
-		fread (buffer, sizeof(char), currentSegmentSize, fcurrentSegment);
+		fread(buffer, sizeof(char), currentSegmentSize, fcurrentSegment);
 		
 		// Write current uncompressed segment to the output .elf
 		fwrite(buffer, sizeof(char), currentSegmentSize, foutputelf);
@@ -361,6 +354,32 @@ int makeElf(char* originalPath, char* segmentsPath, char* outputPath) {
 		}
 	}
 	fclose(foutputelf);
+	
+	// GENERATION OF THE MAKE-FSELF BATCH SCRIPT
+	FILE *fmakefselfbat;
+	fmakefselfbat = fopen("BATCH_MAKE_FSELF.BAT", "a");
+	char text[256];
+	sprintf(text, "\nvita-make-fself -c -a 0x%llX %s %s.self", authid, outputPath, outputPath);
+	fwrite(text, sizeof(char), strlen(text), fmakefselfbat);
+	fclose(fmakefselfbat);
+	
+	// BACKUP OF MODULE NAME, AUTH ID A?D PATH TO A FILE
+	foutputelf = fopen(outputPath, "rb");
+	fseek(foutputelf, 0x18, SEEK_SET);
+	int elf_entrypoint = 0;
+	fread(&elf_entrypoint, sizeof(char), sizeof(int), foutputelf);
+	rewind(foutputelf);
+	fseek(foutputelf, firstSegmentOffset+elf_entrypoint+4, SEEK_SET);
+	char module_name[256];
+	fread(module_name, sizeof(char), 256, foutputelf);
+	fclose(foutputelf);
+	FILE *fself_info_backup_list;
+	fself_info_backup_list = fopen("module_info_backup_list.txt", "a");
+	char text_2[512];
+	sprintf(text_2, "\n|-\n| [[%s]] || 0x%llX || %s", module_name, authid, originalPath);
+	fwrite(text_2, sizeof(char), strlen(text_2), fself_info_backup_list);
+	fclose(fself_info_backup_list);
+	
 	return 0;
 }
 
