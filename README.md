@@ -67,9 +67,9 @@ A PC tool that rebuilds ELF from decrypted modules' segments. To be used after u
 
 * Credits: zecoxao for the tutorial (how to rebuild ELF from decrypted segments and original SELF), vitasdk for vita-make-fself
 
-vDump
+French-American Games Decrypter (FAGDec)
 ---
-A PSVita homebrew that dumps easily user/kernel modules in a variety of ways (NOTE: NOT GAMES, THIS DOES NOT ENABLE PIRACY).
+A PSVita homebrew that dumps easily user/kernel modules in a variety of ways, games are now supported.
 
 * Credits: zecoxao for vitadump (new), st4rk for vitadump (old), xerpi for both.
 
@@ -197,16 +197,36 @@ Dependencies: zlib
 
 --------------------------------------------------------------------------------
 
-vDump usage
+FAGDec usage
 ---
-Everything is contained within the vpk. Follow the onscreen instructions provided in the application.
+Everything is contained within the vpk. 
 
-Methods:
+Explainations:
 
-	VitaDump (old) – Only works with user mode modules, this method dumps the sections out of memory.
-
-	VitaDump (new) – MAKE SURE YOU RUN THE KPLUGIN (scroll down to kplugin and hit X to enable it). This method uses system functions to decrypt segments of SYSTEM applications.
-
+	Controls:
+		Left/Right switches panes. Holding down each key will expand that pane to fullscreen.
+		On the Modules list pane, you may hit "Circle" twice to delete a module. "Cross" cancels this action. You can hold down circle.
+		On a menu with special option that can be jumped to with a button, the button that executes this option is indicated to the right of that specifc option.
+	Decrypt to...:
+		SELF - These are verified against the original ELF and can be ran directly on the vita. Big elfs (50mb+) may have trouble verifying.
+		ELF - These are not verified to increase speed. The product must be make_fself'd on the computer or by another method. However, the sha256 is saved to verify at another date. 
+		NOTE: For modders, you must have a ELF to modify.
+			To convert to SELF:
+				1) Obtain the leaked SDK make_fself.exe (YOU CANNOT USE THE VITASDK VERSION).
+				2) Run: make_fself.exe -c -e <modulename>.elf <modulename>
+				3) Open self_auth.bin/<modulename>.auth and copy the the first 8 bytes to offset 80 of the output of make_fself.exe or <modulename> (the output). This is the auth_id.
+				
+	self_auth.bin/<output>.auth:
+		Information is provided by the f00d after being handed a SELF.
+	Decrypting vs0/os0 modules:
+		These modules's self_auth.bin are saved to <outputname>.auth
+	Decrypting Games (when installed):
+		Just select the title from the screen, and select the modules you wish to be decrypted.
+	Using the PATH_ID spoofing system:
+		vs0/os0 - Drop the module into the vs0:/vs0_em or os0:/os0_em and it will decrypt as if it was the respective device.
+		app/patch - Drop the game module into ux0:/app_em/<titleid> or ux0:/patch_em/<titleid>. They must be in their respectiv folder in order to work. They also must be PFS decrypted. 
+			NOTE: IN ORDER FOR A NPDRM GAME TO DECRYPT FOR PATCH/APP, THE work.bin must be located ux0:/app_em/<titleid>/sce_sys/package/work.bin. This applies to both patches and base games.
+	
 --------------------------------------------------------------------------------
 
 PSVita-ELF-builder usage
