@@ -224,7 +224,7 @@ Explainations:
 		Just select the title from the screen, and select the modules you wish to be decrypted.
 	Using the PATH_ID spoofing system:
 		vs0/os0 - Drop the module into the vs0:/vs0_em or os0:/os0_em and it will decrypt as if it was the respective device.
-		app/patch - Drop the game module into ux0:/app_em/<titleid> or ux0:/patch_em/<titleid>. They must be in their respectiv folder in order to work. They also must be PFS decrypted. 
+		app/patch  (YOU DO NOT NEED ASSETS TO USE THIS MODE)- Drop the game module into ux0:/app_em/<titleid> or ux0:/patch_em/<titleid>. They must be in their respectiv folder in order to work. They also must be PFS decrypted. 
 			NOTE: IN ORDER FOR A NPDRM GAME TO DECRYPT FOR PATCH/APP, THE work.bin must be located ux0:/app_em/<titleid>/sce_sys/package/work.bin. This applies to both patches and base games.
 	
 --------------------------------------------------------------------------------
