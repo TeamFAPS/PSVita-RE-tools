@@ -1,0 +1,1 @@
+Menu *creditGenerateMenu(void *p_menu) ;
