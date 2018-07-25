@@ -199,34 +199,33 @@ Dependencies: zlib
 
 FAGDec usage
 ---
-Everything is contained within the vpk. 
+Install the .vpk on a PSVita.
 
-Explainations:
-
-	Controls:
-		Left/Right switches panes. Holding down each key will expand that pane to fullscreen.
-		On the Modules list pane, you may hit "Circle" twice to delete a module. "Cross" cancels this action. You can hold down circle.
-		On a menu with special option that can be jumped to with a button, the button that executes this option is indicated to the right of that specifc option.
+### Controls:
+	Left/Right switches panels. Holding down each key will expand that pane to fullscreen.
+	On the Modules list panel, you may hit "Circle" twice to delete a module. "Cross" cancels this action. You can hold down circle.
+	On a menu with special option that can be jumped to with a button, the button that executes this option is indicated to the right of that specifc option.
+		
+### Menus:
 	Decrypt to...:
-		SELF - These are verified against the original ELF and can be ran directly on the vita. Big elfs (50mb+) may have trouble verifying.
-		ELF - These are not verified to increase speed. The product must be make_fself'd on the computer or by another method. However, the sha256 is saved to verify at another date. 
-		NOTE: For modders, you must have a ELF to modify.
-			To convert to SELF:
-				1) Obtain the leaked SDK make_fself.exe (YOU CANNOT USE THE VITASDK VERSION).
-				2) Run: make_fself.exe -c -e <modulename>.elf <modulename>
-				3) Open self_auth.bin/<modulename>.auth and copy the the first 8 bytes to offset 80 of the output of make_fself.exe or <modulename> (the output). This is the auth_id.
-				
-	self_auth.bin/<output>.auth:
-		Information is provided by the f00d after being handed a SELF.
-	Decrypting vs0/os0 modules:
-		These modules's self_auth.bin are saved to <outputname>.auth
-	Decrypting Games (when installed):
-		Just select the title from the screen, and select the modules you wish to be decrypted.
-	Using the PATH_ID spoofing system:
-		vs0/os0 - Drop the module into the vs0:/vs0_em or os0:/os0_em and it will decrypt as if it was the respective device.
-		app/patch  (YOU DO NOT NEED ASSETS TO USE THIS MODE)- Drop the game module into ux0:/app_em/<titleid> or ux0:/patch_em/<titleid>. They must be in their respectiv folder in order to work. They also must be PFS decrypted. 
-			NOTE: IN ORDER FOR A NPDRM GAME TO DECRYPT FOR PATCH/APP, THE work.bin must be located ux0:/app_em/<titleid>/sce_sys/package/work.bin. This applies to both patches and base games.
-	
+		SELF - These are verified against the original ELF and can be ran directly on the PSVita. Big ELFs (50MB+) may have trouble verifying.
+		ELF - These are not verified to increase speed. The product must be make_fself'd on the computer or by another method. However, the sha256 is saved to be verified later if you wish.
+
+#### NOTE: Modders need a ELF to modify, then they have to make a SELF from the modded ELF. See just below:
+
+### To manually convert ELF to SELF (on PC):
+		1) Obtain the leaked SDK make_fself.exe (YOU CANNOT USE THE VITASDK VERSION).
+		2) Run: make_fself.exe -c -e <modulename>.elf <modulename>
+		3) Open self_auth.bin/<modulename>.auth and copy the first 8 bytes to offset 0x80 of the output SELF of make_fself.exe. These 8 bytes data is the program-authority-id.
+
+### Decrypting games (when installed on PSVita):
+	Just select the title from the screen, and select the modules you wish to be decrypted.
+
+### Decrypting games (when NOT installed on PSVita) -> Using the PATH_ID spoofing system:
+	vs0/os0 - Drop the module into the vs0:/vs0_em or os0:/os0_em and it will decrypt as if it was the respective device.
+	app/patch (YOU DO NOT NEED ASSETS TO USE THIS MODE) - Drop the game module into ux0:/app_em/<titleid> or ux0:/patch_em/<TITLEID>. They must be in their respective folder. They also must be PFS decrypted.
+	NOTE: IN ORDER FOR A NPDRM GAME TO BE DECRYPTED, appropriate work.bin must be located at ux0:/app_em/<titleid>/sce_sys/package/work.bin. This applies to both patches and base games.
+
 --------------------------------------------------------------------------------
 
 PSVita-ELF-builder usage
@@ -249,7 +248,7 @@ The output .elf are valid for RE and they can also be rebuilded into SELF using 
 
 You can also hexedit as you want the ELFs then transform them into SELFs.
 
-### WARNING : NEVER WRITE to your PSVita os0 nor vs0:.
+### WARNING : NEVER WRITE to your PSVita os0: nor vs0:.
 
 --------------------------------------------------------------------------------
 
