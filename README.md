@@ -71,7 +71,7 @@ French-American Games Decrypter (FAGDec) by  @CelesteBlue-dev and @dots-tb
 ---
 A PSVita homebrew that dumps easily user/kernel modules in a variety of ways, games are now supported.
 
-* Credits: zecoxao for vitadump (new), st4rk for vitadump (old), xerpi for both.
+* Credits: Motoharu, zecoxao for vitadump (new), xerpi for both, the NPS team esp. @juliosueiras, check app for further credits.
 
 psvitalibdoc
 ---
