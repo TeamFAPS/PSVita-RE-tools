@@ -31,7 +31,7 @@ static int dump_type = DUMP_ELF;
 #define DECOMPRESS_DONE  0x02
 #define DECOMPRESS_SEGOK 0x04
 
-//int _newlib_heap_size_user = 128 * 1024 * 1024;
+int _newlib_heap_size_user = 128 * 1024 * 1024;
 
 
 int checkSceHeader(const char *file) {
