@@ -67,11 +67,11 @@ A PC tool that rebuilds ELF from decrypted modules' segments. To be used after u
 
 * Credits: zecoxao for the tutorial (how to rebuild ELF from decrypted segments and original SELF), vitasdk for vita-make-fself
 
-French-American Games Decrypter (FAGDec) by  @CelesteBlue-dev and @dots-tb
+French-American Games Decrypter (FAGDec) by - @CelesteBlue-dev and @dots-tb
 ---
-A PSVita homebrew that dumps easily user/kernel modules in a variety of ways, games are now supported.
+A PSVita homebrew that decrypts easily PSVita user/kernel and games modules and can generate .ppk (compatibility pack for low FWs)
 
-* Credits: Motoharu, zecoxao for vitadump (new), xerpi for both, the NPS team esp. @juliosueiras, check app for further credits.
+* Credits: Motoharu, Molecule Team, zecoxao for vitadump (new), xerpi for both, the NPS team esp. @juliosueiras, check app for further credits.
 
 psvitalibdoc
 ---
