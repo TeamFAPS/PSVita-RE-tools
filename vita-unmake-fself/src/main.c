@@ -15,14 +15,6 @@ static void usage(char *argv[])
 {
 	printf("%s binary",argv[0]);
 }
-/* SCE-specific definitions for p_type: */
-#define PT_SCE_RELA		0x60000000	/* SCE Relocations */
-#define PT_SCE_COMMENT		0x6FFFFF00	/* Unused */
-#define PT_SCE_VERSION		0x6FFFFF01	/* Unused */
-#define PT_SCE_UNK		0x70000001	/* Unknown */
-#define PT_SCE_PSPRELA		0x700000A0	/* Unused (PSP ELF only) */
-#define PT_SCE_PPURELA		0x700000A4	/* Unused (SPU ELF only) */
-
 
 int main(int argc, const char **argv)
 {
@@ -72,32 +64,36 @@ int main(int argc, const char **argv)
 		goto error;
 	}
 	fseek(fout, 0, SEEK_SET);
+	Elf32_Phdr *phdr;
 	if(memcmp(input + shdr->header_len,"\177ELF\1\1\1",8)==0) {
 		ehdr = (ELF_header *)(input + shdr->header_len);
 		ehdr->e_shoff = 0;
 		ehdr->e_shnum = 0;
 		ehdr->e_shstrndx = 0;
-		fwrite(input + shdr->header_len, ehdr->e_ehsize, 1, fout);		
-		perror("Using original elf header");
+		fwrite(input + shdr->header_len, ehdr->e_ehsize, 1, fout);	
+		phdr = (Elf32_Phdr *)(input + shdr->header_len + ehdr->e_phoff);
+		printf("Using original elf header\n");
 	} else {
-		fwrite(input + shdr->elf_offset, ehdr->e_ehsize, 1, fout);		
+		fwrite(input + shdr->elf_offset, ehdr->e_ehsize, 1, fout);	
+		phdr = (Elf32_Phdr *)(input + shdr->phdr_offset);
+
 	}
 	
-	Elf32_Phdr *phdr = (Elf32_Phdr *)(input + shdr->phdr_offset);
 	for(int i = 0; i < ehdr->e_phnum; i++) {
 		uint8_t *destination = (uint8_t *)(input + sinfo[i].offset);
 		if(sinfo[i].compression == 2) {
-			size_t sz = phdr[i].p_memsz ? phdr[i].p_memsz : phdr[i].p_filesz;
+			size_t sz = phdr[i].p_filesz;
 			destination = (uint8_t *)calloc(1,sz);
 			if (!destination) {
 				perror("Error could not allocate memory.");
 				goto error;
 			}
-			
-			int ret = uncompress(destination, (long unsigned int*)&sz, (input + sinfo[i].offset), sinfo[i].length);
+			int ret = uncompress(destination, (long unsigned int*)&sz, input + sinfo[i].offset, sinfo[i].length);
 			if(ret != Z_OK) {
-				fprintf(stderr, "Warning: could not uncompress segment %d, (No segment?), will copy segment: %d",i, ret);
+			
+				fprintf(stderr, "Warning: could not decompress segment %d, (No segment?), will copy segment: %d",i, ret);
 				destination = input + sinfo[i].offset;
+			
 			}
 		}
 		ELF_header *ehdr = (ELF_header *)(destination);
@@ -105,7 +101,7 @@ int main(int argc, const char **argv)
 			ehdr->e_shoff = 0;
 			ehdr->e_shnum = 0;
 			ehdr->e_shstrndx = 0;
-			perror("2nd elf header");
+			printf("2nd elf header");
 		}
 		fseek(fout, phdr[i].p_offset, SEEK_SET);
 		fwrite(destination, phdr[i].p_filesz, 1, fout);
