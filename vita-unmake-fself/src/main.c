@@ -107,7 +107,7 @@ int main(int argc, const char **argv)
 		fwrite(destination, phdr[i].p_filesz, 1, fout);
 	}
 	fseek(fout, ehdr->e_phoff, SEEK_SET);
-	fwrite(input + shdr->phdr_offset, ehdr->e_phentsize*ehdr->e_phnum, 1, fout);
+	fwrite(phdr,  ehdr->e_phentsize, ehdr->e_phnum, fout);
 
 	fclose(fout);
 
