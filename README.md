@@ -226,6 +226,8 @@ Install the .vpk on a PSVita.
 	app/patch (YOU DO NOT NEED ASSETS TO USE THIS MODE) - Drop the game module into ux0:/app_em/<titleid> or ux0:/patch_em/<TITLEID>. They must be in their respective folder. They also must be PFS decrypted.
 	NOTE: IN ORDER FOR A NPDRM GAME TO BE DECRYPTED, appropriate work.bin must be located at ux0:/app_em/<titleid>/sce_sys/package/work.bin. This applies to both patches and base games.
 
+### WHEN MODDING YOU NEED THE self_auth.bin FROM THE BASE GAME! PLEASE DO NOT FORGET!
+
 --------------------------------------------------------------------------------
 
 PSVita-ELF-builder usage
