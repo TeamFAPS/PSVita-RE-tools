@@ -92,7 +92,7 @@ ShipLog v2.0 usage
 
 ### Usage:
 
-Install ShipLog.skprx in taiHEN config.txt under *KERNEL and install ShipLog.vpk. You must reboot the Vita with the kernel plugin installed to open the configuration app. Logs are stored in a buffer and must be obtained using one of the following methods:
+Install backdoor_exe.skprx in taiHEN config.txt under *KERNEL and install ShipLog.vpk. You must reboot the Vita with the kernel plugin installed to open the configuration app. Logs are stored in a buffer and must be obtained using one of the following methods:
 
 - Network:
 
@@ -105,7 +105,7 @@ Install ShipLog.skprx in taiHEN config.txt under *KERNEL and install ShipLog.vpk
 	
 	1. Open the ShipLog application and enable file logging. Make sure you save the configuration.
 	2. Reboot the vita.
-	3. Check ux0:data/logs.txt for new logs.
+	3. Check ux0:data/logger.txt for new logs.
 	
 	NOTE: This method may ware down your memory card and is slow. This method is only recommended when tested material may crash the system, preventing the dumping of logs.
 	
