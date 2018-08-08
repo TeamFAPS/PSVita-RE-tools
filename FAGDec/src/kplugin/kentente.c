@@ -34,7 +34,7 @@ void kuEntenteGetLogs(char *dest) {
 	EXIT_SYSCALL(state);
 }
 
-int	kuEntenteStatus() {
+int kuEntenteStatus() {
 	int state, ret;
 	ENTER_SYSCALL(state);
 	ret = status;
