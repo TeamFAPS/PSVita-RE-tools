@@ -36,7 +36,7 @@ A PC tool that hooks specified NIDS automatically.
 
 * Credits: xerpi for base code used, TheFlow for db.yml parsing, yasen for the name ideas
 
-VitaDecompilerMod – by @dots-tb
+VitaDecompilerMod – by @dots-tb - based on vitadecompiler by TheFloW, itself based on prxtool by TyRaNiD
 ---
 A FREE alternative to IDA. It has a great pseudo-C decompilation that offers a quick view thanks to text file exporting.
 
@@ -53,9 +53,15 @@ Compared to original @TheFlow's version we added a few features such as:
 	+ Relocation support
 	+ There might be more ?
 
-* Credits: TheFloW for original VitaDecompiler and prxtool's original devs
+* Credits: TheFloW for original VitaDecompiler and PSP prxtool's contributors
 
-vita-unmake-fself – @by dots-tb
+prxtool for PSVita - by TheFloW
+---
+An alternative to VitaDecompilerMod: prxtool cannot decompile to pseudo-C but it can decompiles ASM very well.
+
+* Credits: TheFloW and xerpi for PSVita port and PSP prxtool's contributors
+
+vita-unmake-fself – by @dots-tb
 ---
 A PC tool that decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
 
@@ -67,7 +73,7 @@ A PC tool that rebuilds ELF from decrypted modules' segments. To be used after u
 
 * Credits: zecoxao for the tutorial (how to rebuild ELF from decrypted segments and original SELF), vitasdk for vita-make-fself
 
-French-American Games Decrypter (FAGDec) by - @CelesteBlue-dev and @dots-tb
+French-American Games Decrypter (FAGDec) - by @CelesteBlue-dev and @dots-tb
 ---
 A PSVita homebrew that decrypts easily PSVita user/kernel and games modules and can generate .ppk (compatibility pack for low FWs)
 
@@ -75,7 +81,7 @@ A PSVita homebrew that decrypts easily PSVita user/kernel and games modules and 
 
 psvitalibdoc
 ---
-Some lists of functions names / NIDs / libraries / modules to be used with IDA, VitaDecompiler or other tools that will come later.
+Some lists of functions names / NIDs / libraries / modules to be used with vitadump IDA plugin, vitaldr IDA plugin, VitaDecompilerMod or prxtool for PSVita.
 
 ioPlus 0.1, 0.2 – by @dots-tb
 ---
@@ -175,6 +181,25 @@ The top section is a printed NIDS table which gives the exports and imports of a
 Each function has a virtual address and offset displayed next to it. This offset given (if not for a function that has a NID) maybe hooked with Taihen.
 
 Most strings or values are accompanied by a s_text/s_data which gives you the original address. The address is then checked repeatedly until a non-address is found. 
+
+--------------------------------------------------------------------------------
+
+prxtool usage
+---
+
+### Usage:
+
+Put the module ELF and db.yml in the same folder as prxtool.exe.
+
+The provided build is compatible with Windows. Simply open command line and:
+
+	Run: prxtool -n db.yml -w <module_name>.elf > <module_name>.S
+
+### Building:
+
+The source code and building instructions are available on TheFloW's github repository:
+
+https://github.com/TheOfficialFloW/prxtool
 
 --------------------------------------------------------------------------------
 
