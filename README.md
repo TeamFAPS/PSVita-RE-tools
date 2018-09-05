@@ -272,10 +272,12 @@ Install the .vpk on a PSVita.
 
 #### NOTE: Modders need a ELF to modify, then they have to make a SELF from the modded ELF. See just below:
 
-### To manually convert ELF to SELF (on PC):
+### To manually convert ELF to SELF (on PC using make_fself):
 		1) Obtain the leaked SDK make_fself.exe (YOU CANNOT USE THE VITASDK VERSION).
-		2) Run: make_fself.exe -c -e <modulename>.elf <modulename> or use vita-elf-inject
+		2) Run: make_fself.exe -c -e <modulename>.elf <modulename>
 		3) Open self_auth.bin/<modulename>.auth and copy the first 8 bytes to offset 0x80 of the output SELF of make_fself.exe. These 8 bytes data is the program-authority-id.
+		
+		NOTE: If you do not wish to use illegally obtained material or want a cross-platform solution, use vita-elf-inject
 
 ### Decrypting games (when installed on PSVita):
 	Just select the title from the screen, and select the modules you wish to be decrypted.
