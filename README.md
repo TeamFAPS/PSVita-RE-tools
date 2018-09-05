@@ -71,6 +71,8 @@ vita-elf-inject – by @dots-tb
 ---
 A PC tool that injects a decrypted elf(made by FAGDec or vita-unmake-fself) into an decrypted eboot.bin (made by FAGDec).
 
+* Credits: Motoharu and CelesteBlue for make-fself rev ur engs.
+
 PSVita-ELF-builder – by @CelesteBlue-dev
 ---
 A PC tool that rebuilds ELF from decrypted modules' segments. To be used after using vitaDecrypt or vDump.
