@@ -65,7 +65,11 @@ vita-unmake-fself – by @dots-tb
 ---
 A PC tool that decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
 
-This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use vDump or any dumping tool to first get a unencrypted SELF. Read SELFtoELF documentation for more informations.
+This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use FAGDec to first get a unencrypted SELF. Read SELFtoELF documentation for more informations.
+
+vita-elf-inject – by @dots-tb
+---
+A PC tool that injects a decrypted elf(made by FAGDec or vita-unmake-fself) into an decrypted eboot.bin (made by FAGDec).
 
 PSVita-ELF-builder – by @CelesteBlue-dev
 ---
@@ -218,7 +222,33 @@ The output will be produced in the same folder with .elf appended on to the end 
 
 Dependencies: zlib
 
-	make install
+	make
+
+--------------------------------------------------------------------------------
+
+vita-elf-inject usage
+---
+
+### Usage:
+
+	Run: ./vita-elf-inject.exe input_fself input_elf
+
+	(you most likely will be able to drag-and-drop also)
+	
+### Recommended usage for modding:	
+	
+	1. Run FAGDec to obtain a SELF.
+	2. Use vita-unmake-fself to extract the elf from the self.
+	3. Make required modifications to the elf.
+	4. Use vita-elf-inject to inject this modified elf back into the self.
+	
+The original eboot will be replaced with the product of injection. Please make a backup to plan accordingly.
+
+### Building:
+
+Dependencies: zlib
+
+	make
 
 --------------------------------------------------------------------------------
 
