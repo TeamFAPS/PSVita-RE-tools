@@ -244,6 +244,8 @@ vita-elf-inject usage
 	
 The original eboot will be replaced with the product of injection. Please make a backup to plan accordingly.
 
+NOTE: The product will run, however it will have slight changes that differentiates it from a eboot made with the official make-fself.
+
 ### Building:
 
 Dependencies: zlib
@@ -270,7 +272,7 @@ Install the .vpk on a PSVita.
 
 ### To manually convert ELF to SELF (on PC):
 		1) Obtain the leaked SDK make_fself.exe (YOU CANNOT USE THE VITASDK VERSION).
-		2) Run: make_fself.exe -c -e <modulename>.elf <modulename>
+		2) Run: make_fself.exe -c -e <modulename>.elf <modulename> or use vita-elf-inject
 		3) Open self_auth.bin/<modulename>.auth and copy the first 8 bytes to offset 0x80 of the output SELF of make_fself.exe. These 8 bytes data is the program-authority-id.
 
 ### Decrypting games (when installed on PSVita):
