@@ -35,6 +35,10 @@
 *.i*86
 *.x86_64
 *.hex
+*.skprx
+*.suprx
+*.self
+*eboot.bin
 
 # Debug files
 *.dSYM/
