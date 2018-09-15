@@ -95,6 +95,14 @@ A PSVita kernel plugin that allows more IO operations in userland. Fast, simpler
 
 Version 0.2 is much more inefficient, but supports decryption of files within devices that may open such as PFS devices. (WARNING THIS PLUGIN MAY BYPASS SAFE-MODE)
 
+physmem_dumper - by xyz
+---
+A kernel plugin that dumps Non-Secure World (NS kernel + userland) memory using RAM physical range: from 0x40200000 to 0x5FD00000.
+
+See wiki for more information on PSVita's physical memory: https://wiki.henkaku.xyz/vita/Physical_Memory.
+
+The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
+
 --------------------------------------------------------------------------------
 
 ## Using the Tools
@@ -335,6 +343,21 @@ NOTE: an opened device with the file decrypted must be currently opened in order
 	cd build
 	cmake ..
 	make all
+
+--------------------------------------------------------------------------------
+
+physmem_dumper usage
+---
+### How to get a dump:
+Put physmem_dumper.skprx in ur0:tai/. You have 3 ways to start this kernel module:
+1. EARLY KERNEL INIT. If you have enso, add this line at the start of ur0:tai/boot_config.txt:
+-load ur0:tai/physmem_dumper.skprx
+2. PRE SHELL INIT. Add this line in ur0:tai/config.txt under *KERNEL line: 
+ur0:tai/physmem_dumper.skprx
+3. POST SHELL INIT. Rename physmem_dumper.skprx to kplugin.txt and move this file to ux0: root. Launch kplugin loader app by xerpi. Wait until the app tells you to press START to exit.
+
+### How to use the dump:
+The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
 
 --------------------------------------------------------------------------------
 
