@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "elf.h"
 #include <inttypes.h>
 
+#include "elf.h"
 
-//located at 0xE4
-typedef struct
-{
+// located at 0xE4
+typedef struct {
  uint32_t filename_offset;
  uint32_t elf_offset;
  uint32_t elf_size;
@@ -64,28 +63,29 @@ char *str_replace(char *orig, char *rep, char *with) {
 
 int main(int argc, char **argv){
 	
-	if(argc < 3){
-		printf ("\nusage: bootimage_extract table.bin outdir/ \n");
+	if (argc < 3){
+		printf ("\nusage: bootimage_extract bootimage.skprx.elf outdir\n");
 		return -1;
 	}
 	
-	FILE *fp = fopen(argv[1],"rb");
+	FILE *fp = fopen(argv[1], "rb");
+	rmdir(argv[2]);
+	mkdir(argv[2], 777);
 	
-	
-	unsigned char *input = (unsigned char*) malloc (0x400);
+	unsigned char *input = (unsigned char*) malloc(0x400);
 	fseek(fp, 0, SEEK_SET);
-	fread(input,0x400,1,fp);
+	fread(input, 0x400, 1, fp);
 	Elf32_Ehdr *elf = (Elf32_Ehdr *)input;
 	Elf32_Phdr *phdrs = input + elf->e_phoff;
-	printf("Segment 0 off: %x\n",phdrs[0].p_offset);
+	printf("Segment 0 off: %x\n", phdrs[0].p_offset);
 	int i = 0;
-	while(i!= 0x1C * 2){
+	while (i != 0x1C * 2){
 		
-		unsigned char *data_in_buf = (unsigned char*) malloc (12);
-		unsigned char *data_in_buf_2 = (unsigned char*) malloc (27);
+		unsigned char *data_in_buf = (unsigned char*) malloc(12);
+		unsigned char *data_in_buf_2 = (unsigned char*) malloc(27);
 	
 		fseek(fp, phdrs[0].p_offset + 0xE4 + (12*i), SEEK_SET);
-		fread(data_in_buf,12,1,fp);
+		fread(data_in_buf, 12, 1, fp);
 		ENTRY_TABLE* entry_table = (ENTRY_TABLE*)data_in_buf;
 		
 		printf("filename_offset:    0x%X\n", entry_table->filename_offset);
@@ -98,9 +98,10 @@ int main(int argc, char **argv){
 		
 		fseek(fp, phdrs[0].p_offset + entry_table->filename_offset, SEEK_SET);
 		fread(data_in_buf_2, 27, 1, fp);
-		data_in_buf_2 = str_replace (data_in_buf_2, "os0:kd/", argv[2]);
-		rmdir(argv[2]);
-		mkdir(argv[2],777);
+		char outdir[256];
+		sprintf(outdir, "%s/", argv[2]);
+		data_in_buf_2 = str_replace (data_in_buf_2, "os0:kd/", outdir);
+
 		printf("filename:    %s\n", data_in_buf_2);
 		FILE *fout = fopen(data_in_buf_2, "wb");
 		fseek(fp, phdrs[0].p_offset + entry_table->elf_offset, SEEK_SET);
