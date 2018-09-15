@@ -371,7 +371,6 @@ Obtain os0:/bootimage.skprx.elf using FAGDec in ELF mode or some other means.
 
 Run:
 
-	mkdir outdir
 	bootimage_extract bootimage.skprx.elf outdir
 
 --------------------------------------------------------------------------------
