@@ -367,8 +367,9 @@ The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA
 
 bootimage_extract usage
 ---
-1. Obtain bootimage.skprx.elf using FAGDec using ELF mode or some other means.
-2. Run:
+Obtain bootimage.skprx.elf using FAGDec using ELF mode or some other means.
+
+Run:
 
 	mkdir outdir
 	bootimage_extract bootimage.skprx.elf outdir
