@@ -103,9 +103,9 @@ See wiki for more information on PSVita's physical memory: https://wiki.henkaku.
 
 The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
 
-bootimage_extract - by zecoxao
+bootimage_extract - by @zecoxao
 ---
-Extracts embeded ELFs from bootimage.skprx.
+Extracts embedded kernel modules ELFs from os0:/bootimage.skprx.
 
 	+ Dropped support for segment file, added support for ELF input.
 
@@ -367,7 +367,7 @@ The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA
 
 bootimage_extract usage
 ---
-Obtain bootimage.skprx.elf using FAGDec using ELF mode or some other means.
+Obtain os0:/bootimage.skprx.elf using FAGDec in ELF mode or some other means.
 
 Run:
 
