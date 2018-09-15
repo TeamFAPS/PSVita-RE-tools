@@ -369,6 +369,7 @@ bootimage_extract usage
 ---
 1. Obtain bootimage.skprx.elf using FAGDec using ELF mode or some other means.
 2. Run:
+
 	mkdir outdir
 	bootimage_extract bootimage.skprx.elf outdir
 
