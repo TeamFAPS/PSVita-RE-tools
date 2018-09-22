@@ -109,6 +109,14 @@ Extracts embedded kernel modules ELFs from os0:/bootimage.skprx.
 
 	+ Dropped support for segment file, added support for ELF input.
 
+nids-extract - by @dots-tb
+---
+A program that extracts export NIDs from an ELF.
+
+kdump-extract - by @dots-tb
+---
+A program that finds and extracts segment 0 and NIDs from a continous kernel memory dump starting from Sysmem. It is to be used in conjuction with kdumper.
+
 --------------------------------------------------------------------------------
 
 ## Using the Tools
@@ -371,10 +379,29 @@ Obtain os0:/bootimage.skprx.elf using FAGDec in ELF mode or some other means.
 
 Run:
 
-	bootimage_extract bootimage.skprx.elf outdir
+	./bootimage_extract bootimage.skprx.elf outdir
 
 --------------------------------------------------------------------------------
 
+kdump-extract usage
+---
+Obtain a kdump from kdumper. Be sure that all logging information is removed from it and that the vaddr of SceSysmem is at offset 0x0. Kdump will write it to file, but you must remove preceeding information. Stdout will log locations and NIDs of exports and imports. It will also generate elfs with SEGMENT 1 ONLY.
+
+Run:
+
+	./kdump_extract binary > <output>.txt
+	
+--------------------------------------------------------------------------------
+
+nids-extract usage
+---
+A db yaml will be generated to stdout using the exports of a specified ELF. You will need to specify a version to be inserted to yaml such as "3.60", which is shown in the following example.
+
+Run:
+
+	./nids-extract binary.elf 3.60 > <output>.yml
+	
+--------------------------------------------------------------------------------
 
 ## Further thanks
 zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh
