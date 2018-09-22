@@ -109,13 +109,21 @@ Extracts embedded kernel modules ELFs from os0:/bootimage.skprx.
 
 	+ Dropped support for segment file, added support for ELF input.
 
+Kdumper - by @TheFloW and @CelesteBlue
+---
+A fSELF to run on an activated testkit/devkit on FW <3.68 in order to dunp its kernel !
+
+Confirmed working between 3.30 and 3.67. Will need some changes for lower FWs.
+
+Credits: TheFloW for the kernel exploit. CelesteBlue for the many improvements.
+
 nids-extract - by @dots-tb
 ---
-A program that extracts export NIDs from an ELF.
+A PC program that extracts exports NIDs from an ELF.
 
 kdump-extract - by @dots-tb
 ---
-A program that finds and extracts segment 0 and NIDs from a continous kernel memory dump starting from Sysmem. It is to be used in conjuction with kdumper.
+A PC program that finds and extracts segment 0 of a kernel module from a continous kernel memory dump. It ourputs a .elf that can be used for RE (see vitadecompiler), for extracting NIDs (see nids-extract). It is to be used in conjunction with Kdumper on PSVita side.
 
 --------------------------------------------------------------------------------
 
