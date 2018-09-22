@@ -385,7 +385,7 @@ Run:
 
 kdump-extract usage
 ---
-Obtain a kdump from kdumper. Be sure that all logging information is removed from it and that the vaddr of SceSysmem is at offset 0x0. Kdump will write it to file, but you must remove preceeding information. Stdout will log locations and NIDs of exports and imports. It will also generate elfs with SEGMENT 1 ONLY.
+Obtain a kdump from kdumper. Be sure that all logging information is removed from it and that the vaddr of SceSysmem is at offset 0x0. Kdump will write it to file, but you must remove preceeding information. Stdout will log locations and NIDs of exports and imports. It will also generate elfs with SEGMENT 0 ONLY.
 
 Run:
 
