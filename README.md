@@ -412,4 +412,4 @@ Run:
 --------------------------------------------------------------------------------
 
 ## Further thanks
-zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh
+zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad, SKFU
