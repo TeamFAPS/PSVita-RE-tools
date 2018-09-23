@@ -391,13 +391,18 @@ Run:
 
 --------------------------------------------------------------------------------
 
+Kdumper usage
+---
+Before compiling, you have to change IP address to the one of your PC in main.c. After compiling, install the app on activated testkit/devkit <3.68. On PC listen TCP on port 9023 
+. Run the PSVita app. Follow the instructions on screen. The kernel dump is sent to PC through socket.
+
 kdump-extract usage
 ---
-Obtain a kdump from kdumper. Be sure that all logging information is removed from it and that the vaddr of SceSysmem is at offset 0x0. Kdump will write it to file, but you must remove preceeding information. Stdout will log locations and NIDs of exports and imports. It will also generate elfs with SEGMENT 0 ONLY.
+Obtain a kernel dump from Kdumper. Be sure that the vaddr of SceSysmem seg0 is at offset 0x0 of the kdump. Kdumper will write it to the file, but you must remove preceeding information.
 
 Run:
 
-	./kdump_extract binary > <output>.txt
+	./kdump_extract kdump.bin
 	
 --------------------------------------------------------------------------------
 
