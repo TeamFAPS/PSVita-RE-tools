@@ -9,7 +9,8 @@
 
 
 #define PHYSDUMP_START			0x402
-#define PHYSDUMP_END			0x5FD
+#define PHYSDUMP_END			0x600 // Retail and TestKit
+//#define PHYSDUMP_END			0x800 // DevKit
 #define PHYSDUMP_OUTPUT			"ur0:dump/physmem-dump.bin"
 #define DUMP_PATH "ur0:dump/"
 #define LOG_FILE DUMP_PATH "physmem-dumper_log.txt"
