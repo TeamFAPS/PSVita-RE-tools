@@ -23,12 +23,14 @@ add_executable(${PROJECT_NAME}.elf
 )
 
 target_link_libraries(${PROJECT_NAME}.elf
-	-lSceKernelThreadmgr_stub_weak
+	-lSceDriverUser_stub_weak
+	-lSceAppUtil_stub_weak
+	-lSceKernelThreadMgr_stub_weak
 	-lSceNetCtl_stub_weak
 	-lSceNet_stub_weak
 	-lSceNgs_stub_weak
+	-lSceNgsUser_stub_weak
 	-lSceMotionDev_stub_weak
-	-lSceDriverUser_stub_weak
 	-lSceDisplay_stub_weak
 	-lSceCtrl_stub_weak
 	-lSceSysmodule_stub_weak
