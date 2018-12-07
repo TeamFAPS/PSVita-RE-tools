@@ -111,11 +111,11 @@ Extracts embedded kernel modules ELFs from os0:/bootimage.skprx.
 
 Kdumper - by @TheFloW and @CelesteBlue
 ---
-A fSELF to run on an activated testkit/devkit on FW <3.68 in order to dunp its kernel !
+A fSELF to run on an activated testkit/devkit on FW <=3.67 in order to dump its kernel !
 
-Confirmed working between 3.30 and 3.67. Will need some changes for lower FWs.
+Confirmed working between 3.50 and 3.67. Will need some changes for lower FWs (sceMotionDevGetEvaInfo is only on FW >= 3.50)
 
-Credits: TheFloW for the kernel exploit. CelesteBlue for the many improvements.
+Credits: TheFloW for the kernel exploit. CelesteBlue for the many improvements, Mathieulh for SceNgsUser code.
 
 nids-extract - by @dots-tb
 ---
