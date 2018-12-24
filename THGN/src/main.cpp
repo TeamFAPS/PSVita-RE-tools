@@ -298,8 +298,10 @@ int main(int argc, char *argv[])
 			mode = Import;
 			modeText = "Import";
 			if(ret>0)
+			{
 				mode = All;
 				modeText = "Export";
+			}
 		}
 	}
 	printf("This hooker got NIDS, generating code...\n");
