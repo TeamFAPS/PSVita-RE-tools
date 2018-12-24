@@ -125,7 +125,6 @@ int getImports(SceModuleInfo *mod_info, uint8_t *segment1, uint32_t vaddr, Hooks
 		convertToImportsTable3xx(import_2xx, &imp_table);
 		char *lib_name = (char *)(segment1 + (imp_table.lib_name - vaddr));
 		uint32_t *nid_table = (uint32_t *)(segment1 + imp_table.func_nid_table - vaddr);		
-		uint32_t imports_addr = imp_table.func_nid_table;
 		for (int j = 0; j < imp_table.num_functions; j++) {	
 			if(!imp_table.lib_name)
 						continue;	
@@ -158,10 +157,8 @@ int getImports(SceModuleInfo *mod_info, uint8_t *segment1, uint32_t vaddr, Hooks
 static uint8_t *handleSegments(int seg, uint8_t *input, SCE_header *shdr) {
 	segment_info *sinfo = (segment_info *)(input + shdr->section_info_offset);
 	uint8_t *destination = (uint8_t *)(input + sinfo[seg].offset);
-	Elf32_Phdr *phdr = (Elf32_Phdr *)(input + shdr->phdr_offset);
 	
 	if(sinfo[seg].compression == 2) {
-		size_t sz = phdr[seg].p_memsz ? phdr[seg].p_memsz : phdr[seg].p_filesz;
 		destination = (uint8_t *)calloc(1,sinfo[seg].length);
 		
 		if (!destination) {
