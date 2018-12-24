@@ -94,7 +94,7 @@ int getExports(SceModuleInfo *mod_info, uint8_t *segment1, uint32_t vaddr, Hooks
 				continue;
 			
 			uint32_t nid = nid_table[j];
-			HookEntry *hook = malloc(sizeof(HookEntry));
+			HookEntry *hook = (HookEntry*)malloc(sizeof(HookEntry));
 			hook->nid = nid;
 			hook->lib_nid = exp_table->module_nid;
 			hook->nid_type = Export;
@@ -106,7 +106,7 @@ int getExports(SceModuleInfo *mod_info, uint8_t *segment1, uint32_t vaddr, Hooks
 				snprintf(name, sizeof(name), "_%s", funcName);
 			else
 				snprintf(name, sizeof(name), "%s_%08X", lib_name, nid);
-			hook->nid_name = malloc(sizeof(name));
+			hook->nid_name = (char*)malloc(sizeof(name));
 			strcpy(hook->nid_name, name);
 			nids->push_back(hook);
 			count++;
@@ -132,7 +132,7 @@ int getImports(SceModuleInfo *mod_info, uint8_t *segment1, uint32_t vaddr, Hooks
 				continue;
 			uint32_t nid = nid_table[j];
 
-			HookEntry *hook = malloc(sizeof(HookEntry));
+			HookEntry *hook = (HookEntry*)malloc(sizeof(HookEntry));
 			hook->nid = nid;
 			hook->lib_nid = imp_table.module_nid;
 			hook->nid_type = Import;
@@ -143,7 +143,7 @@ int getImports(SceModuleInfo *mod_info, uint8_t *segment1, uint32_t vaddr, Hooks
 				snprintf(name, sizeof(name), "_%s", funcName);
 			else
 				snprintf(name, sizeof(name), "%s_%08X", lib_name, nid);
-			hook->nid_name = malloc(sizeof(char) *strlen(name));
+			hook->nid_name = (char*)malloc(sizeof(char) *strlen(name));
 			strcpy(hook->nid_name, name);
 			nids->push_back(hook);
 			count++;
