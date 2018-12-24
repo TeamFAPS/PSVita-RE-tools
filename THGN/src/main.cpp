@@ -113,6 +113,7 @@ int getExports(SceModuleInfo *mod_info, uint8_t *segment1, uint32_t vaddr, Hooks
 		}
 		 i += exp_table->size;
 	 }
+	return count;
 }
 
 int getImports(SceModuleInfo *mod_info, uint8_t *segment1, uint32_t vaddr, Hooks *nids, const char *lib) {
@@ -151,6 +152,7 @@ int getImports(SceModuleInfo *mod_info, uint8_t *segment1, uint32_t vaddr, Hooks
 		 i += imp_table.size;
 	 }
 	 
+	return count;
 }
 
 static uint8_t *handleSegments(int seg, uint8_t *input, SCE_header *shdr) {
