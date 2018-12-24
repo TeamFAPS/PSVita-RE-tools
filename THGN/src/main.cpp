@@ -183,6 +183,17 @@ static void usage(char *argv[])
 	printf("%s binary <all/library_name/exports/imports> <kernel/user> db.yml <sys:1/0>\n",argv[0]);
 }
 
+struct Closer
+{
+	FILE** f;
+
+	~Closer()
+	{
+		if (*f)
+			fclose(*f);
+	}
+};
+
 // Example: hooker mono-vita.suprx all
 
 int main(int argc, char *argv[])
@@ -191,6 +202,7 @@ int main(int argc, char *argv[])
 	printf("Made by @dots_tb dedicated to the following frenchies: @CelesteBlue123 and @Nkekev\n");
 	
 	FILE *fin = NULL;
+	Closer fin_closer{&fin};
 	if (argc < 5) {
 		usage(argv);
 		return 1;
@@ -203,7 +215,7 @@ int main(int argc, char *argv[])
 	
 	if (!fin) {
 		perror("Failed to open input file");
-		goto error;
+		return 1;
 	}
 	fseek(fin, 0, SEEK_END);
 	size_t sz = ftell(fin);
@@ -211,7 +223,7 @@ int main(int argc, char *argv[])
 	uint8_t *input = (uint8_t *)calloc(1, sz);	
 	if (!input) {
 		perror("Failed to allocate buffer for input file");
-		goto error;
+		return 1;
 	}
 	if (fread(input, sz, 1, fin) != 1) {
 		static const char s[] = "Failed to read input file";
@@ -219,7 +231,7 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "%s: unexpected end of file\n", s);
 		else
 			perror(s);
-		goto error;
+		return 1;
 	}
 	fclose(fin);
 	fin = NULL;
@@ -230,7 +242,7 @@ int main(int argc, char *argv[])
 	std::ofstream fout(output_path);
 	if(!fout) {
 		fprintf(stderr, "Error could not open output file.");
-		goto error;
+		return 1;
 	}
 	if(shdr->magic == 0x454353) {
 		printf("SELF detected.\n");
@@ -244,7 +256,7 @@ int main(int argc, char *argv[])
 			phdr = (Elf32_Phdr *)(segment1 + ehdr->e_phoff);
 		} else  {
 			fprintf(stderr, "File is not a binary");
-			goto error;
+			return 1;
 		}
 	}
 
@@ -395,12 +407,4 @@ int main(int argc, char *argv[])
 	fout.close();
 	printf("Code was generated...: %s\n", output_path);
 	return 0;
-error:
-	if (fin)
-		fclose(fin);
-	if(fout)
-		fout.close();
-	return 1;
-	exit(0);
-
 }
