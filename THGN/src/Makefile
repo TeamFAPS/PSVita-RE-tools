@@ -1,8 +1,8 @@
 TARGET = THGNIDS
 OBJS = main.o import/vita-import.o import/vita-import-parse.o import/yamltree.o import/yamltreeutil.o
-LIBS = -lz -lyaml
+LIBS = -lz -lyaml -s -static 
 
-CFLAGS = -s -static -Wall -Wextra -fpermissive -std=c++0x 
+CFLAGS = -Wall -Wextra -fpermissive -std=c++0x 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
@@ -11,7 +11,7 @@ $(TARGET): $(OBJS)
 
 %.o: %.cpp
 	@echo "Compiling $^"
-	$(CXX) $(CFLAGS) -c $^ -o $@ -static -static-libgcc -static-libstdc++ 
+	$(CXX) $(CFLAGS) -c $^ -o $@ 
 
 clean:
 	@echo "Removing all the .o files"
