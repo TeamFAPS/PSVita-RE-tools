@@ -182,7 +182,7 @@ int init_ngsuser(void) {
 	return ret;
 }
 
-int leak_kstack_ngsuser(void) {
+int leak_kstack_ngsuser(void) { // Coded by LemonHaze from TheFloW's ROP code
 	uint32_t ret = 0;
 	
 	// Write voiceDef to kstack
