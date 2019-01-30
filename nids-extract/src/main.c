@@ -35,7 +35,7 @@ void getExports(SceModuleInfo *mod_info, uint8_t *segment0, uint32_t vaddr, uint
 }
 
 static void usage(char *argv[]) {
-	printf("Usage: %s ver file1.elf path/file2.elf...\n", argv[0]);
+	printf("Usage: %s ver file1.elf path/file2.elf... > db_lookup.yml\n", argv[0]);
 }
 
 int main(int argc, char **argv) {
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
 	printf("modules:\n");
 
 	for (int i=2; i < argc; i++) {
-
+		fprintf(stderr, "Opening %s\n", argv[i]);
 		fin = fopen(argv[i], "rb");
 		
 		if (!fin) {
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
 		Elf32_Phdr *phdr = (Elf32_Phdr *)(input + ehdr->e_phoff);
 		SceModuleInfo *mod_info = (SceModuleInfo *)(input + phdr[0].p_offset + ehdr->e_entry);
 		
-		printf("  %s:\n", mod_info->name);
+		printf("  %s: # %s\n", mod_info->name, argv[i]);
 		printf("    nid: 0x%08X\n", mod_info->nid);
 		printf("    libraries:\n");
 		getExports(mod_info, input + phdr[0].p_offset, phdr[0].p_vaddr, phdr[0].p_memsz);	
