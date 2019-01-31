@@ -85,10 +85,6 @@ A PSVita homebrew that decrypts easily PSVita user/kernel and games modules and 
 
 * Credits: Motoharu, Molecule Team, zecoxao for vitadump (new), xerpi for both, the NPS team esp. @juliosueiras, check app for further credits.
 
-psvitalibdoc
----
-Some lists of functions names / NIDs / libraries / modules to be used with vitadump IDA plugin, vitaldr IDA plugin, VitaDecompilerMod or prxtool for PSVita.
-
 ioPlus 0.1, 0.2 – by @dots-tb
 ---
 A PSVita kernel plugin that allows more IO operations in userland. Fast, simpler, and efficient alternative to kuio (by @Rinnegatamante) (3x smaller). It allows elevated IO permissions of user applications and plugins using the original sceIo functions. This includes reading, writing, opening, and folder management within applications such as official games. It may also include getting stats, not sure.
@@ -113,17 +109,21 @@ Kdumper - by @TheFloW and @CelesteBlue
 ---
 A fSELF to run on an activated testkit/devkit on FW <=3.67 in order to dump its kernel !
 
-Confirmed working between 3.50 and 3.67. Will need some changes for lower FWs (sceMotionDevGetEvaInfo is only on FW >= 3.50)
+Confirmed working between 3.50 and 3.67. Will need some changes for lower FWs (sceMotionDevGetEvaInfo is only on FW >= 3.50).
 
-Credits: TheFloW for the kernel exploit. CelesteBlue for the many improvements, Mathieulh for SceNgsUser code.
-
-nids-extract - by @dots-tb
----
-A PC program that extracts exports NIDs from an ELF.
+Credits: TheFloW for the kernel exploit. CelesteBlue for the many improvements, Mathieulh and LemonHaze for SceNgsUser code.
 
 kdump-extract - by @dots-tb
 ---
 A PC program that finds and extracts segment 0 of a kernel module from a continous kernel memory dump. It ourputs a .elf that can be used for RE (see vitadecompiler), for extracting NIDs (see nids-extract). It is to be used in conjunction with Kdumper on PSVita side.
+
+nids-extract - by @dots-tb
+---
+A PC program that extracts a list in .yml format of exported NIDs from a PSVita ELF.
+
+psvitalibdoc
+---
+Some lists of functions names / NIDs / libraries / modules to be used with vitadump IDA plugin, vitaldr IDA plugin, VitaDecompilerMod or prxtool for PSVita.
 
 --------------------------------------------------------------------------------
 
@@ -402,7 +402,7 @@ Obtain a kernel dump from Kdumper. Be sure that the vaddr of SceSysmem seg0 is a
 
 Run:
 
-	./kdump_extract kdump.bin
+	kdump_extract kdump.bin
 	
 --------------------------------------------------------------------------------
 
@@ -410,11 +410,24 @@ nids-extract usage
 ---
 A db yaml will be generated to stdout using the exports of a specified ELF. You will need to specify a version to be inserted to yaml such as "3.60", which is shown in the following example.
 
-Run:
+#### For a single file:
 
-	./nids-extract binary.elf 3.60 > <output>.yml
+	nids-extract <FW version> <binary name>.elf > <output filename>.yml
+
+Example:
+
+	nids-extract.exe 3.65 kd/acmgr.elf > acmgr.yml
 	
+#### For multiple files in one command in terminal:
+
+	./nids-extract 3.60 $(find decrypted -name '*.elf' -not -path "./app/*") > db_lookup.yml`
+
+or better:
+
+	./nids-extract 3.60 $(find 360_fw/fs_dec -type f -name '*.elf' ! -name eboot.elf ! -path '*/sm/*.elf') > db_lookup.yml
+
 --------------------------------------------------------------------------------
 
 ## Further thanks
-zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad, SKFU
+
+zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad, SKFU, Vita3K, devnoname120, LemonHaze, SocraticBliss, PrincessOfSleeping
