@@ -35,52 +35,58 @@ void getExports(SceModuleInfo *mod_info, uint8_t *segment0, uint32_t vaddr, uint
 }
 
 static void usage(char *argv[]) {
-	printf("Usage: %s binary ver\n", argv[0]);
+	printf("Usage: %s ver file1.elf path/file2.elf... > db_lookup.yml\n", argv[0]);
 }
 
 int main(int argc, char **argv) {
 	FILE *fin = NULL;
-	if (argc != 3) {
+	if (argc < 3) {
 		usage(argv);
 		return 1;
 	}
-	fin = fopen(argv[1], "rb");
-	
-	if (!fin) {
-		perror("Failed to open input file");
-		goto error;
-	}
-	fseek(fin, 0, SEEK_END);
-	size_t sz = ftell(fin);
-	fseek(fin, 0, SEEK_SET);
-	uint8_t *input = calloc(1, sz);	
-	if (!input) {
-		perror("Failed to allocate buffer for input file");
-		goto error;
-	}
-	if (fread(input, sz, 1, fin) != 1) {
-		static const char s[] = "Failed to read input file";
-		if (feof(fin))
-			fprintf(stderr, "%s: unexpected end of file\n", s);
-		else
-			perror(s);
-		goto error;
-	}
-	fclose(fin);
-	fin = NULL;
-	
-	
-	ELF_header *ehdr = (ELF_header *)(input);
-	Elf32_Phdr *phdr = (Elf32_Phdr *)(input + ehdr->e_phoff);
-	SceModuleInfo *mod_info = (SceModuleInfo *)(input + phdr[0].p_offset + ehdr->e_entry);
-	
+
 	printf("version: 2\n");
-	printf("firmware: %s\n", argv[2]);
+	printf("firmware: %s\n", argv[1]);
 	printf("modules:\n");
-	printf("  %s:\n", mod_info->name);
-	printf("    nid: 0x%08X\n", mod_info->nid);
-	printf("    libraries:\n");
-	getExports(mod_info, input + phdr[0].p_offset, phdr[0].p_vaddr, phdr[0].p_memsz);
+
+	for (int i=2; i < argc; i++) {
+		fprintf(stderr, "Opening %s\n", argv[i]);
+		fin = fopen(argv[i], "rb");
+		
+		if (!fin) {
+			perror("Failed to open input file");
+			goto error;
+		}
+		fseek(fin, 0, SEEK_END);
+		size_t sz = ftell(fin);
+		fseek(fin, 0, SEEK_SET);
+		uint8_t *input = calloc(1, sz);	
+		if (!input) {
+			perror("Failed to allocate buffer for input file");
+			goto error;
+		}
+		if (fread(input, sz, 1, fin) != 1) {
+			static const char s[] = "Failed to read input file";
+			if (feof(fin))
+				fprintf(stderr, "%s: unexpected end of file\n", s);
+			else
+				perror(s);
+			goto error;
+		}
+		fclose(fin);
+		fin = NULL;
+		
+		
+		ELF_header *ehdr = (ELF_header *)(input);
+		Elf32_Phdr *phdr = (Elf32_Phdr *)(input + ehdr->e_phoff);
+		SceModuleInfo *mod_info = (SceModuleInfo *)(input + phdr[0].p_offset + ehdr->e_entry);
+		
+		printf("  %s: # %s\n", mod_info->name, argv[i]);
+		printf("    nid: 0x%08X\n", mod_info->nid);
+		printf("    libraries:\n");
+		getExports(mod_info, input + phdr[0].p_offset, phdr[0].p_vaddr, phdr[0].p_memsz);	
+	}
+
 	
 error:
 	if (fin)
