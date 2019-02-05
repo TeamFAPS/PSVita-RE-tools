@@ -1,2 +1,3 @@
-# bootimage_extract
-extracts embedded elfs from bootimage.skprx
+# kernel_bootimage_extract
+
+Extracts embedded ELFs from PSVita bootimage.elf.
