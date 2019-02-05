@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=
 LDFLAGS=
 SOURCES=main.c
-EXECUTABLE=bootimage_extract
+EXECUTABLE=kernel_bootimage_extract
 all:
 	$(CC) $(CFLAGS) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
 clean:
