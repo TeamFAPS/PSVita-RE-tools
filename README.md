@@ -99,11 +99,9 @@ See wiki for more information on PSVita's physical memory: https://wiki.henkaku.
 
 The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
 
-bootimage_extract - by @zecoxao
+kernel_bootimage_extract - by @CelesteBlue and @zecoxao
 ---
-Extracts embedded kernel modules ELFs from os0:/bootimage.skprx.
-
-	+ Dropped support for segment file, added support for ELF input.
+Extracts embedded kernel modules ELFs from bootimage.elf.
 
 Kdumper - by @TheFloW and @CelesteBlue
 ---
@@ -381,13 +379,15 @@ ur0:tai/physmem_dumper.skprx
 ### How to use the dump:
 The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
 
-bootimage_extract usage
+kernel_bootimage_extract usage
 ---
-Obtain os0:/bootimage.skprx.elf using FAGDec in ELF mode or some other means.
+Obtain os0:/bootimage.elf using sceutils or FAGDec in ELF mode or by other means.
 
 Run:
 
-	./bootimage_extract bootimage.skprx.elf outdir
+	./kernel_bootimage_extract bootimage.elf outdir
+
+Then you can look in the new folder named "outdir" that now embeds many .elf files.
 
 --------------------------------------------------------------------------------
 
@@ -430,4 +430,4 @@ or better:
 
 ## Further thanks
 
-zecoxao, xerpi, Team_molecule, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad, SKFU, Vita3K, devnoname120, LemonHaze, SocraticBliss, PrincessOfSleeping
+zecoxao, xerpi, Team_molecule, Hykem, St4rk, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad, SKFU, Vita3K, devnoname120, LemonHaze, SocraticBliss, PrincessOfSleeping
