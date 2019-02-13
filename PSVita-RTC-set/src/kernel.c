@@ -36,7 +36,7 @@ int module_start(SceSize argc, const void *args) {
 
 	// Setting CP RTC for DevKits
 	ret = module_get_export_func(KERNEL_PID, "SceSblPostSsMgr", TAI_ANY_LIBRARY, 0x3F9BDEDF, &stub);
-	LOG("ret = %08x\n", res);
+	LOG("ret = %08x\n", ret);
 	if (ret == 0){
 		void (*sceSblRtcMgrSetCpRtcForDriver) (int) = (void *) stub;
 		sceSblRtcMgrSetCpRtcForDriver(startDate1970); // 01-01-2000: 0x386D4381; 
