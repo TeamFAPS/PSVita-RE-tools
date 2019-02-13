@@ -25,7 +25,7 @@ static void log_write(const char *buffer, size_t length);
 
 void _start() __attribute__ ((weak, alias ("module_start")));
 int module_start(SceSize argc, const void *args) {
-	uint32_t ret = -1;
+	unsigned int ret = -1;
 	uintptr_t stub;
 
 	// 0xDCB731F0F1C000 (1970)
