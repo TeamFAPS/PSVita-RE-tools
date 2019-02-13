@@ -5,15 +5,15 @@ Every tool provided here will be licensed under GPLv3.0 unless stated otherwise.
 
 What is that ?
 
-This toolkit provides tools that aid in the development of vita homebrews and plugins. By providing tools that speed up development through automation of processes and gives a more friendly view into complex things of PSVita OS.
+This toolkit provides tools that aid in the development of PSVita homebrews and plugins, as well as PC tools and even emulators, by providing tools that speed up development through automation of processes and gives a more friendly view into complex things of PSVita OS.
 
-These tools aided in the development of plugins such as: NoAVLS, ReStore and ReNpDrm and many RE things that helped in Wiki and vitasdk improvements.
+These tools aided in the development of plugins such as: ReStore and ReNpDrm, repatch, reF00D, NoAVLS, rebgdl.
+
+These tools also heavily contribute to Wiki and vitasdk improvements.
 
 What it won’t do:
 
-These tools are solely used to aid in homebrew / plugins / hacks development. It probably will not produce a major hack. It will not magically make you a vita god. It will not automatically hack the vita. These tools are purely tools, most of them already existed in some form or another.
-
-THIS TOOLSET PURELY SPEEDS UP THE PROCESS OF DEVELOPMENT THROUGH EASE OF ACCESS AND DOES NOT GIVE YOU ANYTHING YOU ALL DID NOT HAVE.
+These tools are solely used to aid in homebrew / plugins / hacks development. It probably will not produce a major hack. It will not magically make you a vita god. It will not automatically hack the vita.
 
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
 
@@ -63,27 +63,27 @@ An alternative to VitaDecompilerMod: prxtool cannot decompile to pseudo-C but it
 
 vita-unmake-fself – by @dots-tb
 ---
-A PC tool that decompresses an unencrypted SELF file (skprx, suprx, self, eboot.bin) into an ELF file.
+A PC tool that decompresses an unencrypted SELF file (.skprx, .suprx, .self, eboot.bin) into an ELF file (.elf, .velf).
 
-This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use FAGDec to first get a unencrypted SELF. Read SELFtoELF documentation for more informations.
+This tool can't decompress NPDRM encrypted SELF nor System encrypted SELF. That means that you will have to use FAGDec or sceutils to first get a unencrypted SELF. Read SELFtoELF documentation for more informations.
 
 vita-elf-inject – by @dots-tb
 ---
-A PC tool that injects a decrypted elf(made by FAGDec or vita-unmake-fself) into an decrypted eboot.bin (made by FAGDec).
+A PC tool that injects an ELF (made by FAGDec or vita-unmake-fself) into a decrypted eboot.bin.
 
 * Credits: Motoharu and CelesteBlue for make-fself rev ur engs.
 
 PSVita-ELF-builder – by @CelesteBlue-dev
 ---
-A PC tool that rebuilds ELF from decrypted modules' segments. To be used after using vitaDecrypt or vDump.
+DEPRECATED - A PC tool that rebuilds ELF from decrypted modules' segments. To be used after using vitaDecrypt (never released).
 
 * Credits: zecoxao for the tutorial (how to rebuild ELF from decrypted segments and original SELF), vitasdk for vita-make-fself
 
 French-American Games Decrypter (FAGDec) - by @CelesteBlue-dev and @dots-tb
 ---
-A PSVita homebrew that decrypts easily PSVita user/kernel and games modules and can generate .ppk (compatibility pack for low FWs)
+A PSVita homebrew that decrypts easily PSVita user/kernel and games modules and can generate .ppk (compatibility pack for low FWs).
 
-* Credits: Motoharu, Molecule Team, zecoxao for vitadump (new), xerpi for both, the NPS team esp. @juliosueiras, check app for further credits.
+* Credits: Motoharu, Team Molecule, zecoxao for vitadump(new), xerpi, NPS team esp. @juliosueiras. Check app for further credits.
 
 ioPlus 0.1, 0.2 – by @dots-tb
 ---
@@ -109,7 +109,7 @@ A fSELF to run on an activated testkit/devkit on FW <=3.67 in order to dump its 
 
 Confirmed working between 3.50 and 3.67. Will need some changes for lower FWs (sceMotionDevGetEvaInfo is only on FW >= 3.50).
 
-Credits: TheFloW for the kernel exploit. CelesteBlue for the many improvements, Mathieulh and LemonHaze for SceNgsUser code.
+Credits: TheFloW for the kernel exploit, CelesteBlue for the many improvements, Mathieulh and LemonHaze for SceNgsUser code.
 
 kdump-extract - by @dots-tb
 ---
@@ -430,4 +430,4 @@ or better:
 
 ## Further thanks
 
-zecoxao, xerpi, Team_molecule, Hykem, St4rk, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys(yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad, SKFU, Vita3K, devnoname120, LemonHaze, SocraticBliss, PrincessOfSleeping
+zecoxao, xerpi, Team_molecule, Hykem, St4rk, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys (yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad (wargio), SKFU, Vita3K, devnoname120, LemonHaze, SocraticBliss, PrincessOfSleeping, Sorvigolova, 173210
