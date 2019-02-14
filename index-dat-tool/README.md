@@ -6,11 +6,11 @@ index.dat decrypter / encrypter for PSVita and PS4
 
 ### Decryption
 
-index-dat-tool index.dat index.dat.txt
+index-dat-tool index.dat version.txt
 
 ### Encryption
 
-index-dat-tool -g index.dat index.dat.txt
+index-dat-tool -g index.dat version.txt
 
 ## Thanks
 
