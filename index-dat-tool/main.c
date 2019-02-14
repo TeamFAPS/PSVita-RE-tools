@@ -26,16 +26,16 @@ int main (int argc, char *argv[]) {
 	u8 *data;
 
 	if (argc != 3 && argc != 4)
-		fail("usage: undat [-g] index.dat index.dat.txt");
+		fail("usage: undat [-g] index.dat version.txt");
 
 	for (int i=0; i<argc; i++) {
 		if (strcmp(argv[i], "-g") == 0) {
-			printf("running in generation mode");
 			generation_mode = 1;
 		}
 	}
 	
 	if (!generation_mode) {
+		printf("running in decryption mode");
 		in = fopen(argv[1], "rb");
 		if (in == NULL)
 			fail("Unable to open %s", argv[1]);
@@ -58,6 +58,7 @@ int main (int argc, char *argv[]) {
 
 		memcpy_to_file(argv[2], data + 32, len - 32);
 	} else {
+		printf("running in generation mode");
 		size_t new_len;
 		u8 *out;
 		in = fopen(argv[2], "rb");
@@ -68,7 +69,7 @@ int main (int argc, char *argv[]) {
 		fseek(in, 0, SEEK_SET);
 		data = malloc(len);
 		if (fread(data, 1, len, in) != len)
-			fail("Unable to read index.dat.txt file");
+			fail("Unable to read version.txt file");
 		fclose(in);
 
 		new_len = len + 32;
