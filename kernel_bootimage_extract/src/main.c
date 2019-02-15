@@ -7,18 +7,18 @@
 
 
 #define MAX_PATH_BUFFER_SIZE 256
-#define ELF_BASE_VADDR 0x81000000
+#define BOOTIMAGE_ELF_BASE_VADDR 0x81000000
 #define TEXT_SEGMENT_CHUNK_SIZE 0x400
 
 typedef struct {
- uint32_t module_path_offset;
- uint32_t elf_offset;
- uint32_t elf_size;
+ uint32_t path_offset;
+ uint32_t file_offset;
+ uint32_t file_size;
 } ENTRY_TABLE_NEW;
 
 typedef struct {
- uint32_t elf_size;
- char module_path[256];
+ uint32_t file_size;
+ char path[256];
 } MODULE_HEADER_OLD;
 
 // You must free the result if result is non-NULL.
@@ -69,6 +69,26 @@ char *str_replace(char *orig, char *rep, char *with) {
 }
 
 
+void generateFolders(const char *path, const char *dest_path) {
+	char temp_path[PATH_MAX];
+	strcpy(temp_path, path);
+	char *folder = (char *)&temp_path;
+	folder++;
+	char current_path[PATH_MAX];
+	strcpy(current_path, dest_path);
+	char *end_path;
+	while ((end_path = strchr(folder, '/'))!= NULL) {
+		*end_path = 0;
+		snprintf(current_path, PATH_MAX, "%s/%s", current_path, folder);
+		printf("Creating folder %s\n", current_path);
+
+		mkdir(current_path, 777);
+		folder = end_path + 1;
+	}
+}
+
+int pcff_mode = 0;
+
 int main(int argc, char **argv){
 	
 	if (argc < 3){
@@ -83,6 +103,17 @@ int main(int argc, char **argv){
 		return -1;
 	}
 	
+	uint32_t seg_num = 0;
+	uint32_t slide = BOOTIMAGE_ELF_BASE_VADDR;
+	uint32_t entries_start_offset = 0xE4;
+	for (int i=0; i<argc; i++) {
+		if (strcmp(argv[i], "-p") == 0) {
+			pcff_mode = 1;
+			seg_num = 1;
+			entries_start_offset = 0x90;
+		}
+	}
+	
 	rmdir(argv[2]);
 	mkdir(argv[2], 777);
 	char outdir[MAX_PATH_BUFFER_SIZE];
@@ -95,11 +126,11 @@ int main(int argc, char **argv){
 	Elf32_Phdr *phdrs = (Elf32_Phdr *) (text_segment_chunk + elf->e_phoff);
 	uint32_t text_seg_offset = phdrs[0].p_offset;
 	printf("Text segment offset: %x\n", text_seg_offset);
-	uint32_t bootimage_text_segment_size = *(uint32_t *)(text_segment_chunk + text_seg_offset + 0xC0) - ELF_BASE_VADDR;
+	uint32_t bootimage_text_segment_size = *(uint32_t *)(text_segment_chunk + text_seg_offset + 0xC0) - slide;
 	printf("bootimage text segment size:    0x%X\n", bootimage_text_segment_size);
 	
 	if (bootimage_text_segment_size ==  phdrs[0].p_filesz) { // Old bootimage format
-		uint32_t offset = *(uint32_t *)(text_segment_chunk + text_seg_offset + 0xC4) - ELF_BASE_VADDR;
+		uint32_t offset = *(uint32_t *)(text_segment_chunk + text_seg_offset + 0xC4) - slide;
 		printf("embedded modules start offset:    0x%X\n", offset);
 		while ((text_seg_offset + offset) < bootimage_text_segment_size){
 			unsigned char *data_in_buf = (unsigned char *) malloc(sizeof(MODULE_HEADER_OLD));
@@ -107,62 +138,75 @@ int main(int argc, char **argv){
 			fread(data_in_buf, sizeof(MODULE_HEADER_OLD), 1, fp);	
 			MODULE_HEADER_OLD* module_header = (MODULE_HEADER_OLD *)data_in_buf;
 
-			printf("elf size:     0x%X\n", module_header->elf_size);			
-			printf("module path:    %s\n", module_header->module_path);
+			printf("elf size:     0x%X\n", module_header->file_size);			
+			printf("module path:    %s\n", module_header->path);
 			unsigned char *string_buf = (unsigned char *) malloc(MAX_PATH_BUFFER_SIZE);
-			string_buf = (unsigned char *) (str_replace(module_header->module_path, "os0:kd/", outdir));
+			string_buf = (unsigned char *) (str_replace(module_header->path, "os0:kd/", outdir));
 			string_buf = (unsigned char *) (str_replace(string_buf, ".skprx", ".elf"));
 			printf("output path:    %s\n", string_buf);
 			
 			FILE *fout = fopen(string_buf, "wb");
 			free(string_buf);
-			unsigned char *elf_buffer = (unsigned char *) malloc(module_header->elf_size);
+			unsigned char *elf_buffer = (unsigned char *) malloc(module_header->file_size);
 			fseek(fp, text_seg_offset + offset + sizeof(MODULE_HEADER_OLD), SEEK_SET);
-			fread(elf_buffer, module_header->elf_size, 1, fp);
-			fwrite(elf_buffer, 1, module_header->elf_size, fout);
+			fread(elf_buffer, module_header->file_size, 1, fp);
+			fwrite(elf_buffer, 1, module_header->file_size, fout);
 			fclose(fout);
 			free(elf_buffer);
 			
-			offset += (sizeof(MODULE_HEADER_OLD) + module_header->elf_size);
+			offset += (sizeof(MODULE_HEADER_OLD) + module_header->file_size);
 			printf("next module offset:    0x%X\n", offset);
 			free(data_in_buf);
 		}
 	} else { // New bootimage format
-		uint32_t *temp = (uint32_t *) malloc(8);
-		fseek(fp, phdrs[0].p_offset + 0xE0, SEEK_SET);
-		fread(temp, 8, 1, fp);
-		uint32_t table_size = (temp[1] - temp[0]) / sizeof(ENTRY_TABLE_NEW);
-		free(temp);
-		printf("table_size:     0x%X\n", table_size);
-		for (uint32_t i = 0; i+1 < table_size; i++){
+		ENTRY_TABLE_NEW *entry_table;
+		uint32_t i = 0;
+		do {
 			unsigned char *data_in_buf = (unsigned char *) malloc(sizeof(ENTRY_TABLE_NEW));
-			fseek(fp, phdrs[0].p_offset + 0xE4 + sizeof(ENTRY_TABLE_NEW) * i, SEEK_SET);
+			fseek(fp, phdrs[seg_num].p_offset + entries_start_offset + sizeof(ENTRY_TABLE_NEW) * i, SEEK_SET);
 			fread(data_in_buf, sizeof(ENTRY_TABLE_NEW), 1, fp);
-			ENTRY_TABLE_NEW *entry_table = (ENTRY_TABLE_NEW *)data_in_buf;
+			entry_table = (ENTRY_TABLE_NEW *)data_in_buf;
 			
-			printf("module_path_offset:    0x%X\n", entry_table->module_path_offset - ELF_BASE_VADDR);
-			printf("elf_offset:       0x%X\n", entry_table->elf_offset - ELF_BASE_VADDR);
+			if (pcff_mode) {
+				slide = *((uint32_t *)(data_in_buf)) & 0xFFFF0000;
+			}
 			
-			printf("elf size:     0x%X\n", entry_table->elf_size);
+			printf("path_offset:    0x%X\n", entry_table->path_offset - slide);
+			printf("file_offset:       0x%X\n", entry_table->file_offset - slide);
+			
+			printf("elf size:     0x%X\n", entry_table->file_size);
 			unsigned char *string_buf = (unsigned char *) malloc(MAX_PATH_BUFFER_SIZE);
-			fseek(fp, phdrs[0].p_offset + entry_table->module_path_offset - ELF_BASE_VADDR, SEEK_SET);
+			fseek(fp, phdrs[seg_num].p_offset + entry_table->path_offset - slide, SEEK_SET);
 			fread(string_buf, MAX_PATH_BUFFER_SIZE, 1, fp);
 			printf("module path:    %s\n", string_buf);
-			string_buf = (unsigned char *) (str_replace(string_buf, "os0:kd/", outdir));
-			string_buf = (unsigned char *) (str_replace(string_buf, ".skprx", ".elf"));
-			printf("output path:    %s\n", string_buf);
 			
-			FILE *fout = fopen(string_buf, "wb");
+			generateFolders(string_buf, outdir);
+			
+			unsigned char *string_buf_2 = (unsigned char *) malloc(MAX_PATH_BUFFER_SIZE);
+			
+			if (pcff_mode) {
+				snprintf(string_buf_2, MAX_PATH_BUFFER_SIZE, "%s%s", outdir, string_buf);
+			} else {
+				string_buf_2 = (unsigned char *) (str_replace(string_buf, "os0:kd/", outdir));
+				string_buf_2 = (unsigned char *) (str_replace(string_buf_2, ".skprx", ".elf"));
+			}
+			
 			free(string_buf);
-			fseek(fp, phdrs[0].p_offset + entry_table->elf_offset - ELF_BASE_VADDR, SEEK_SET);
-			unsigned char *elf_buffer = (unsigned char *) malloc(entry_table->elf_size);
-			fread(elf_buffer, entry_table->elf_size, 1, fp);
-			fwrite(elf_buffer, 1, entry_table->elf_size, fout);
+			printf("output path:    %s\n", string_buf_2);
+			FILE *fout = fopen(string_buf_2, "wb");
+			free(string_buf_2);
+			fseek(fp, phdrs[seg_num].p_offset + entry_table->file_offset - slide, SEEK_SET);
+			unsigned char *elf_buffer = (unsigned char *) malloc(entry_table->file_size);
+			fread(elf_buffer, entry_table->file_size, 1, fp);
+			fwrite(elf_buffer, 1, entry_table->file_size, fout);
+			free(elf_buffer);
 			fclose(fout);
 			
-			free(data_in_buf);
-			free(elf_buffer);
-		}
+			i++;
+			fseek(fp, phdrs[seg_num].p_offset + entries_start_offset + sizeof(ENTRY_TABLE_NEW) * i, SEEK_SET);
+			fread(data_in_buf, sizeof(ENTRY_TABLE_NEW), 1, fp);
+			entry_table = (ENTRY_TABLE_NEW *)data_in_buf;
+		} while(entry_table->path_offset != 0);
 	}
 	free(elf);
 	fclose(fp);
