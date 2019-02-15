@@ -110,14 +110,14 @@ int main(int argc, char **argv){
 		if (strcmp(argv[i], "-p") == 0) {
 			pcff_mode = 1;
 			seg_num = 1;
-			entries_start_offset = 0x90;
+			entries_start_offset = 0;
 		}
 	}
 	
 	rmdir(argv[2]);
 	mkdir(argv[2], 777);
 	char outdir[MAX_PATH_BUFFER_SIZE];
-	sprintf(outdir, "%s/", argv[2]);
+	sprintf(outdir, "%s", argv[2]);
 	
 	unsigned char *text_segment_chunk = (unsigned char *) malloc(TEXT_SEGMENT_CHUNK_SIZE);
 	fseek(fp, 0, SEEK_SET);
@@ -141,7 +141,7 @@ int main(int argc, char **argv){
 			printf("elf size:     0x%X\n", module_header->file_size);			
 			printf("module path:    %s\n", module_header->path);
 			unsigned char *string_buf = (unsigned char *) malloc(MAX_PATH_BUFFER_SIZE);
-			string_buf = (unsigned char *) (str_replace(module_header->path, "os0:kd/", outdir));
+			string_buf = (unsigned char *) (str_replace(module_header->path, "os0:kd", outdir));
 			string_buf = (unsigned char *) (str_replace(string_buf, ".skprx", ".elf"));
 			printf("output path:    %s\n", string_buf);
 			
@@ -158,41 +158,35 @@ int main(int argc, char **argv){
 			printf("next module offset:    0x%X\n", offset);
 			free(data_in_buf);
 		}
-	} else { // New bootimage format
+	} else { // New bootimage or pcff format
 		ENTRY_TABLE_NEW *entry_table;
 		uint32_t i = 0;
+		unsigned char *data_in_buf = (unsigned char *) malloc(sizeof(ENTRY_TABLE_NEW));
+		fseek(fp, phdrs[seg_num].p_offset + entries_start_offset + sizeof(ENTRY_TABLE_NEW) * i, SEEK_SET);
+		fread(data_in_buf, sizeof(ENTRY_TABLE_NEW), 1, fp);
+		entry_table = (ENTRY_TABLE_NEW *)data_in_buf;
+		if (pcff_mode)
+			slide = *((uint32_t *)(data_in_buf)) & 0xFFFF0000;
 		do {
-			unsigned char *data_in_buf = (unsigned char *) malloc(sizeof(ENTRY_TABLE_NEW));
-			fseek(fp, phdrs[seg_num].p_offset + entries_start_offset + sizeof(ENTRY_TABLE_NEW) * i, SEEK_SET);
-			fread(data_in_buf, sizeof(ENTRY_TABLE_NEW), 1, fp);
-			entry_table = (ENTRY_TABLE_NEW *)data_in_buf;
-			
-			if (pcff_mode) {
-				slide = *((uint32_t *)(data_in_buf)) & 0xFFFF0000;
-			}
-			
 			printf("path_offset:    0x%X\n", entry_table->path_offset - slide);
 			printf("file_offset:       0x%X\n", entry_table->file_offset - slide);
-			
 			printf("elf size:     0x%X\n", entry_table->file_size);
+			
 			unsigned char *string_buf = (unsigned char *) malloc(MAX_PATH_BUFFER_SIZE);
 			fseek(fp, phdrs[seg_num].p_offset + entry_table->path_offset - slide, SEEK_SET);
 			fread(string_buf, MAX_PATH_BUFFER_SIZE, 1, fp);
 			printf("module path:    %s\n", string_buf);
-			
 			generateFolders(string_buf, outdir);
-			
 			unsigned char *string_buf_2 = (unsigned char *) malloc(MAX_PATH_BUFFER_SIZE);
-			
-			if (pcff_mode) {
-				snprintf(string_buf_2, MAX_PATH_BUFFER_SIZE, "%s%s", outdir, string_buf);
-			} else {
-				string_buf_2 = (unsigned char *) (str_replace(string_buf, "os0:kd/", outdir));
+			if (pcff_mode)
+				snprintf(string_buf_2, MAX_PATH_BUFFER_SIZE, "%s/%s", outdir, string_buf);
+			else {
+				string_buf_2 = (unsigned char *) (str_replace(string_buf, "os0:kd", outdir));
 				string_buf_2 = (unsigned char *) (str_replace(string_buf_2, ".skprx", ".elf"));
 			}
-			
 			free(string_buf);
 			printf("output path:    %s\n", string_buf_2);
+			
 			FILE *fout = fopen(string_buf_2, "wb");
 			free(string_buf_2);
 			fseek(fp, phdrs[seg_num].p_offset + entry_table->file_offset - slide, SEEK_SET);
