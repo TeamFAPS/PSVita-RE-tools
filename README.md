@@ -91,7 +91,7 @@ A PSVita kernel plugin that allows more IO operations in userland. Fast, simpler
 
 Version 0.2 is much more inefficient, but supports decryption of files within devices that may open such as PFS devices. (WARNING THIS PLUGIN MAY BYPASS SAFE-MODE)
 
-physmem_dumper - by xyz
+physmem_dumper - by @xyzz
 ---
 A kernel plugin that dumps Non-Secure World (NS kernel + userland) memory using RAM physical range: from 0x40200000 to 0x5FD00000.
 
@@ -99,11 +99,11 @@ See wiki for more information on PSVita's physical memory: https://wiki.henkaku.
 
 The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
 
-kernel_bootimage_extract - by @CelesteBlue and @zecoxao
+kernel_bootimage_extract - by @CelesteBlue-dev and @zecoxao
 ---
-Extracts embedded kernel modules ELFs from bootimage.elf.
+Extracts embedded kernel modules ELFs from bootimage.elf or embedded ePSP flash files from pcff.elf.
 
-Kdumper - by @TheFloW and @CelesteBlue
+Kdumper - by @TheFloW and @CelesteBlue-dev
 ---
 A fSELF to run on an activated testkit/devkit on FW <=3.67 in order to dump its kernel !
 
@@ -381,6 +381,8 @@ The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA
 
 kernel_bootimage_extract usage
 ---
+
+#### PSVita kernel bootimage mode
 Obtain os0:/bootimage.elf using sceutils or FAGDec in ELF mode or by other means.
 
 Run:
@@ -388,6 +390,15 @@ Run:
 	./kernel_bootimage_extract bootimage.elf outdir
 
 Then you can look in the new folder named "outdir" that now embeds many .elf files.
+
+#### ePSP flash image mode
+Obtain vs0:/app/NPXS10028/pcff.elf using sceutils or FAGDec in ELF mode or by other means.
+
+Run:
+
+	./kernel_bootimage_extract pcff.elf outdir -p
+
+Then you can look in the new folder named "outdir" that now embeds ePSP flash files.
 
 --------------------------------------------------------------------------------
 
