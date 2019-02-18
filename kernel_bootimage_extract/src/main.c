@@ -8,7 +8,7 @@
 
 #define MAX_PATH_BUFFER_SIZE 256
 #define BOOTIMAGE_ELF_BASE_VADDR 0x81000000
-#define TEXT_SEGMENT_CHUNK_SIZE 0x400
+#define ELF_HEADER_CHUNK_SIZE 0x400
 
 typedef struct {
  uint32_t path_offset;
@@ -119,9 +119,9 @@ int main(int argc, char **argv){
 	char outdir[MAX_PATH_BUFFER_SIZE];
 	sprintf(outdir, "%s", argv[2]);
 	
-	unsigned char *text_segment_chunk = (unsigned char *) malloc(TEXT_SEGMENT_CHUNK_SIZE);
+	unsigned char *text_segment_chunk = (unsigned char *) malloc(ELF_HEADER_CHUNK_SIZE);
 	fseek(fp, 0, SEEK_SET);
-	fread(text_segment_chunk, TEXT_SEGMENT_CHUNK_SIZE, 1, fp);
+	fread(text_segment_chunk, ELF_HEADER_CHUNK_SIZE, 1, fp);
 	Elf32_Ehdr *elf = (Elf32_Ehdr *)text_segment_chunk;
 	Elf32_Phdr *phdrs = (Elf32_Phdr *) (text_segment_chunk + elf->e_phoff);
 	uint32_t text_seg_offset = phdrs[0].p_offset;
