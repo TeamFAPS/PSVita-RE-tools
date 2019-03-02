@@ -103,6 +103,10 @@ kernel_bootimage_extract - by @CelesteBlue-dev and @zecoxao
 ---
 Extracts embedded kernel modules ELFs from bootimage.elf or embedded ePSP flash files from pcff.elf.
 
+kbl_elf_extract - by @CelesteBlue-dev and @dots-tb
+---
+Extracts embedded secure kernel modules ELFs from kernel_boot_loader.elf.seg1.
+
 Kdumper - by @TheFloW and @CelesteBlue-dev
 ---
 A fSELF to run on an activated testkit/devkit on FW <=3.67 in order to dump its kernel !
@@ -399,6 +403,19 @@ Run:
 	./kernel_bootimage_extract pcff.elf outdir -p
 
 Then you can look in the new folder named "outdir" that now embeds ePSP flash files.
+
+--------------------------------------------------------------------------------
+
+kbl_elf_extract usage
+---
+
+Obtain kernel_boot_loader.elf.seg1 using sceutils.
+
+Run:
+
+	./kbl_elf_extract kernel_boot_loader.elf.seg1
+
+Then you can look in the current folder that now embeds the extracted secure kernel modules ELF files.
 
 --------------------------------------------------------------------------------
 
