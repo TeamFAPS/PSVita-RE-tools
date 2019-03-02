@@ -93,7 +93,7 @@ Version 0.2 is much more inefficient, but supports decryption of files within de
 
 physmem_dumper - by @xyzz
 ---
-A kernel plugin that dumps Non-Secure World (NS kernel + userland) memory using RAM physical range: from 0x40200000 to 0x5FD00000.
+A PSVita kernel plugin that dumps Non-Secure World (NS kernel + userland) memory using RAM physical range: from 0x40200000 to 0x5FD00000.
 
 See wiki for more information on PSVita's physical memory: https://wiki.henkaku.xyz/vita/Physical_Memory.
 
@@ -101,19 +101,23 @@ The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA
 
 kernel_bootimage_extract - by @CelesteBlue-dev and @zecoxao
 ---
-Extracts embedded kernel modules ELFs from bootimage.elf or embedded ePSP flash files from pcff.elf.
+A PC program that extracts embedded kernel modules ELFs from bootimage.elf or embedded ePSP flash files from pcff.elf.
 
 kbl_elf_extract - by @CelesteBlue-dev and @dots-tb
 ---
-Extracts embedded secure kernel modules ELFs from kernel_boot_loader.elf.seg1.
+A PC program that extracts embedded secure kernel modules ELFs from kernel_boot_loader.elf.seg1.
+
+unarzl - by @TeamMolecule
+---
+A PC program that extracts ARZL compressed file.
 
 Kdumper - by @TheFloW and @CelesteBlue-dev
 ---
-A fSELF to run on an activated testkit/devkit on FW <=3.67 in order to dump its kernel !
+A PSVita fSELF to run on an activated TestKit/DevKit on FW <=3.67 in order to dump its kernel !
 
 Confirmed working between 3.50 and 3.67. Will need some changes for lower FWs (sceMotionDevGetEvaInfo is only on FW >= 3.50).
 
-Credits: TheFloW for the kernel exploit, CelesteBlue for the many improvements, Mathieulh and LemonHaze for SceNgsUser code.
+Credits: TheFloW for the kernel exploits, CelesteBlue for the many improvements, Mathieulh and LemonHaze for SceNgsUser code.
 
 kdump-extract - by @dots-tb
 ---
@@ -416,6 +420,23 @@ Run:
 	./kbl_elf_extract kernel_boot_loader.elf.seg1
 
 Then you can look in the current folder that now embeds the extracted secure kernel modules ELF files.
+
+--------------------------------------------------------------------------------
+
+unarzl usage
+---
+
+Obtain a ARZL compressed file.
+
+Run:
+
+	./unarzl arzl_compressed_file.bin output_file.bin
+
+or simply:
+
+	./unarzl arzl_compressed_file.bin
+
+Then you can look in the current folder that now embeds the extracted file.
 
 --------------------------------------------------------------------------------
 
