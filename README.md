@@ -306,8 +306,8 @@ Arguments: <mode> <input>
         -b Bruteforce hex from shortcode
 No arguments = interactive
 ```
-In decode it simply looks up the shortcode for the provided hex string
-However, in bruteforce mode, it will try every hex code in the table until it finds a match takes about 2 seconds.
+In decode it simply looks up the shortcode for the provided hex string    
+However, in bruteforce mode, it will try every hex code in the table until it finds a match which takes about 2 seconds.      
 
 Example: ErrorResolver -b C2-9779-2
 would return 80102601 as this is the Hex code for C2-9779-2
