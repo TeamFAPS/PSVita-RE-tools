@@ -98,7 +98,8 @@ A PSVita kernel plugin that dumps Non-Secure World (NS kernel + userland) memory
 See wiki for more information on PSVita's physical memory: https://wiki.henkaku.xyz/vita/Physical_Memory.
 
 The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
-Error Resolver - by @SilicaAndPina and @Princess-of-Sleeping
+
+ErrorResolver - by @SilicaAndPina and @Princess-of-Sleeping
 ---
 A PC Program that can read the PSVita os0:/kd/error_table.bin
 
