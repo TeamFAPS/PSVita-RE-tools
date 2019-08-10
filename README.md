@@ -318,6 +318,7 @@ would return 80102601 as this is the Hex code for C2-9779-2
 Dependencies: none
 
 	make
+--------------------------------------------------------------------------------
 
 FAGDec usage
 ---
