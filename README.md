@@ -99,6 +99,10 @@ See wiki for more information on PSVita's physical memory: https://wiki.henkaku.
 
 The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
 
+ErrorResolver - by @SilicaAndPina and @Princess-of-Sleeping
+---
+A PC Program that can read the PSVita os0:/kd/error_table.bin
+
 kernel_bootimage_extract - by @CelesteBlue-dev and @zecoxao
 ---
 A PC program that extracts embedded kernel modules ELFs from bootimage.elf or embedded ePSP flash files from pcff.elf.
@@ -291,6 +295,30 @@ Dependencies: zlib
 	make
 
 --------------------------------------------------------------------------------
+ErrorResolver usage
+---
+### Usage: 
+* Requires os0:/kd/error_table.bin  to be present in the Working Directory.
+
+```
+Arguments: <mode> <input>
+        Modes:
+        -d Decode hex to shortcode
+        -b Bruteforce hex from shortcode
+No arguments = interactive
+```
+In decode it simply looks up the shortcode for the provided hex string    
+However, in bruteforce mode, it will try every hex code in the table until it finds a match which takes about 2 seconds.      
+
+Example: ErrorResolver -b C2-9779-2
+would return 80102601 as this is the Hex code for C2-9779-2
+
+### Building
+
+Dependencies: none
+
+	make
+--------------------------------------------------------------------------------
 
 FAGDec usage
 ---
@@ -479,4 +507,4 @@ or better:
 
 ## Further thanks
 
-zecoxao, xerpi, Team_molecule (yifanlu, Davee, Proxima, xyz), Hykem, St4rk, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys (yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad (wargio), SKFU, Vita3K, devnoname120, LemonHaze, SocraticBliss, PrincessOfSleeping, Sorvigolova, 173210, qwikrazor87, ColdBird
+zecoxao, xerpi, Team_molecule (yifanlu, Davee, Proxima, xyz), Hykem, St4rk, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys (yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad (wargio), SKFU, Vita3K, devnoname120, LemonHaze, SocraticBliss, PrincessOfSleeping, Sorvigolova, 173210, qwikrazor87, ColdBird, Princess of Sleeping
