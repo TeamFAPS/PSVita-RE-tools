@@ -1,14 +1,18 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <sys/stat.h>
+#include <sys/unistd.h>
 
 #include "elf.h"
 
 
-#define MAX_PATH_BUFFER_SIZE 256
+#define PATH_BUFFER_MAX_SIZE 256
 #define BOOTIMAGE_ELF_BASE_VADDR 0x81000000
 #define ELF_HEADER_CHUNK_SIZE 0x400
+
 
 typedef struct {
  uint32_t path_offset;
@@ -70,16 +74,16 @@ char *str_replace(char *orig, char *rep, char *with) {
 
 
 void generateFolders(const char *path, const char *dest_path) {
-	char temp_path[PATH_MAX];
+	char temp_path[PATH_BUFFER_MAX_SIZE];
 	strcpy(temp_path, path);
 	char *folder = (char *)&temp_path;
 	folder++;
-	char current_path[PATH_MAX];
+	char current_path[PATH_BUFFER_MAX_SIZE];
 	strcpy(current_path, dest_path);
 	char *end_path;
 	while ((end_path = strchr(folder, '/'))!= NULL) {
 		*end_path = 0;
-		snprintf(current_path, PATH_MAX, "%s/%s", current_path, folder);
+		snprintf(current_path, PATH_BUFFER_MAX_SIZE, "%s/%s", current_path, folder);
 		printf("Creating folder %s\n", current_path);
 
 		mkdir(current_path, 777);
@@ -87,36 +91,38 @@ void generateFolders(const char *path, const char *dest_path) {
 	}
 }
 
-int pcff_mode = 0;
+void print_usage(char *argv_0) {
+	printf("\n\nUsage: %s [-pcff] bootimage.elf outdir\n", argv_0);
+}
 
 int main(int argc, char **argv){
-	
 	if (argc < 3){
-		printf ("\nUsage: kernel_bootimage_extract.exe bootimage.elf outdir\n");
+		print_usage(argv[0]);
 		return -1;
 	}
 	
 	FILE *fp = fopen(argv[1], "rb");
 	if (fp <= 0) {
-		printf ("\nUsage: kernel_bootimage_extract.exe bootimage.elf outdir\n");
-		printf ("\nNo input file found !\n");
-		return -1;
+		printf ("\nNo input file found !\n\n");
+		print_usage(argv[0]);
+		return -2;
 	}
 	
+	_Bool pcff_mode = false;
 	uint32_t seg_num = 0;
-	uint32_t slide = BOOTIMAGE_ELF_BASE_VADDR;
 	uint32_t entries_start_offset = 0xE4;
 	for (int i=0; i<argc; i++) {
-		if (strcmp(argv[i], "-p") == 0) {
-			pcff_mode = 1;
+		if (strcmp(argv[i], "-pcff") == 0) {
+			pcff_mode = true;
 			seg_num = 1;
 			entries_start_offset = 0;
 		}
 	}
+	uint32_t slide = BOOTIMAGE_ELF_BASE_VADDR;
 	
 	rmdir(argv[2]);
 	mkdir(argv[2], 777);
-	char outdir[MAX_PATH_BUFFER_SIZE];
+	char outdir[PATH_BUFFER_MAX_SIZE];
 	sprintf(outdir, "%s", argv[2]);
 	
 	unsigned char *text_segment_chunk = (unsigned char *) malloc(ELF_HEADER_CHUNK_SIZE);
@@ -140,7 +146,7 @@ int main(int argc, char **argv){
 
 			printf("elf size:     0x%X\n", module_header->file_size);			
 			printf("module path:    %s\n", module_header->path);
-			unsigned char *string_buf = (unsigned char *) malloc(MAX_PATH_BUFFER_SIZE);
+			unsigned char *string_buf = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
 			string_buf = (unsigned char *) (str_replace(module_header->path, "os0:kd", outdir));
 			string_buf = (unsigned char *) (str_replace(string_buf, ".skprx", ".elf"));
 			printf("output path:    %s\n", string_buf);
@@ -172,14 +178,14 @@ int main(int argc, char **argv){
 			printf("file_offset:       0x%X\n", entry_table->file_offset - slide);
 			printf("elf size:     0x%X\n", entry_table->file_size);
 			
-			unsigned char *string_buf = (unsigned char *) malloc(MAX_PATH_BUFFER_SIZE);
+			unsigned char *string_buf = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
 			fseek(fp, phdrs[seg_num].p_offset + entry_table->path_offset - slide, SEEK_SET);
-			fread(string_buf, MAX_PATH_BUFFER_SIZE, 1, fp);
+			fread(string_buf, PATH_BUFFER_MAX_SIZE, 1, fp);
 			printf("module path:    %s\n", string_buf);
 			generateFolders(string_buf, outdir);
-			unsigned char *string_buf_2 = (unsigned char *) malloc(MAX_PATH_BUFFER_SIZE);
+			unsigned char *string_buf_2 = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
 			if (pcff_mode)
-				snprintf(string_buf_2, MAX_PATH_BUFFER_SIZE, "%s/%s", outdir, string_buf);
+				snprintf(string_buf_2, PATH_BUFFER_MAX_SIZE, "%s/%s", outdir, string_buf);
 			else {
 				string_buf_2 = (unsigned char *) (str_replace(string_buf, "os0:kd", outdir));
 				string_buf_2 = (unsigned char *) (str_replace(string_buf_2, ".skprx", ".elf"));
