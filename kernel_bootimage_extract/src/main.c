@@ -4,9 +4,12 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <sys/stat.h>
-#include <sys/unistd.h>
 
 #include "elf.h"
+
+#if (defined(_WIN32) || defined(__WIN32__))
+#define mkdir(A, B) mkdir(A)
+#endif
 
 
 #define PATH_BUFFER_MAX_SIZE 256
