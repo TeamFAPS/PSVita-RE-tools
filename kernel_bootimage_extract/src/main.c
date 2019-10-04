@@ -88,7 +88,6 @@ void generateFolders(const char *path, const char *dest_path) {
 		*end_path = 0;
 		snprintf(current_path, PATH_BUFFER_MAX_SIZE, "%s/%s", current_path, folder);
 		printf("Creating folder %s\n", current_path);
-
 		mkdir(current_path, 777);
 		folder = end_path + 1;
 	}
@@ -103,14 +102,14 @@ int main(int argc, char **argv){
 		print_usage(argv[0]);
 		return -1;
 	}
-	
+
 	FILE *fp = fopen(argv[1], "rb");
 	if (fp <= 0) {
 		printf ("\nNo input file found !\n\n");
 		print_usage(argv[0]);
 		return -2;
 	}
-	
+
 	_Bool pcff_mode = false;
 	uint32_t seg_num = 0;
 	uint32_t entries_start_offset = 0xE4;
@@ -122,12 +121,12 @@ int main(int argc, char **argv){
 		}
 	}
 	uint32_t slide = BOOTIMAGE_ELF_BASE_VADDR;
-	
+
 	rmdir(argv[2]);
 	mkdir(argv[2], 777);
 	char outdir[PATH_BUFFER_MAX_SIZE];
 	sprintf(outdir, "%s", argv[2]);
-	
+
 	unsigned char *text_segment_chunk = (unsigned char *) malloc(ELF_HEADER_CHUNK_SIZE);
 	fseek(fp, 0, SEEK_SET);
 	fread(text_segment_chunk, ELF_HEADER_CHUNK_SIZE, 1, fp);
@@ -137,23 +136,23 @@ int main(int argc, char **argv){
 	printf("Text segment offset: %x\n", text_seg_offset);
 	uint32_t bootimage_text_segment_size = *(uint32_t *)(text_segment_chunk + text_seg_offset + 0xC0) - slide;
 	printf("bootimage text segment size:    0x%X\n", bootimage_text_segment_size);
-	
+
 	if (bootimage_text_segment_size ==  phdrs[0].p_filesz) { // Old bootimage format
 		uint32_t offset = *(uint32_t *)(text_segment_chunk + text_seg_offset + 0xC4) - slide;
 		printf("embedded modules start offset:    0x%X\n", offset);
 		while ((text_seg_offset + offset) < bootimage_text_segment_size){
 			unsigned char *data_in_buf = (unsigned char *) malloc(sizeof(MODULE_HEADER_OLD));
 			fseek(fp, text_seg_offset + offset, SEEK_SET);
-			fread(data_in_buf, sizeof(MODULE_HEADER_OLD), 1, fp);	
+			fread(data_in_buf, sizeof(MODULE_HEADER_OLD), 1, fp);
 			MODULE_HEADER_OLD* module_header = (MODULE_HEADER_OLD *)data_in_buf;
 
-			printf("elf size:     0x%X\n", module_header->file_size);			
-			printf("module path:    %s\n", module_header->path);
+			printf("elf size: 0x%X\n", module_header->file_size);
+			printf("module path: %s\n", module_header->path);
 			unsigned char *string_buf = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
 			string_buf = (unsigned char *) (str_replace(module_header->path, "os0:kd", outdir));
 			string_buf = (unsigned char *) (str_replace(string_buf, ".skprx", ".elf"));
-			printf("output path:    %s\n", string_buf);
-			
+			printf("output path: %s\n", string_buf);
+
 			FILE *fout = fopen(string_buf, "wb");
 			free(string_buf);
 			unsigned char *elf_buffer = (unsigned char *) malloc(module_header->file_size);
@@ -162,9 +161,9 @@ int main(int argc, char **argv){
 			fwrite(elf_buffer, 1, module_header->file_size, fout);
 			fclose(fout);
 			free(elf_buffer);
-			
+
 			offset += (sizeof(MODULE_HEADER_OLD) + module_header->file_size);
-			printf("next module offset:    0x%X\n", offset);
+			printf("next module offset: 0x%X\n", offset);
 			free(data_in_buf);
 		}
 	} else { // New bootimage or pcff format
@@ -180,7 +179,7 @@ int main(int argc, char **argv){
 			printf("path_offset:    0x%X\n", entry_table->path_offset - slide);
 			printf("file_offset:       0x%X\n", entry_table->file_offset - slide);
 			printf("elf size:     0x%X\n", entry_table->file_size);
-			
+
 			unsigned char *string_buf = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
 			fseek(fp, phdrs[seg_num].p_offset + entry_table->path_offset - slide, SEEK_SET);
 			fread(string_buf, PATH_BUFFER_MAX_SIZE, 1, fp);
@@ -195,7 +194,7 @@ int main(int argc, char **argv){
 			}
 			free(string_buf);
 			printf("output path:    %s\n", string_buf_2);
-			
+
 			FILE *fout = fopen(string_buf_2, "wb");
 			free(string_buf_2);
 			fseek(fp, phdrs[seg_num].p_offset + entry_table->file_offset - slide, SEEK_SET);
@@ -204,7 +203,7 @@ int main(int argc, char **argv){
 			fwrite(elf_buffer, 1, entry_table->file_size, fout);
 			free(elf_buffer);
 			fclose(fout);
-			
+
 			i++;
 			fseek(fp, phdrs[seg_num].p_offset + entries_start_offset + sizeof(ENTRY_TABLE_NEW) * i, SEEK_SET);
 			fread(data_in_buf, sizeof(ENTRY_TABLE_NEW), 1, fp);
@@ -213,6 +212,6 @@ int main(int argc, char **argv){
 	}
 	free(elf);
 	fclose(fp);
-	
+
 	return 0;
 }
