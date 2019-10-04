@@ -79,9 +79,9 @@ int main(int argc, char **argv){
 	}
 
 	char path[PATH_BUFFER_MAX_SIZE];
-	uint32_t size = 0;
 
 	for (uint32_t offset = 0; offset < filesize; ++offset) {
+		uint32_t size = 0;
 		Elf32_Ehdr *elf = (void *)buffer + offset;
 		if (!memcmp(elf->e_ident, "\177ELF\1\1\1", 8)) {
 			printf("Found ELF at 0x%X\n", offset);
@@ -106,7 +106,7 @@ int main(int argc, char **argv){
 			snprintf(path, PATH_BUFFER_MAX_SIZE, "%s.elf", mod_info->name);
 			extract_file(path, offset, size);
 		} else if (!strncmp((char *)(buffer+offset), "ARZL", 4)) {
-			printf("Found ARZL compressed data @%x\n", offset);
+			printf("Found ARZL compressed data at 0x%X\n", offset);
 			snprintf(path, PATH_BUFFER_MAX_SIZE, "arzl_compressed_data_0x%X.bin", offset);
 			size = filesize - offset;
 			extract_file(path, offset, size);
