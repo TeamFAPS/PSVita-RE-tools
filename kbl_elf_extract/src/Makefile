@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=
+CFLAGS=-static -Os -s
 LDFLAGS=
 SOURCES=main.c
 EXECUTABLE=kbl_elf_extract
