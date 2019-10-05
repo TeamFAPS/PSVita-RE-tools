@@ -85,30 +85,39 @@ int main(int argc, char **argv){
 		Elf32_Ehdr *elf = (void *)buffer + offset;
 		if (!memcmp(elf->e_ident, "\177ELF\1\1\1", 8)) {
 			printf("Found ELF at 0x%X\n", offset);
+			
+			//Get module info
 			sceModuleInfo_common *mod_info;
 			if (elf->e_entry) {
 				Elf32_Phdr *phdrs = (void *)buffer + offset + elf->e_phoff;
 				mod_info = (void *)buffer + offset + phdrs[0].p_offset + elf->e_entry;
-				for (int i = 0; i < elf->e_phnum; ++i)
-					size += phdrs[i].p_filesz;
 			} else {
 				if (elf->e_shnum > 0) {
 					Elf32_Shdr *shdrs = (void *)buffer + offset + elf->e_shoff;
 					for (int i = 0; i < elf->e_shnum; i++) {
 						char *sh_name = (void *)buffer + offset + shdrs[elf->e_shstrndx].sh_offset + shdrs[i].sh_name;
-						if (!strcmp(".sceModuleInfo.rodata", sh_name)) {
+						if (!strcmp(".sceModuleInfo.rodata", sh_name))
 							mod_info = (void *)buffer + offset + shdrs[i].sh_offset;
-						}
 					}
-					size = shdrs[elf->e_shnum - 1].sh_offset + shdrs[elf->e_shnum - 1].sh_size;
 				}
 			}
+			
+			// Get ELF size
+			if (elf->e_shnum > 0) {
+				Elf32_Shdr *shdrs = (void *)buffer + offset + elf->e_shoff;
+				size = shdrs[elf->e_shnum - 1].sh_offset + shdrs[elf->e_shnum - 1].sh_size;
+			} else {
+				Elf32_Phdr *phdrs = (void *)buffer + offset + elf->e_phoff;
+				for (int i = 0; i < elf->e_phnum; ++i)
+					size += phdrs[i].p_filesz;
+			}
+			
 			snprintf(path, PATH_BUFFER_MAX_SIZE, "%s.elf", mod_info->name);
 			extract_file(path, offset, size);
 		} else if (!strncmp((char *)(buffer+offset), "ARZL", 4)) {
 			printf("Found ARZL compressed data at 0x%X\n", offset);
 			snprintf(path, PATH_BUFFER_MAX_SIZE, "arzl_compressed_data_0x%X.bin", offset);
-			size = filesize - offset;
+			size = filesize - offset; // Since size is unknown, better too much than not enough
 			extract_file(path, offset, size);
 		}
 	}
