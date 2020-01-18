@@ -155,6 +155,7 @@ PrincessLog Usage
 	3. Add net_logging_mgr.skprx to your config.txt
 	4. Run NetDbgLogPc.exe
 	5. Reboot.
+	Note: If the plugin is already installed and you wish to update the configuration, you may use Update Configuration (along with saving it) without rebooting your system.
 	
 In the application you wish to log use:
 
