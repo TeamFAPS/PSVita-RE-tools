@@ -164,6 +164,10 @@ QAF Settings:
 
 	There is options to make more verbose logs used in QA. You can enable these in the manager app.
 	
+Note:
+	While being much faster than ShipLog, if there is massive amounts of logs the logger may not be able to process them completely and will freeze (ex: taiHEN hexdump). This is unlikely in normal usage.
+
+	
 ### Building:
 
 	Each application must built individually with cmake.
