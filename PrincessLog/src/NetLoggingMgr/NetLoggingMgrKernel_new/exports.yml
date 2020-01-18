@@ -1,0 +1,17 @@
+NetLoggingMgr:
+  attributes: 0
+  version:
+    major: 1
+    minor: 0
+  main:
+    start: module_start
+  modules:
+    NetLoggingMgrForKernel:
+      syscall: false
+      functions:
+        - NetLoggingMgrLoadConfigForKernel
+    NetLoggingMgr:
+      syscall: true
+      functions:
+        - NetLoggingMgrReadConfig
+        - NetLoggingMgrUpdateConfig

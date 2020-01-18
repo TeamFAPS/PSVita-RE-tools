@@ -19,7 +19,13 @@ These tools are solely used to aid in homebrew / plugins / hacks development. It
 
 ## Description of the tools
 
-ShipLog v2.0 - by @dots-tb
+Codename PrincessLog - by @Princess-of-Sleeping 
+---
+A complete logging solution for any homebrew, user plugin, kernel plugin. It is more efficient and overall nicer than ShipLog. It is Windows only atm.
+	
+* Credits: Princess-of-Sleeping 
+
+ShipLog v2.0 - by @dots-tb 
 ---
 A complete logging solution for any homebrew, user plugin, kernel plugin. It can use network or file logging.
 
@@ -139,7 +145,33 @@ Some lists of functions names / NIDs / libraries / modules to be used with vitad
 
 ## Using the Tools
 
-ShipLog v2.0 usage
+PrincessLog Usage
+---
+
+### Usage:
+
+	1. Install NetLoggingMgrSettings.vpk.
+	2. Launch the application and configure your settings. Be sure to save.
+	3. Add net_logging_mgr.skprx to your config.txt
+	4. Run NetDbgLogPc.exe
+	5. Reboot.
+	
+In the application you wish to log use:
+
+	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
+
+QAF Settings:
+
+	There is options to make more verbose logs used in QA. You can enable these in the manager app.
+	
+### Building:
+
+	Each application must built individually with cmake.
+	When building the kernel plugin, use "make install" to automatically install the stubs. This must be done before building the manager app.
+	The PC app does not have a dependency on order.
+	
+
+ShipLog v2.0 usage (Please use PrincessLog unless you are sadly on Linux)
 ---
 
 ### Usage:

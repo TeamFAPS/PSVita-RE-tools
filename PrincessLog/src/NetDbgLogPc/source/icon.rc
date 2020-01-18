@@ -1,0 +1,3 @@
+#include "icon.h"
+
+ICO1 ICON DISCARDABLE "icon0.ico"
