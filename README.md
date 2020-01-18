@@ -25,7 +25,7 @@ A complete logging solution for any homebrew, user plugin, kernel plugin. It is 
 	
 * Credits: Princess-of-Sleeping 
 
-ShipLog v2.0 - by @dots-tb 
+ShipLog v2.0 - by @dots-tb (Obsolete, use PrincessLog) 
 ---
 A complete logging solution for any homebrew, user plugin, kernel plugin. It can use network or file logging.
 
@@ -154,6 +154,7 @@ PrincessLog Usage
 	2. Launch the application and configure your settings. Be sure to save.
 	3. Add net_logging_mgr.skprx to your config.txt
 	4. Run NetDbgLogPc.exe
+	4.5. To use on linux, cuevavirus has provided the following netcat command:
 	5. Reboot.
 	Note: If the plugin is already installed and you wish to update the configuration, you may use Update Configuration (along with saving it) without rebooting your system.
 	
@@ -176,7 +177,7 @@ Note:
 	The PC app does not have a dependency on order.
 	
 
-ShipLog v2.0 usage (Please use PrincessLog unless you are sadly on Linux)
+ShipLog v2.0 usage (Obsolete - Please use PrincessLog)
 ---
 
 ### Usage:
