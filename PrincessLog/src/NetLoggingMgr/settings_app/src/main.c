@@ -22,8 +22,8 @@
 #include "debugScreen.h"
 #include "gxm.h"
 
-#include "../../common/NetLoggingMgrInternal.h"
-#include "../../common/NetLoggingMgr.h"
+#include "NetLoggingMgrInternal.h"
+#include "NetLoggingMgr.h"
 
 NetLoggingMgrConfig_t NetLoggingMgrConfig;
 

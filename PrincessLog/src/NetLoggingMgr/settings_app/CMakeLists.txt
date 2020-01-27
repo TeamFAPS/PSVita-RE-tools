@@ -1,25 +1,11 @@
-cmake_minimum_required(VERSION 2.8)
-
-if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  if(DEFINED ENV{VITASDK})
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
-  else()
-    message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
-  endif()
-endif()
-
-set(SHORT_NAME eboot)
-project(NetLoggingMgrSettings)
-include("${VITASDK}/share/vita.cmake" REQUIRED)
-
+set(ELF net_logging_mgr_settings.elf)
+set(SELF eboot.bin)
+set(VPK NetLoggingMgrSettings.vpk)
 set(VITA_APP_NAME "NetLoggingMgr Settings")
 set(VITA_TITLEID  "NLMS00000")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -O3 -std=gnu99")
 
-
-# Builds
 function(ADD_RESOURCES out_var)
   set(result)
   foreach(in_f ${ARGN})
@@ -29,7 +15,7 @@ function(ADD_RESOURCES out_var)
       COMMAND ${CMAKE_COMMAND} -E make_directory ${out_dir}
       COMMAND ${CMAKE_LINKER} -r -b binary -o ${out_f} ${in_f}
       DEPENDS ${in_f}
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       COMMENT "Building resource ${out_f}"
       VERBATIM
       )
@@ -38,17 +24,20 @@ function(ADD_RESOURCES out_var)
   set(${out_var} "${result}" PARENT_SCOPE)
 endfunction()
 
-file(GLOB res_files RELATIVE ${CMAKE_SOURCE_DIR} *.gxp)
+file(GLOB res_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.gxp)
 add_resources(gxp_res ${res_files})
 
-add_executable(${PROJECT_NAME}
+add_executable("${ELF}"
   ${gxp_res}
   src/main.c
   src/gxm.c
 )
 
-target_link_libraries(${PROJECT_NAME}
- # ${CMAKE_CURRENT_BINARY_DIR}/../NetLoggingMgrKernel_new/stubs/libNetLoggingMgr_stub.a
+target_include_directories("${ELF}"
+  PRIVATE "${CMAKE_SOURCE_DIR}/include"
+)
+
+target_link_libraries("${ELF}"
   NetLoggingMgr_stub
   taihen_stub
   SceDisplay_stub
@@ -62,11 +51,14 @@ target_link_libraries(${PROJECT_NAME}
   SceVshBridge_stub
 )
 
-vita_create_self(eboot.bin ${PROJECT_NAME}
+vita_create_self("${SELF}"
+  "${ELF}"
   UNSAFE
 )
 
-vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} eboot.bin
-  VERSION ${VITA_VERSION}
-  NAME ${VITA_APP_NAME}
+vita_create_vpk("${VPK}"
+  "${VITA_TITLEID}"
+  "${SELF}"
+  VERSION "${VITA_VERSION}"
+  NAME "${VITA_APP_NAME}"
 )

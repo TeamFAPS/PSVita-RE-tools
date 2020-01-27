@@ -13,7 +13,7 @@
 
 #include <stdarg.h>
 
-#include "../../common/NetLoggingMgrInternal.h"
+#include "NetLoggingMgrInternal.h"
 
 #define HookImport(module_name, library_nid, func_nid, func_name) taiHookFunctionImportForKernel(KERNEL_PID, &func_name ## _ref, module_name, library_nid, func_nid, func_name ## _patch)
 
