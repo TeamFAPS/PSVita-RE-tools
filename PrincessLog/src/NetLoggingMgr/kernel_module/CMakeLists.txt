@@ -8,6 +8,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -nostdlib")
 
 add_executable("${ELF}"
   src/main.c
+  src/ringbuf.c
 )
 
 target_include_directories("${ELF}"
@@ -15,6 +16,8 @@ target_include_directories("${ELF}"
 )
 
 target_link_libraries("${ELF}"
+  gcc
+
   taihenForKernel_stub
   taihenModuleUtils_stub
   SceSysmemForDriver_stub
