@@ -183,7 +183,7 @@ int net_thread(SceSize args, void *argp){
 
 	while(net_thread_run){
 		char buf[0x400];
-		int received_len = ringbuf_get(buf, sizeof(buf));
+		int received_len = ringbuf_get_wait(buf, sizeof(buf));
 
 		if (received_len > 0) {
 
@@ -208,8 +208,6 @@ int net_thread(SceSize args, void *argp){
 			ksceNetClose(net_sock);
 			net_sock = 0;
 		}
-
-		ksceKernelDelayThread(50 * 1000);
 	}
 
 	return 0;
