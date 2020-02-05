@@ -64,7 +64,6 @@ static uint32_t NetLoggingMgrFlags = 0;
 static int net_thread_run = 0;
 static SceUID net_thread_uid = 0;
 
-static int net_sock = 0;
 static SceNetSockaddrIn server;
 
 int (* sceKernelGetModuleListForKernel)(SceUID pid, int flags1, int flags2, SceUID *modids, size_t *num);
@@ -169,10 +168,35 @@ end:
 
 int ksceNetShutdown(int s, int how);
 
-int net_thread(SceSize args, void *argp){
+static int net_connect(void) {
+	int net_sock;
 
-	int ret = 0;
+socket:
+	net_sock = ksceNetSocket("NetLoggingTCP", SCE_NET_AF_INET, SCE_NET_SOCK_STREAM, 0);
+	if (net_sock < 0) {
+		goto socket_error;
+	}
 
+	int timeout = 5 * 1000 * 1000;
+	ksceNetSetsockopt(net_sock, SCE_NET_SOL_SOCKET, SCE_NET_SO_SNDTIMEO, &timeout, sizeof(timeout));
+
+	if (ksceNetConnect(net_sock, (SceNetSockaddr*)&server, sizeof(server)) == 0) {
+		return net_sock;
+	}
+	ksceNetShutdown(net_sock, SCE_NET_SHUT_RDWR);
+
+socket_error:
+	ksceNetClose(net_sock);
+	ksceKernelDelayThread(1000 * 1000);
+	goto socket;
+}
+
+static void net_close(int net_sock) {
+	ksceNetShutdown(net_sock, SCE_NET_SHUT_RDWR);
+	ksceNetClose(net_sock);
+}
+
+static int net_thread(SceSize args, void *argp){
 	if(NetLoggingMgrFlags & NLM_BIT_DELAY_NET_THREAD){
 		ksceKernelDelayThread(8 * 1000 * 1000);
 	}
@@ -184,30 +208,28 @@ int net_thread(SceSize args, void *argp){
 	while(net_thread_run){
 		char buf[0x400];
 		int received_len = ringbuf_get_wait(buf, sizeof(buf));
-
-		if (received_len > 0) {
-
-			net_sock = ksceNetSocket("NetLogging", SCE_NET_AF_INET, SCE_NET_SOCK_STREAM, 0);
-			if(net_sock < 0){
-				goto socket_error;
-			}
-
-		//connect_continue:
-
-			ret = ksceNetConnect(net_sock, (SceNetSockaddr *)&server, sizeof(server));
-			if(ret < 0){
-				//goto connect_continue;
-				goto connect_error;
-			}
-			ksceNetSend(net_sock, buf, received_len, 0);
-
-		connect_error:
-			ksceNetShutdown(net_sock, SCE_NET_SHUT_RDWR);
-
-		socket_error:
-			ksceNetClose(net_sock);
-			net_sock = 0;
+		if (received_len == 0) {
+			continue;
 		}
+
+		int net_sock;
+
+	connect:
+		net_sock = net_connect();
+
+	send:
+		if (ksceNetSend(net_sock, buf, received_len, 0) < 0) {
+			net_close(net_sock);
+			ksceKernelDelayThread(1000 * 1000);
+			goto connect;
+		}
+
+		received_len = ringbuf_get(buf, sizeof(buf));
+		if (received_len > 0) {
+			goto send;
+		}
+
+		net_close(net_sock);
 	}
 
 	return 0;
