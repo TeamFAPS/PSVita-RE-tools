@@ -197,9 +197,13 @@ int ringbuf_get(char *c, int size) {
 	return n_get;
 }
 
-int ringbuf_get_wait(char *c, int size) {
+int ringbuf_get_wait(char *c, int size, SceUInt *timeout) {
 	int n_get = 0;
-	ksceKernelWaitEventFlag(evf_uid, RINGBUF_EVF_NON_EMPTY, SCE_KERNEL_EVF_WAITMODE_AND, NULL, NULL);
+	int ret = ksceKernelWaitEventFlag(evf_uid,
+		RINGBUF_EVF_NON_EMPTY, SCE_KERNEL_EVF_WAITMODE_AND, NULL, timeout);
+	if (ret < 0) {
+		goto done;
+	}
 	ksceKernelLockMutex(mtx_uid, 1, NULL);
 
 	while (size-- > 0) {
@@ -215,5 +219,6 @@ int ringbuf_get_wait(char *c, int size) {
 	}
 
 	ksceKernelUnlockMutex(mtx_uid, 1);
+done:
 	return n_get;
 }

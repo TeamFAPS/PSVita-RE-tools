@@ -207,7 +207,7 @@ static int net_thread(SceSize args, void *argp){
 
 	while(net_thread_run){
 		char buf[0x400];
-		int received_len = ringbuf_get_wait(buf, sizeof(buf));
+		int received_len = ringbuf_get_wait(buf, sizeof(buf), NULL);
 		if (received_len == 0) {
 			continue;
 		}
@@ -224,7 +224,7 @@ static int net_thread(SceSize args, void *argp){
 			goto connect;
 		}
 
-		received_len = ringbuf_get(buf, sizeof(buf));
+		received_len = ringbuf_get_wait(buf, sizeof(buf), (SceUInt[]){1000 * 1000});
 		if (received_len > 0) {
 			goto send;
 		}
