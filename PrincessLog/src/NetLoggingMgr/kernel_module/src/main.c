@@ -1,3 +1,21 @@
+/*
+PSVita RE Tools: NetLoggingMgr aka PrincessLog
+Copyright (C) 2020 Princess of Sleeping
+Copyright (C) 2020 Asakura Reiko
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include <psp2kern/kernel/cpu.h>
 #include <psp2kern/kernel/modulemgr.h>
 #include <psp2kern/kernel/sysmem.h>
@@ -13,7 +31,8 @@
 
 #include <stdarg.h>
 
-#include "../../common/NetLoggingMgrInternal.h"
+#include "NetLoggingMgrInternal.h"
+#include "ringbuf.h"
 
 #define HookImport(module_name, library_nid, func_nid, func_name) taiHookFunctionImportForKernel(KERNEL_PID, &func_name ## _ref, module_name, library_nid, func_nid, func_name ## _patch)
 
@@ -34,34 +53,17 @@
 #define GetOffset(modid, segidx, offset, func_p) \
 	module_get_offset(KERNEL_PID, modid, segidx, offset, (uintptr_t *)func_p)
 
-#define LOG_BLOCK_SIZE			0x400
-#define LOG_BLOCK_MAX_NUM		0x40
-#define LOG_BLOCK_MAX_STRLEN		(LOG_BLOCK_SIZE - 1)
-
 #define NLM_BIT_INIT			(1 << 0)
 #define NLM_BIT_DELAY_NET_THREAD	(1 << 1)
 #define NLM_BIT_CONFIG_LOADED		(1 << 2)
 
-typedef struct {
-	uint32_t send_flag;
-	char *send_buf_p;
-} log_data_t;
-
-static log_data_t log_data[LOG_BLOCK_MAX_NUM];
-
-static int current_log_block_num = 0;
-static char *pLogBlockBase = NULL;
+#define RINGBUF_LEN 0x2000
 
 static uint32_t NetLoggingMgrFlags = 0;
-
-static SceUID sysmem_uid = 0;
-
-SceUID ev_flag_uid;
 
 static int net_thread_run = 0;
 static SceUID net_thread_uid = 0;
 
-static int net_sock = 0;
 static SceNetSockaddrIn server;
 
 int (* sceKernelGetModuleListForKernel)(SceUID pid, int flags1, int flags2, SceUID *modids, size_t *num);
@@ -111,104 +113,19 @@ unsigned int My_ksceNetInetPton(unsigned char ip1, unsigned char ip2, unsigned c
 	return ip;
 }
 
-void *GetCurrentLogBlock(void){
-	return (void *)(pLogBlockBase + (LOG_BLOCK_SIZE * current_log_block_num));
-}
-
-int SetNextLogBlockNum(void){
-
-	log_data[current_log_block_num].send_flag = 1;
-	log_data[current_log_block_num].send_buf_p = GetCurrentLogBlock();
-
-	current_log_block_num++;
-
-	if(current_log_block_num >= (LOG_BLOCK_MAX_NUM - 1)){
-		current_log_block_num = 0;
-	}
-
-	ksceKernelSetEventFlag(ev_flag_uid, 1);
-
-	return current_log_block_num;
-}
-
-void SendCurrentLogBlock(void){
-
-	if(log_data[current_log_block_num].send_flag)
-		return;
-
-	log_data[current_log_block_num].send_flag = 1;
-	log_data[current_log_block_num].send_buf_p = GetCurrentLogBlock();
-
-	ksceKernelSetEventFlag(ev_flag_uid, 1);
-
-}
-
-int GetCurrentLogBlockFreeSizeForKernel(void){
-	return LOG_BLOCK_MAX_STRLEN - strnlen(GetCurrentLogBlock(), LOG_BLOCK_MAX_STRLEN);
-}
-
 // userland printf
 int UserDebugPrintfCallback(void *args, char c){
-
-	char *LogBuf;
-	size_t current_block_strlen;
-
-	LogBuf = (char *)GetCurrentLogBlock();
-
-	current_block_strlen = strnlen(LogBuf, LOG_BLOCK_MAX_STRLEN);
-
-	if(current_block_strlen == LOG_BLOCK_MAX_STRLEN){
-
-		SetNextLogBlockNum();
-		current_block_strlen = 0;
-		LogBuf = (char *)GetCurrentLogBlock();
-
-	}
-
-	*(char *)(LogBuf + current_block_strlen) = c;
-
-	SendCurrentLogBlock();
-
+	ringbuf_put_clobber(&c, 1);
 	return 0;
 }
 
 int KernelDebugPrintfCallback(int unk, const char *fmt, const va_list args){
-
-	char string[0x200];
-	char *pString;
-	char *LogBuf;
-
-	int cpy_size;
-	int free_size;
-	int len;
-
-	pString = (char *)&string;
-
-	len = vsnprintf(pString, (sizeof(string) - 1), fmt, args);
-
-	while(len > 0){
-
-		free_size = GetCurrentLogBlockFreeSizeForKernel();
-
-		if(free_size == 0){
-			SetNextLogBlockNum();
-			free_size = GetCurrentLogBlockFreeSizeForKernel();
-		}
-
-		cpy_size = (len > free_size) ? free_size : len;
-
-		LogBuf = (char *)GetCurrentLogBlock();
-		LogBuf += strnlen(LogBuf, LOG_BLOCK_MAX_STRLEN);
-
-		memcpy(LogBuf, pString, cpy_size);
-
-		len -= cpy_size;
-		pString += cpy_size;
-
-		SendCurrentLogBlock();
-
-	}
-
+	char buf[0x400];
+	int buf_len = sizeof(buf);
+	int len = vsnprintf(buf, buf_len, fmt, args);
+	len = len < 0 ? 0 : len;
+	len = len >= buf_len ? buf_len - 1 : len;
+	ringbuf_put_clobber(buf, len);
 	return 0;
 }
 
@@ -244,25 +161,6 @@ end:
 	return ret;
 }
 
-int LogWaitForKernel(){
-
-	int i = 0;
-
-	while(net_thread_run){
-
-		ksceKernelWaitEventFlag(ev_flag_uid, 3, SCE_EVENT_WAITOR | SCE_EVENT_WAITCLEAR_PAT, NULL, NULL);
-
-		for(i=0;i<LOG_BLOCK_MAX_NUM;i++){
-			if(log_data[i].send_flag){
-				goto end;
-			}
-		}
-	}
-
-end:
-	return i;
-}
-
 /* flags for sceNetShutdown */
 #define SCE_NET_SHUT_RD             0
 #define SCE_NET_SHUT_WR             1
@@ -270,10 +168,35 @@ end:
 
 int ksceNetShutdown(int s, int how);
 
-int net_thread(SceSize args, void *argp){
+static int net_connect(void) {
+	int net_sock;
 
-	int i = 0, ret = 0;
+socket:
+	net_sock = ksceNetSocket("NetLoggingTCP", SCE_NET_AF_INET, SCE_NET_SOCK_STREAM, 0);
+	if (net_sock < 0) {
+		goto socket_error;
+	}
 
+	int timeout = 5 * 1000 * 1000;
+	ksceNetSetsockopt(net_sock, SCE_NET_SOL_SOCKET, SCE_NET_SO_SNDTIMEO, &timeout, sizeof(timeout));
+
+	if (ksceNetConnect(net_sock, (SceNetSockaddr*)&server, sizeof(server)) == 0) {
+		return net_sock;
+	}
+	ksceNetShutdown(net_sock, SCE_NET_SHUT_RDWR);
+
+socket_error:
+	ksceNetClose(net_sock);
+	ksceKernelDelayThread(1000 * 1000);
+	goto socket;
+}
+
+static void net_close(int net_sock) {
+	ksceNetShutdown(net_sock, SCE_NET_SHUT_RDWR);
+	ksceNetClose(net_sock);
+}
+
+static int net_thread(SceSize args, void *argp){
 	if(NetLoggingMgrFlags & NLM_BIT_DELAY_NET_THREAD){
 		ksceKernelDelayThread(8 * 1000 * 1000);
 	}
@@ -283,41 +206,30 @@ int net_thread(SceSize args, void *argp){
 	ksceDebugPrintf("\n");
 
 	while(net_thread_run){
-
-		i = LogWaitForKernel();
-
-		for(;i<LOG_BLOCK_MAX_NUM;i++){
-			if(log_data[i].send_flag == 0){
-				continue;
-			}
-
-			net_sock = ksceNetSocket("NetLogging", SCE_NET_AF_INET, SCE_NET_SOCK_STREAM, 0);
-			if(net_sock < 0){
-				goto socket_error;
-			}
-
-		//connect_continue:
-
-			ret = ksceNetConnect(net_sock, (SceNetSockaddr *)&server, sizeof(server));
-			if(ret < 0){
-				//goto connect_continue;
-				goto connect_error;
-			}
-
-			ksceNetSend(net_sock, log_data[i].send_buf_p, strnlen(log_data[i].send_buf_p, LOG_BLOCK_MAX_STRLEN), 0);
-
-		connect_error:
-			ksceNetShutdown(net_sock, SCE_NET_SHUT_RDWR);
-
-		socket_error:
-			ksceNetClose(net_sock);
-
-			net_sock = 0;
-
-			memset(log_data[i].send_buf_p, 0, LOG_BLOCK_SIZE);
-			log_data[i].send_flag = 0;
-			log_data[i].send_buf_p = NULL;
+		char buf[0x400];
+		int received_len = ringbuf_get_wait(buf, sizeof(buf), NULL);
+		if (received_len == 0) {
+			continue;
 		}
+
+		int net_sock;
+
+	connect:
+		net_sock = net_connect();
+
+	send:
+		if (ksceNetSend(net_sock, buf, received_len, 0) < 0) {
+			net_close(net_sock);
+			ksceKernelDelayThread(1000 * 1000);
+			goto connect;
+		}
+
+		received_len = ringbuf_get_wait(buf, sizeof(buf), (SceUInt[]){1000 * 1000});
+		if (received_len > 0) {
+			goto send;
+		}
+
+		net_close(net_sock);
 	}
 
 	return 0;
@@ -463,14 +375,11 @@ int NetLoggingMgrFinish(void){
 
 	HookRelease(hook_uid[0x00], SceQafMgrForDriver_382C71E8);
 
-	if(sysmem_uid > 0){
-		ksceKernelFreeMemBlock(sysmem_uid);
-		sysmem_uid = 0;
-	}
-
 	sceDebugSetHandlersForKernel(0, 0);
 
 	sceDebugRegisterPutcharHandlerForKernel(0, 0);
+
+	ringbuf_term();
 
 	NetLoggingMgrFlags &= ~NLM_BIT_INIT;
 
@@ -494,17 +403,10 @@ int NetLoggingMgrInit(void){
 		goto end;
 	}
 
-	sysmem_uid = ksceKernelAllocMemBlock("LogBuf", 0x6020D006, (((LOG_BLOCK_SIZE * LOG_BLOCK_MAX_NUM) + 0xFFF) & ~0xFFF), NULL);
-	if(sysmem_uid < 0){
-		ret = sysmem_uid;
+	ret = ringbuf_init(RINGBUF_LEN);
+	if (ret < 0) {
 		goto end;
 	}
-
-	ksceKernelGetMemBlockBase(sysmem_uid, (void **)&pLogBlockBase);
-
-
-
-
 
 	if(GetExport("SceKernelModulemgr", 0xC445FA63, 0x97CF7B4E, &sceKernelGetModuleListForKernel) < 0)
 	if(GetExport("SceKernelModulemgr", 0x92C9FFC2, 0xB72C75A4, &sceKernelGetModuleListForKernel) < 0){
@@ -560,8 +462,6 @@ int NetLoggingMgrInit(void){
 	if(sceKernelSysrootGetShellPidForDriver() < 0){		// Enso user
 		NetLoggingMgrFlags |= NLM_BIT_DELAY_NET_THREAD;
 	}
-
-	ev_flag_uid = ksceKernelCreateEventFlag("NetLogFlag", SCE_EVENT_WAITMULTIPLE, 0, NULL);
 
 	net_thread_uid = ksceKernelCreateThread("net_thread", net_thread, 0x40, 0x1000, 0, 0, 0);
 	if(net_thread_uid < 0){
