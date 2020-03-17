@@ -21,7 +21,7 @@ These tools are solely used to aid in homebrew / plugins / hacks development. It
 
 Codename PrincessLog - by @Princess-of-Sleeping 
 ---
-A complete logging solution for any homebrew, user plugin, kernel plugin. It is more efficient and overall nicer than ShipLog. It is Windows only atm.
+A complete logging solution for any homebrew, user plugin, kernel plugin. It is more efficient and overall nicer than ShipLog.
 	
 * Credits: Princess-of-Sleeping 
 
@@ -150,13 +150,13 @@ PrincessLog Usage
 
 ### Usage:
 
-	1. Install NetLoggingMgrSettings.vpk.
-	2. Launch the application and configure your settings. Be sure to save.
-	3. Add net_logging_mgr.skprx to your config.txt
-	4. Run NetDbgLogPc.exe
-	4.5. To use on linux, cuevavirus has provided the following netcat command:
-	5. Reboot.
-	Note: If the plugin is already installed and you wish to update the configuration, you may use Update Configuration (along with saving it) without rebooting your system.
+1. Install NetLoggingMgrSettings.vpk.
+2. Launch the application and configure your settings. Be sure to save.
+3. Add net_logging_mgr.skprx to your config.txt
+4. Run NetDbgLogPc.exe
+	- To use on other platforms, use netcat or similar. Example netcat command: `nc -kl -w 3 8080`.
+5. Reboot.
+Note: If the plugin is already installed and you wish to update the configuration, you may use Update Configuration (along with saving it) without rebooting your system.
 	
 In the application you wish to log use:
 
