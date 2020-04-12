@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-static -Os -s
 LDFLAGS=
-SOURCES=main.c
+SOURCES=main.c unarzl.c
 EXECUTABLE=kbl_elf_extract
 
 all:
