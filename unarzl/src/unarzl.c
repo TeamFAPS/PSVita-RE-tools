@@ -3,8 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int arzl_decompress(unsigned char *buffer, unsigned int buflen, const unsigned char *input, const unsigned char **endptr)
-{
+int arzl_decompress(unsigned char *buffer, unsigned int buflen, const unsigned char *input, const unsigned char **endptr) {
 #define LOBYTE(x) (*(uint8_t *)&x)
   unsigned char *v5; // r5@1
   unsigned char v6; // r11@1
@@ -121,7 +120,7 @@ int arzl_decompress(unsigned char *buffer, unsigned int buflen, const unsigned c
     v10 = -1;
     for ( v11 = 0; v8 != v5; *v20 = v22 )
     {
-      v12 = (v9 & 0xFFFFF8FF) | (((uint8_t)v8 & 7) << 8);
+      v12 = (v9 & 0xFFFFF8FF) | (((uint8_t)((uint64_t)v8 & 7)) << 8);
       v9 = 1;
       v13 = &v109[255 * ((v12 >> v6) & 7)];
       do
@@ -211,7 +210,7 @@ int arzl_decompress(unsigned char *buffer, unsigned int buflen, const unsigned c
           goto LABEL_82;
         }
 LABEL_32:
-        v36 = &v109[32 * v28 | 8 * (((uint32_t)v8 << v28) & 3) | (v11 & 7)];
+        v36 = &v109[32 * v28 | 8 * (((uint32_t)((uint64_t)v8) << v28) & 3) | (v11 & 7)];
         v104 = v28 - 3;
         v37 = (uint8_t)v36[2984];
         if ( !(v10 >> 24) )
@@ -616,8 +615,7 @@ LABEL_83:
   return v7;
 }
 
-int arzl_deobfuscate(unsigned char *buffer, int len, int version)
-{
+int arzl_deobfuscate(unsigned char *buffer, int len, int version) {
   unsigned char *buf; // r3@1
   unsigned char *bufend; // r12@1
   unsigned int data; // t1@3 MAPDST
@@ -706,99 +704,24 @@ LABEL_13:
   return len;
 }
 
-int main(int argc, const char *argv[])
-{
-  FILE *input;
-  FILE *output;
-  long int size;
-  long int count;
-  char *inbuf;
-  char *outbuf;
-  int outlen;
-  int len;
-  int ret;
-
-  input = output = NULL;
-  inbuf = outbuf = NULL;
-  ret = 1;
-  if (argc < 2)
-  {
-    fprintf(stderr, "usage: %s input [output]\n", argv[0]);
-    return 1;
-  }
-
-  if ((input = fopen(argv[1], "rb")) == NULL)
-  {
-    perror("input");
-    goto error;
-  }
-
-  if (argc > 2) {
-	if ((output = fopen(argv[2], "wb")) == NULL) {
-		perror("output");
-		goto error;
-	}
-  } else if ((output = fopen("uncompressed_data.bin", "wb")) == NULL) {
-	  	perror("output");
-		goto error;
-  }
-
-  fseek(input, 0, SEEK_END);
-  if ((size = ftell(input)) < 0)
-  {
-    perror("input");
-    goto error;
-  }
-  fseek(input, 0, SEEK_SET);
-
-  if ((inbuf = malloc(size)) == NULL)
-  {
-    perror("memory");
-    goto error;
-  }
-  outlen = (int)size;
-
-  count = 0;
-  while ((count = fread(inbuf+count, sizeof(char), size, input)) < size)
-  {
-    if (count < 0)
-    {
-      perror("read");
-      goto error;
-    }
-    size -= count;
-  }
-
-  do
-  {
-    outlen *= 2; // resize buffer
-    outbuf = realloc(outbuf, outlen);
-    len = arzl_decompress((uint8_t *)outbuf, outlen, (uint8_t *)inbuf+4, NULL);
+void *unarzl(const void *inbuf, uint32_t *size) {
+  void *ret = 0;
+  uint8_t * outbuf = NULL;
+  uint32_t len;
+  uint32_t max_len = *size;
+  do {
+    max_len *= 2; // resize buffer
+    outbuf = realloc(outbuf, max_len);
+    len = arzl_decompress((uint8_t *)outbuf, max_len, (uint8_t *)inbuf+4, NULL);
   } while (len == 0x80560201); // out of space
-
-  if (len < 0)
-  {
+  if (len < 0) {
     fprintf(stderr, "Error decompressing: 0x%08X\n", len);
     goto error;
   }
   arzl_deobfuscate((uint8_t *)outbuf, len, 2);
-
-  count = 0;
-  while ((count = fwrite(outbuf+count, sizeof(char), len, output)) < len)
-  {
-    if (count < 0)
-    {
-      perror("write");
-      goto error;
-    }
-    len -= count;
-  }
-
-  ret = 0;
+  *size = len;
+  return outbuf;
 error:
   free(outbuf);
-  free(inbuf);
-  fclose(output);
-  fclose(input);
   return ret;
 }
