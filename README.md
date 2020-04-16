@@ -19,11 +19,20 @@ These tools are solely used to aid in homebrew / plugins / hacks development. It
 
 ## Description of the tools
 
+Princess Silly Mini Log USB (PSMLogUSB) - by dots_tb
+---
+A modified version of PrincessLog to use the USB serial drivers provided by the PSM SDK. This allows for serial stdout without hardware modification.
+
+* Credits: dots_tb, SilicaAndPina (idea), Sysie
+
+* Req: Yifan Lu, SonicMastr, teakhanirons
+
+
 Codename PrincessLog - by @Princess-of-Sleeping 
 ---
 A complete logging solution for any homebrew, user plugin, kernel plugin. It is more efficient and overall nicer than ShipLog.
 	
-* Credits: Princess-of-Sleeping 
+* Credits: Princess-of-Sleeping, cuevavirus
 
 ShipLog v2.0 - by @dots-tb (Obsolete, use PrincessLog) 
 ---
@@ -144,7 +153,42 @@ Some lists of functions names / NIDs / libraries / modules to be used with vitad
 --------------------------------------------------------------------------------
 
 ## Using the Tools
+Princess Silly Mini Log USB Usage
+---
 
+### Usage:
+
+1. Install PSM Usb Serial Drivers. 
+2. Add PSMLogUSB.skprx to your config.txt and reboot.
+3. Open your favorite serial monitoring program and set the correct COM port. Set the baudrate to 57600.
+	
+In the application you wish to log use:
+
+	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
+	
+Note:
+
+	PSMUSBLog will try to end any other USB service, except the the one used in VitaShell for Usb Mass Storage(UMS) mounting. So this will naturally create incompatibilities with plugins such as vita-udcd-uvc.
+	
+	When using UMS, the serial will be interrupted, however will auto-start up after the UMS service has ended.
+
+	The serial device will also be disconnected on reboot and will only restart until the plugin is re-initialized (usually right when Taihen launches)
+	
+Serial Monitoring Programs:
+
+	You may use any serial monitor program. However, because of the constant reconnecting, I'd recommend kiTTY. <http://www.9bis.net/kitty/#!pages/download.md>
+	
+	This program allows easy auto reconnect (Connection > Attempt to reconnect on connection failure)
+	
+	You may also want to enable newline mode: (Terminal > Implicit CR in every LF)
+	
+	Finally, to find your COM number, look at the "Device Manager" in Windows. It will be under "Ports (COM & LPT)"
+	
+Why use PrincessLog over this:
+
+	If you are working with USB or are using a Linux dev enviroment (have not checked if Linux has drivers), you may still want to consider PrincessLog.
+
+	
 PrincessLog Usage
 ---
 
