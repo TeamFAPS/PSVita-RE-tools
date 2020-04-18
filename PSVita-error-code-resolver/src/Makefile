@@ -1,19 +1,17 @@
-TARGET = ErrorResolver
-
-OBJS = ErrorResolver.o
-
+TARGET = PSVita-error-code-resolver
+OBJS = main.o
 LIBS = 
+CFLAGS = -static -Os -s -Wall -Wextra -std=c99 -static-libgcc
 
-CFLAGS = -s -static -Wall -Wextra -std=c99
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	@echo "Creating binary $(TARGET)"
-	$(CXX) $(OBJS) -o $@ $(LIBS)  -static -static-libgcc
+	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LIBS)
 
 %.o: %.cpp
 	@echo "Compiling $^"
-	$(CXX) $(CFLAGS) -c $^ -o $@ -static -static-libgcc 
+	$(CXX) $(CFLAGS) -c $^ -o $@ $(LIBS)
 
 clean:
 	@echo "Removing all the .o files"
