@@ -19,6 +19,13 @@ These tools are solely used to aid in homebrew / plugins / hacks development. It
 
 ## Description of the tools
 
+noASLR - by Princess-of-Sleeping
+---
+Disable a Address Space Layout Randomization of PS Vita
+
+* Credits: Princess-of-Sleeping
+
+
 Princess Silly Mini Log USB (PSMLogUSB) - by dots_tb
 ---
 A modified version of PrincessLog to use the USB serial drivers provided by the PSM SDK. This allows for serial stdout without hardware modification.
@@ -153,6 +160,15 @@ Some lists of functions names / NIDs / libraries / modules to be used with vitad
 --------------------------------------------------------------------------------
 
 ## Using the Tools
+
+noASLR Usage
+---
+
+### Usage:
+1. Add noaslr.skprx to your config.txt and reboot.
+2. Most modules map to a fixed address, making development easier
+3. enjoy
+
 Princess Silly Mini Log USB Usage
 ---
 
