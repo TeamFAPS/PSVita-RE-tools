@@ -1,5 +1,5 @@
 //
-// ioPlus 0.1 -- by @dots-tb @SonicMastrYT
+// ioPlus 0.1 -- by @dots-tb @BigBlackOniiSan
 // Non-threaded, fast, and simplistic io elevation for user plugins and applications
 // WARNING -- USE AT OWN RISK, it obviously elevates IO of all aplications
 //
