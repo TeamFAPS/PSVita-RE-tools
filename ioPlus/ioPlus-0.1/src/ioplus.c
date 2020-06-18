@@ -1,5 +1,5 @@
 //
-// ioPlus 0.1 -- by @dots-tb
+// ioPlus 0.1 -- by @dots-tb @SonicMastrYT
 // Non-threaded, fast, and simplistic io elevation for user plugins and applications
 // WARNING -- USE AT OWN RISK, it obviously elevates IO of all aplications
 //
@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include <vitasdkkern.h>
+#include <dolcesdkkern.h>
 #include <taihen.h>
 
 #define printf ksceDebugPrintf
@@ -15,19 +15,30 @@
 static int hook = -1;
 static tai_hook_ref_t ref_hook;
 
-static int sceFiosKernelOverlayResolveSyncForDriver_patched(SceUID pid, int resolveFlag, const char *pInPath, char *pOutPath, size_t maxPath) {
+typedef struct mount_point_overlay{
+  uint8_t type;
+  uint8_t order;
+  uint16_t dst_len;
+  uint16_t src_len;
+  uint32_t PID;
+  uint32_t mountId;
+  char dst[292];
+  char src[292];
+} mount_point_overlay;
+
+static int sceFiosKernelOverlayAddForProcessForDriver_patched(uint32_t pid, mount_point_overlay *overlay, uint32_t *outID) {
 	int ret, state;
 	ENTER_SYSCALL(state);
-	ret = TAI_CONTINUE(int, ref_hook, pid, resolveFlag, pInPath, pOutPath, maxPath);
-	if(memcmp("invalid", pOutPath, sizeof("invalid") - 1) == 0)
-		strncpy(pOutPath, pInPath, maxPath);
+	if(memcmp("invalid:", overlay->src, sizeof("invalid:") - 1)==0)
+		strncpy(overlay->src, overlay->dst, sizeof(overlay->src));
+	ret = TAI_CONTINUE(int, ref_hook, pid, overlay, outID);
 	EXIT_SYSCALL(state);
 	return ret;
 }	
 void _start() __attribute__ ((weak, alias ("module_start")));
 int module_start(SceSize argc, const void *args)
 {
-	hook = taiHookFunctionExportForKernel(KERNEL_PID, &ref_hook, "SceFios2Kernel", TAI_ANY_LIBRARY, 0x0F456345, sceFiosKernelOverlayResolveSyncForDriver_patched);
+	hook = taiHookFunctionExportForKernel(KERNEL_PID, &ref_hook, "SceFios2Kernel", TAI_ANY_LIBRARY, 0x17E65A1C, sceFiosKernelOverlayAddForProcessForDriver_patched);
 	return SCE_KERNEL_START_SUCCESS;
 }
 
