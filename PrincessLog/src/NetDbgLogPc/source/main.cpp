@@ -48,6 +48,9 @@ int main(int argc, char* argv[]){
 		return 0;
 	}
 
+	DWORD timeout = 5000;
+	setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+
 	memset(&reader_addr, 0, sizeof(reader_addr));
 
 	reader_addr.sin_family = AF_INET;
@@ -78,18 +81,19 @@ int main(int argc, char* argv[]){
 	}
 
 	while(1){
-
-		memset(&buf, 0, sizeof(buf));
-
 		new_sockfd = accept(sockfd,(struct sockaddr *)&writer_addr, &writer_len);
 
 		if(new_sockfd < 0){
 			break;
 		}
 
-		recv(new_sockfd, (char*)buf, sizeof(buf), 0);
+		int received = 0;
 
-		printf("%s", buf);
+		do {
+			memset(buf, 0x00, sizeof(buf));
+			received = recv(new_sockfd, buf, sizeof(buf) - 1, 0);
+			printf("%s", buf);
+		} while (received > 0);
 
 		closesocket(new_sockfd);
 	}
