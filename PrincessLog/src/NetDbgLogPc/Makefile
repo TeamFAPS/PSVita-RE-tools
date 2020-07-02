@@ -14,12 +14,13 @@ OBJ_FILES := $(patsubst %.c,%.o,$(C_FILES)) $(patsubst %.cpp,%.o,$(CPP_FILES))
 CC = $(GCC_PREFIX)gcc
 CXX = $(GCC_PREFIX)g++
 LD = $(GCC_PREFIX)gcc
+WINDRES = $(GCC_PREFIX)windres
 
 all: $(TARGET).exe
 
 $(TARGET).exe: $(OBJ_FILES)
 	@echo Creating icon resource file...
-	@windres source/icon.rc -O coff -o icon.res
+	@$(WINDRES) source/icon.rc -O coff -o icon.res
 	@echo Linking object files...
 	$(LD) -o $@ $(LDARGS) $^ icon.res $(LIBS)
 
