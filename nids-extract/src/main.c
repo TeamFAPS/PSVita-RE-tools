@@ -19,8 +19,17 @@ void getExports(SceModuleInfo *mod_info, uint8_t *segment0, uint32_t vaddr, uint
 			char *lib_name = (char *)(segment0 + exp_table->lib_name - vaddr);
 			uint32_t *nid_table = (uint32_t *)(segment0 + exp_table->nid_table - vaddr);	
 			if (exp_table->lib_name) {
+				int is_kernel = 0;
+				int lib_name_len = strlen(lib_name);
+				if (lib_name_len >= 9) {
+					char *suffix = lib_name + lib_name_len - 9;
+					if (0 == strcmp(suffix, "ForDriver") || 0 == strcmp(suffix, "ForKernel")) {
+						is_kernel = 1;
+					}
+				}
+
 				printf("      %s:\n", lib_name);
-				printf("        kernel: %s\n", (exp_table->attribute&0x4000) ? "false" : "true");
+				printf("        kernel: %s\n", is_kernel ? "true" : "false");
 				printf("        nid: 0x%08X\n", exp_table->module_nid);
 				printf("        functions:\n");
 				for (int j = 0; j < exp_table->num_functions; j++) {
