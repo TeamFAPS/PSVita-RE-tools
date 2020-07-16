@@ -213,10 +213,9 @@ PrincessLog Usage
 1. Install NetLoggingMgrSettings.vpk.
 2. Launch the application and configure your settings. Be sure to save.
 3. Add net_logging_mgr.skprx to your config.txt
-4. Run NetDbgLogPc.exe <port>
+4. Run `NetDbgLogPc.exe <port>`
+	- NOTE: If no port is specified, 8080 will be used by default.
 	- To use on other platforms, use netcat or similar. Example netcat command: `nc -kl -w 3 <port>`.
-	
-	NOTE: If no port is specified, 8080 will be used by default.
 5. Reboot.
 Note: If the plugin is already installed and you wish to update the configuration, you may use Update Configuration (along with saving it) without rebooting your system.
 	
