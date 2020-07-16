@@ -39,13 +39,13 @@ target_link_libraries("${ELF}"
   SceDebugForDriver_stub
 )
 
-vita_create_self("${SELF}"
+dolce_create_self("${SELF}"
   "${ELF}"
   CONFIG exports.yml
   UNSAFE
 )
 
-vita_create_stubs(stubs
+dolce_create_stubs(stubs
   "${ELF}"
   exports.yml
   KERNEL

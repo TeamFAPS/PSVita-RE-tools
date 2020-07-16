@@ -70,11 +70,12 @@ void WaitKeyPress(){
 
 int CallImeDialog(SceImeDialogParam *param){
 	int ret;
-
+	
+	param->sdkVersion = 0x03150021,
 	ret = sceImeDialogInit(param);
 
 	if(ret < 0){
-		sceClibPrintf("show dialog failed!\n");
+		sceClibPrintf("show dialog failed!: %x\n", ret);
 		return ret;
 	}
 
@@ -127,6 +128,54 @@ static void utf16_to_utf8(const uint16_t *src, uint8_t *dst) {
   *dst = '\0';
 }
 
+int SetServerPort(void){
+
+	int res;
+	char ServerPortStrUtf8[6];
+	uint16_t ServerPortStr[6];
+
+	SceImeDialogParam param;
+	sceClibMemset(&param, 0, sizeof(param)); 
+	sceImeDialogParamInit(&param);
+	
+	param.title = u"Enter Server Port (ex:8080)";
+	param.maxTextLength = (sizeof(ServerPortStr)/2)-1;
+	param.initialText = u"";
+	param.inputTextBuffer = ServerPortStr;
+	param.type = SCE_IME_TYPE_NUMBER;
+	res = CallImeDialog(&param);
+	utf16_to_utf8((const uint16_t *)&ServerPortStr, (uint8_t *)&ServerPortStrUtf8);
+
+	psvDebugScreenClear(COLOR_DEFAULT_BG);
+	psvDebugScreenSet();
+	
+	if(res < 0){ 
+		psvDebugScreenPrintf("Error : CallImeDialog failed: %x\n", res);
+		goto end;
+	}
+
+	NetLoggingMgrConfig.port = atoi(ServerPortStrUtf8);
+
+	if(NetLoggingMgrConfig.port < 1 || NetLoggingMgrConfig.port > UINT16_MAX){ //lol idk?
+		psvDebugScreenPrintf("Error : Invalid Port.\n");
+		goto end;
+	}
+
+	psvDebugScreenPrintf("Set Server Port : Success.\n");
+
+end:
+
+	psvDebugScreenPrintf("\n");
+	psvDebugScreenPrintf("please key press\n");
+
+	ReadPad();
+	WaitKeyPress();
+	ReadPad();
+	swap_fb();
+
+	return res;
+}
+
 int SetServerIPv4(void){
 
 	int res;
@@ -134,19 +183,24 @@ int SetServerIPv4(void){
 	uint16_t ServerIPv4Str[16];
 
 	SceImeDialogParam param;
-
 	sceClibMemset(&param, 0, sizeof(param));
+	sceImeDialogParamInit(&param);
 
 	param.title = u"Enter Server IPv4 (ex:192.168.0.6)";
 	param.maxTextLength = (sizeof(ServerIPv4Str)/2)-1;
 	param.initialText = u"";
 	param.inputTextBuffer = ServerIPv4Str;
-
-	CallImeDialog(&param);
+	param.type = SCE_IME_TYPE_EXTENDED_NUMBER;
+	res = CallImeDialog(&param);
 
 	psvDebugScreenClear(COLOR_DEFAULT_BG);
 	psvDebugScreenSet();
-
+	
+	if(res < 0){ 
+		psvDebugScreenPrintf("Error : CallImeDialog failed: %x\n", res);
+		goto end;
+	}
+	
 	utf16_to_utf8((const uint16_t *)&ServerIPv4Str, (uint8_t *)&ServerIPv4StrUtf8);
 
 	res = sceNetInetPton(SCE_NET_AF_INET, ServerIPv4StrUtf8, &NetLoggingMgrConfig.IPv4);
@@ -570,7 +624,7 @@ end:
 int MainMenu(){
 
 	int sel = 0;
-	int sel_max = 6;
+	int sel_max = 7;
 	int sel_idx = 0;
 	int set_idx = 0;
 	MenuItem_t MenuItem[sel_max];
@@ -586,6 +640,7 @@ int MainMenu(){
 	menu_item_init();
 
 	add_menu_item(&MenuItem[set_idx++], "Set Server IPv4");
+	add_menu_item(&MenuItem[set_idx++], "Set Server Port");
 	add_menu_item(&MenuItem[set_idx++], "Qaf Settings");
 	add_menu_item(&MenuItem[set_idx++], "Update Config");
 	add_menu_item(&MenuItem[set_idx++], "Save Config");
@@ -595,6 +650,7 @@ int MainMenu(){
 	set_idx = 0;
 
 	set_item_callback(&MenuItem[set_idx++], SetServerIPv4);
+	set_item_callback(&MenuItem[set_idx++], SetServerPort);
 	set_item_callback(&MenuItem[set_idx++], QafSettings);
 	set_item_callback(&MenuItem[set_idx++], UpdateConfig);
 	set_item_callback(&MenuItem[set_idx++], SaveConfig);

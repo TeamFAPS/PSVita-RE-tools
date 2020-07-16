@@ -51,12 +51,12 @@ target_link_libraries("${ELF}"
   SceVshBridge_stub
 )
 
-vita_create_self("${SELF}"
+dolce_create_self("${SELF}"
   "${ELF}"
   UNSAFE
 )
 
-vita_create_vpk("${VPK}"
+dolce_create_vpk("${VPK}"
   "${VITA_TITLEID}"
   "${SELF}"
   VERSION "${VITA_VERSION}"

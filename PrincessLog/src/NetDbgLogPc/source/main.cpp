@@ -11,7 +11,7 @@
 #include <winsock2.h>
 
 
-
+#define DEFAULT_PORT 8080
 
 char *name;
 	int sockfd;
@@ -23,7 +23,8 @@ char *name;
 
 	struct sockaddr_in writer_addr;
 	int writer_len = sizeof(writer_addr);
-
+	
+	int port = DEFAULT_PORT;
 int main(int argc, char* argv[]){
 
 	int number;
@@ -57,8 +58,15 @@ int main(int argc, char* argv[]){
 
 	reader_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	//reader_addr.sin_addr.s_addr = inet_addr("255.255.255.255");
-
-	reader_addr.sin_port = htons(8080);
+	
+	
+	
+	if(argc > 1)
+		port = atoi(argv[1]);
+	else
+		port = DEFAULT_PORT;
+	printf("setting port to: %i\n", port);
+	reader_addr.sin_port = htons(port);
 
 	if(bind(sockfd, (struct sockaddr *)&reader_addr, sizeof(reader_addr)) < 0){
 

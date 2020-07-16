@@ -276,7 +276,8 @@ int NetLoggingMgrUpdateConfig(NetLoggingMgrConfig_t *new_config){
 	}
 
 	server.sin_addr.s_addr = NetLoggingMgrConfig.IPv4;
-
+	server.sin_port = ksceNetHtons(NetLoggingMgrConfig.port ? NetLoggingMgrConfig.port : DEFAULT_PORT);
+	
 	res = 0;
 
 end:
@@ -317,7 +318,7 @@ int NetLoggingMgrLoadConfigForKernel(void){
 	server.sin_len = sizeof(server);
 	server.sin_family = SCE_NET_AF_INET;
 
-	server.sin_port = ksceNetHtons(8080);
+
 
 	memset(server.sin_zero, 0, sizeof(server.sin_zero));
 
@@ -341,7 +342,8 @@ int NetLoggingMgrLoadConfigForKernel(void){
 	}
 
 	server.sin_addr.s_addr = NetLoggingMgrConfig.IPv4;
-
+	server.sin_port = ksceNetHtons(NetLoggingMgrConfig.port ? NetLoggingMgrConfig.port : DEFAULT_PORT);
+	
 	res = 0;
 
 	NetLoggingMgrFlags |= NLM_BIT_CONFIG_LOADED;
@@ -499,7 +501,7 @@ int module_start(SceSize argc, const void *args){
 
 	ret = NetLoggingMgrInit();
 	if(ret < 0){
-		return SCE_KERNEL_START_NO_RESIDENT;
+		//return SCE_KERNEL_START_NO_RESIDENT;
 		//return SCE_KERNEL_START_FAILED;
 	}
 
