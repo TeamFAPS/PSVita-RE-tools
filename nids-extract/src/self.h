@@ -158,8 +158,9 @@ typedef struct {
 	uint16_t lib_version;
 	uint16_t attribute;
 	uint16_t num_functions;
-	uint32_t num_vars;
-	uint32_t num_tls_vars;
+	uint16_t num_vars;
+	uint16_t num_tls_vars;
+	uint32_t unknown;
 	uint32_t module_nid;
 	uint32_t lib_name;
 	uint32_t nid_table;

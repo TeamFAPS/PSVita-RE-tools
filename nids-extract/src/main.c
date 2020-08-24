@@ -31,10 +31,31 @@ void getExports(SceModuleInfo *mod_info, uint8_t *segment0, uint32_t vaddr, uint
 				printf("      %s:\n", lib_name);
 				printf("        kernel: %s\n", is_kernel ? "true" : "false");
 				printf("        nid: 0x%08X\n", exp_table->module_nid);
-				printf("        functions:\n");
-				for (int j = 0; j < exp_table->num_functions; j++) {
-					uint32_t nid = nid_table[j];
-					printf("          %s_%08X: 0x%08X\n", lib_name, nid, nid);
+
+				int j = 0;
+
+				if (exp_table->num_functions > 0) {
+					printf("        functions:\n");
+					for (int k = 0; k < exp_table->num_functions; k++) {
+						uint32_t nid = nid_table[j++];
+						printf("          %s_%08X: 0x%08X\n", lib_name, nid, nid);
+					}
+				}
+
+				if (exp_table->num_vars > 0) {
+					printf("        variables:\n");
+					for (int k = 0; k < exp_table->num_vars; k++) {
+						uint32_t nid = nid_table[j++];
+						printf("          %s_%08X: 0x%08X\n", lib_name, nid, nid);
+					}
+				}
+
+				if (exp_table->num_tls_vars > 0) {
+					printf("        tls-variables:\n");
+					for (int k = 0; k < exp_table->num_tls_vars; k++) {
+						uint32_t nid = nid_table[j++];
+						printf("          %s_%08X: 0x%08X\n", lib_name, nid, nid);
+					}
 				}
 			}
 		}/* else 
