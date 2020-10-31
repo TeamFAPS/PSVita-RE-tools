@@ -1,5 +1,5 @@
 NoASLR:
-  attributes: 0
+  attributes: 6
   version:
     major: 1
     minor: 0
