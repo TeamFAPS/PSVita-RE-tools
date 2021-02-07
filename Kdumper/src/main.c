@@ -306,10 +306,10 @@ int leak_sysmem_ngsuser(uint32_t kstack_addr) {
 }
 
 int leak_kstack_motiondev() {
-	uint32_t ret;
+	int ret;
 	
 	// 1) Call a function that writes sp to kernel stack
-	ret = sceAppMgrLoadExec(NULL, NULL, NULL);
+	sceAppMgrLoadExec(NULL, NULL, NULL);
 	//printf("appmgr works ;)\n");
 	//sceKernelDelayThread(10 * 1000 * 1000);
 
@@ -323,10 +323,10 @@ int leak_kstack_motiondev() {
 }
 
 int leak_sysmem_motiondev() {
-	uint32_t ret;
+	int ret;
 	
 	// 1) Call a function that writes sp to kernel stack
-	ret = sceAppMgrLoadExec(NULL, NULL, NULL);
+	sceAppMgrLoadExec(NULL, NULL, NULL);
 	//printf("appmgr works ;)\n");
 	//sceKernelDelayThread(10 * 1000 * 1000);
 
