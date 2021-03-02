@@ -6,20 +6,12 @@
 #include <psp2kern/kernel/modulemgr.h>
 #include <psp2kern/kernel/sysclib.h>
 #include <psp2kern/kernel/debug.h>
+#include <psp2kern/kernel/rtc.h>
 #include <psp2kern/sblacmgr.h>
 #include <psp2kern/sblaimgr.h>
 #include <taihen.h>
 
 int module_get_export_func(SceUID pid, const char *modname, uint32_t libnid, uint32_t funcnid, uintptr_t *func);
-
-int ksceRtcSetCurrentTick(SceUInt64 *tick);
-int ksceRtcGetCurrentTick(SceUInt64 *tick);
-int ksceRtcSetCurrentNetworkTick(SceUInt64 *tick);
-int ksceRtcGetCurrentNetworkTick(SceUInt64 *tick);
-int ksceRtcSetCurrentSecureTick(SceUInt64 *tick);
-int ksceRtcGetCurrentSecureTick(SceUInt64 *tick);
-int ksceRtcSetCurrentDebugNetworkTick(SceUInt64 *tick);
-int ksceRtcGetCurrentDebugNetworkTick(SceUInt64 *tick);
 
 int checkSystemFw(void){
 
