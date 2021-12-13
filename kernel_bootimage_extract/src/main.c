@@ -161,7 +161,7 @@ int main(int argc, char **argv){
 			printf("elf size: 0x%X\n", module_header->file_size);
 			printf("module path: %s\n", module_header->path);
 			unsigned char *string_buf = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
-			string_buf = (unsigned char *) (str_replace(module_header->path, "os0:kd/", outdir));
+			string_buf = (unsigned char *) (str_replace(module_header->path, "os0:kd", outdir));
 			string_buf = (unsigned char *) (str_replace(string_buf, ".skprx", ".elf"));
 			printf("output path: %s\n", string_buf);
 
