@@ -94,20 +94,13 @@ void generateFolders(const char *path, const char *dest_path) {
 }
 
 void print_usage(char *argv_0) {
-	printf("\n\nUsage: %s [-pcff] bootimage.elf outdir\n", argv_0);
+	printf("Usage: %s [-pcff] in_file.elf out_dir\n", argv_0);
 }
 
 int main(int argc, char **argv){
 	if (argc < 3){
 		print_usage(argv[0]);
 		return -1;
-	}
-
-	FILE *fp = fopen(argv[1], "rb");
-	if (fp <= 0) {
-		printf ("\nNo input file found !\n\n");
-		print_usage(argv[0]);
-		return -2;
 	}
 
 	_Bool pcff_mode = false;
@@ -120,12 +113,31 @@ int main(int argc, char **argv){
 			entries_start_offset = 0;
 		}
 	}
-	uint32_t slide = BOOTIMAGE_ELF_BASE_VADDR;
 
-	rmdir(argv[2]);
-	mkdir(argv[2], 777);
+	FILE *fp;
+	if (pcff_mode)
+		fp = fopen(argv[2], "rb");
+	else
+		fp = fopen(argv[1], "rb");
+	if (fp <= 0) {
+		printf ("No input file found!\n");
+		print_usage(argv[0]);
+		return -2;
+	}
+
+	uint32_t slide = BOOTIMAGE_ELF_BASE_VADDR;
+	if (pcff_mode) {
+		rmdir(argv[3]);
+		mkdir(argv[3], 777);
+	} else {
+		rmdir(argv[2]);
+		mkdir(argv[2], 777);
+	}
 	char outdir[PATH_BUFFER_MAX_SIZE];
-	sprintf(outdir, "%s", argv[2]);
+	if (pcff_mode)
+		sprintf(outdir, "%s", argv[3]);
+	else
+		sprintf(outdir, "%s", argv[2]);
 
 	unsigned char *text_segment_chunk = (unsigned char *) malloc(ELF_HEADER_CHUNK_SIZE);
 	fseek(fp, 0, SEEK_SET);
@@ -149,7 +161,7 @@ int main(int argc, char **argv){
 			printf("elf size: 0x%X\n", module_header->file_size);
 			printf("module path: %s\n", module_header->path);
 			unsigned char *string_buf = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
-			string_buf = (unsigned char *) (str_replace(module_header->path, "os0:kd", outdir));
+			string_buf = (unsigned char *) (str_replace(module_header->path, "os0:kd/", outdir));
 			string_buf = (unsigned char *) (str_replace(string_buf, ".skprx", ".elf"));
 			printf("output path: %s\n", string_buf);
 
@@ -177,8 +189,8 @@ int main(int argc, char **argv){
 			slide = *((uint32_t *)(data_in_buf)) & 0xFFFF0000;
 		do {
 			printf("path_offset:    0x%X\n", entry_table->path_offset - slide);
-			printf("file_offset:       0x%X\n", entry_table->file_offset - slide);
-			printf("elf size:     0x%X\n", entry_table->file_size);
+			printf("file_offset:    0x%X\n", entry_table->file_offset - slide);
+			printf("elf size:       0x%X\n", entry_table->file_size);
 
 			unsigned char *string_buf = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
 			fseek(fp, phdrs[seg_num].p_offset + entry_table->path_offset - slide, SEEK_SET);
@@ -187,7 +199,7 @@ int main(int argc, char **argv){
 			generateFolders(string_buf, outdir);
 			unsigned char *string_buf_2 = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
 			if (pcff_mode)
-				snprintf(string_buf_2, PATH_BUFFER_MAX_SIZE, "%s/%s", outdir, string_buf);
+				snprintf(string_buf_2, PATH_BUFFER_MAX_SIZE, "%s%s", outdir, string_buf);
 			else {
 				string_buf_2 = (unsigned char *) (str_replace(string_buf, "os0:kd", outdir));
 				string_buf_2 = (unsigned char *) (str_replace(string_buf_2, ".skprx", ".elf"));
