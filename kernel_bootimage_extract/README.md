@@ -17,7 +17,7 @@ Obtain vs0:/app/NPXS10028/pcff.elf using sceutils or FAGDec in ELF mode or by ot
 
 Run:
 
-	./kernel_bootimage_extract pcff.elf outdir -p
+	./kernel_bootimage_extract -pcff pcff.elf outdir
 
 Then you can look in the new folder named "outdir" that now embeds ePSP flash files.
 
