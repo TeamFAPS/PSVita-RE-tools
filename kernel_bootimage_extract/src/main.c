@@ -199,7 +199,7 @@ int main(int argc, char **argv){
 			generateFolders(string_buf, outdir);
 			unsigned char *string_buf_2 = (unsigned char *) malloc(PATH_BUFFER_MAX_SIZE);
 			if (pcff_mode)
-				snprintf(string_buf_2, PATH_BUFFER_MAX_SIZE, "%s%s", outdir, string_buf);
+				snprintf(string_buf_2, PATH_BUFFER_MAX_SIZE, "%s/%s", outdir, string_buf);
 			else {
 				string_buf_2 = (unsigned char *) (str_replace(string_buf, "os0:kd", outdir));
 				string_buf_2 = (unsigned char *) (str_replace(string_buf_2, ".skprx", ".elf"));
