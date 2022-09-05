@@ -1,19 +1,19 @@
-# PSVita Reverse Engineering Tools
+# PS Vita Reverse Engineering Tools
 by @dots-tb and @CelesteBlue-dev (and other devs if they add their tools there)
 
 Every tool provided here will be licensed under GPLv3.0 unless stated otherwise.
 
-What is that ?
+What is this?
 
-This toolkit provides tools that aid in the development of PSVita homebrews and plugins, as well as PC tools and even emulators, by providing tools that speed up development through automation of processes and gives a more friendly view into complex things of PSVita OS.
+This toolkit provides tools that aid in the development of PS Vita homebrews and plugins, as well as PC tools and even emulators, by providing tools that speed up development through automation of processes and gives a more friendly view into complex things of PS Vita OS.
 
 These tools aided in the development of plugins such as: ReStore and ReNpDrm, repatch, reF00D, NoAVLS, rebgdl.
 
 These tools also heavily contribute to Wiki and vitasdk improvements.
 
-What it won’t do:
+What this will not do:
 
-These tools are solely used to aid in homebrew / plugins / hacks development. It probably will not produce a major hack. It will not magically make you a vita god. It will not automatically hack the vita.
+These tools are solely used to aid in homebrew / plugins / hacks development. It probably will not produce a major hack. It will not magically make you a PS Vita god. It will not automatically hack the vita.
 
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
 
@@ -77,11 +77,11 @@ Compared to original @TheFlow's version we added a few features such as:
 
 * Credits: TheFloW for original VitaDecompiler and PSP prxtool's contributors
 
-prxtool for PSVita - by TheFloW
+prxtool for PS Vita - by TheFloW
 ---
 An alternative to VitaDecompilerMod: prxtool cannot decompile to pseudo-C but it can decompiles ASM very well.
 
-* Credits: TheFloW and xerpi for PSVita port and PSP prxtool's contributors
+* Credits: TheFloW and xerpi for PS Vita port and PSP prxtool's contributors
 
 vita-unmake-fself – by @dots-tb
 ---
@@ -103,27 +103,27 @@ DEPRECATED - A PC tool that rebuilds ELF from decrypted modules' segments. To be
 
 French-American Games Decrypter (FAGDec) - by @CelesteBlue-dev and @dots-tb
 ---
-A PSVita homebrew that decrypts easily PSVita user/kernel and games modules and can generate .ppk (compatibility pack for low FWs).
+A PS Vita homebrew that decrypts easily PS Vita user/kernel and games modules and can generate .ppk (compatibility pack for low FWs).
 
 * Credits: Motoharu, Team Molecule, zecoxao for vitadump(new), xerpi, NPS team esp. @juliosueiras. Check app for further credits.
 
 ioPlus 0.1, 0.2 – by @dots-tb
 ---
-A PSVita kernel plugin that allows more IO operations in userland. Fast, simpler, and efficient alternative to kuio (by @Rinnegatamante) (3x smaller). It allows elevated IO permissions of user applications and plugins using the original sceIo functions. This includes reading, writing, opening, and folder management within applications such as official games. It may also include getting stats, not sure.
+A PS Vita kernel plugin that allows more IO operations in userland. Fast, simpler, and efficient alternative to kuio (by @Rinnegatamante) (3x smaller). It allows elevated IO permissions of user applications and plugins using the original sceIo functions. This includes reading, writing, opening, and folder management within applications such as official games. It may also include getting stats, not sure.
 
 Version 0.2 is much more inefficient, but supports decryption of files within devices that may open such as PFS devices. (WARNING THIS PLUGIN MAY BYPASS SAFE-MODE)
 
 physmem_dumper - by @xyzz
 ---
-A PSVita kernel plugin that dumps Non-Secure World (NS kernel + userland) memory using RAM physical range: from 0x40200000 to 0x5FD00000.
+A PS Vita kernel plugin that dumps Non-Secure World (NS kernel + userland) memory using RAM physical range: from 0x40200000 to 0x5FD00000.
 
-See wiki for more information on PSVita's physical memory: https://wiki.henkaku.xyz/vita/Physical_Memory.
+See wiki for more information on PS Vita's physical memory: https://wiki.henkaku.xyz/vita/Physical_Memory.
 
 The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
 
 PSVita-error-code-resolver - by @SilicaAndPina and @Princess-of-Sleeping
 ---
-A PC program that can use the PSVita error_table.bin to translate error codes.
+A PC program that can use the PS Vita error_table.bin to translate error codes.
 
 kernel_bootimage_extract - by @CelesteBlue-dev and @zecoxao
 ---
@@ -139,7 +139,7 @@ A PC program that extracts ARZL compressed file.
 
 Kdumper - by @TheFloW and @CelesteBlue-dev
 ---
-A PSVita fSELF to run on an activated TestKit/DevKit on FW <=3.67 in order to dump its kernel !
+A PS Vita fSELF to run on any activated TestKit/DevKit running FW <=3.67 in order to dump its kernel!
 
 Confirmed working between 3.50 and 3.67. Will need some changes for lower FWs (sceMotionDevGetEvaInfo is only on FW >= 3.50).
 
@@ -147,15 +147,19 @@ Credits: TheFloW for the kernel exploits, CelesteBlue for the many improvements,
 
 kdump-extract - by @dots-tb
 ---
-A PC program that finds and extracts segment 0 of a kernel module from a continous kernel memory dump. It ourputs a .elf that can be used for RE (see vitadecompiler), for extracting NIDs (see nids-extract). It is to be used in conjunction with Kdumper on PSVita side.
+A PC program that finds and extracts segment 0 of a kernel module from a continous kernel memory dump. It outputs a .elf that can be used for RE (see vitadecompiler), for extracting NIDs (see nids-extract). It is to be used in conjunction with Kdumper on PS Vita side.
 
 nids-extract - by @dots-tb
 ---
-A PC program that extracts a list in .yml format of exported NIDs from a PSVita ELF.
+A PC program that extracts a list in .yml format of exported NIDs from a PS Vita ELF.
 
 psvitalibdoc
 ---
-Some lists of functions names / NIDs / libraries / modules to be used with vitadump IDA plugin, vitaldr IDA plugin, VitaDecompilerMod or prxtool for PSVita.
+Some lists of functions names / NIDs / libraries / modules to be used with vitadump IDA plugin, vitaldr IDA plugin, VitaDecompilerMod or prxtool for PS Vita.
+
+psp2-emmc-extract - by @CelesteBlue-dev
+---
+A PC program that extracts partitions from a PS Vita eMMC dump.
 
 --------------------------------------------------------------------------------
 
@@ -399,7 +403,7 @@ PSVita-error-code-resolver usage
 
 ### Usage :
 * Requires error_table.bin to be present in the Working Directory.
-* This file can be found usually in PSVita OS at os0:/kd/error_table.bin.
+* This file can be found usually in PS Vita OS at os0:/kd/error_table.bin.
 
 ```
 Arguments: <mode> <input>
@@ -427,7 +431,7 @@ Dependencies: none
 
 FAGDec usage
 ---
-Install the .vpk on a PSVita.
+Install the .vpk on a PS Vita.
 
 ### Controls:
 	Left/Right switches panels. Holding down each key will expand that pane to fullscreen.
@@ -436,7 +440,7 @@ Install the .vpk on a PSVita.
 		
 ### Menus:
 	Decrypt to...:
-		SELF - These are verified against the original ELF and can be ran directly on the PSVita. Big ELFs (50MB+) may have trouble verifying.
+		SELF - These are verified against the original ELF and can be ran directly on the PS Vita. Big ELFs (50MB+) may have trouble verifying.
 		ELF - These are not verified to increase speed. The product must be make_fself'd on the computer or by another method. However, the sha256 is saved to be verified later if you wish.
 
 #### NOTE: Modders need a ELF to modify, then they have to make a SELF from the modded ELF. See just below:
@@ -448,10 +452,10 @@ Install the .vpk on a PSVita.
 		
 		NOTE: If you do not wish to use illegally obtained material or want a cross-platform solution, use vita-elf-inject
 
-### Decrypting games (when installed on PSVita):
+### Decrypting games (when installed on PS Vita):
 	Just select the title from the screen, and select the modules you wish to be decrypted.
 
-### Decrypting games (when NOT installed on PSVita) -> Using the PATH_ID spoofing system:
+### Decrypting games (when NOT installed on PS Vita) -> Using the PATH_ID spoofing system:
 	vs0/os0 - Drop the module into the vs0:/vs0_em or os0:/os0_em and it will decrypt as if it was the respective device.
 	app/patch (YOU DO NOT NEED ASSETS TO USE THIS MODE) - Drop the game module into ux0:/app_em/<titleid> or ux0:/patch_em/<TITLEID>. They must be in their respective folder. They also must be PFS decrypted.
 	NOTE: IN ORDER FOR A NPDRM GAME TO BE DECRYPTED, appropriate work.bin must be located at ux0:/app_em/<titleid>/sce_sys/package/work.bin. This applies to both patches and base games.
@@ -462,7 +466,7 @@ Install the .vpk on a PSVita.
 
 PSVita-ELF-builder usage
 ---
-To reverse PSVita, you need some dumps of the PSVita modules. These dumps are either memory dumps (St4rk's vitadump) or decrypted SELF (vitaDecrypt).
+To reverse PS Vita OS, you need some dumps of the PS Vita modules. These dumps are either memory dumps (St4rk's vitadump) or decrypted SELF (vitaDecrypt).
 
 Now you also have a ALL IN ONE solution: vDump. But in case you want to decrypt quickly a lot of SELFs, you will keep using vitaDecrypt.
 
@@ -472,7 +476,7 @@ The output .elf are valid for RE and they can also be rebuilded into SELF using 
 
 ### Usage :
 
-1) In os0-, ud0- and vs0-, place the REAL files of your PSVita filesystem.
+1) In os0-, ud0- and vs0-, place the REAL files of your PS Vita filesystem.
 2) In ux0-/dump/, place the out folder that you got using vitadecrypt.
 3) To rebuild ELF, on Windows run _RUNME.BAT.
 4) After having rebuilded ELF, to rebuild SELF, on Windows run BATCH_MAKE_FSELF.BAT.
@@ -480,7 +484,7 @@ The output .elf are valid for RE and they can also be rebuilded into SELF using 
 
 You can also hexedit as you want the ELFs then transform them into SELFs.
 
-### WARNING : NEVER WRITE to your PSVita os0: nor vs0:.
+### WARNING : NEVER WRITE to your PS Vita os0: nor vs0:.
 
 --------------------------------------------------------------------------------
 
@@ -523,7 +527,7 @@ The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA
 kernel_bootimage_extract usage
 ---
 
-#### PSVita kernel bootimage mode
+#### PS Vita kernel bootimage mode
 Obtain os0:/bootimage.elf using sceutils or FAGDec in ELF mode or by other means.
 
 Run:
@@ -575,8 +579,7 @@ Then you can look in the current folder that now embeds the extracted file.
 
 Kdumper usage
 ---
-Before compiling, you have to change IP address to the one of your PC in main.c. After compiling, install the app on activated testkit/devkit <3.68. On PC listen TCP on port 9023 
-. Run the PSVita app. Follow the instructions on screen. The kernel dump is sent to PC through socket.
+Before compiling, you have to change IP address to the one of your PC in main.c. After compiling, install the app on activated testkit/devkit <3.68. On PC listen TCP on port 9023. Run the PS Vita application. Follow the instructions on screen. The kernel dump is sent to PC through socket.
 
 kdump-extract usage
 ---
