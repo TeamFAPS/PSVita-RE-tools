@@ -92,12 +92,12 @@ void unpack(char *filename) {
 	for (int part_idx = 0; part_idx < ARRAYSIZE(mbr.parts.entries); ++part_idx) {
 		SceMbrPartEntry *p = &mbr.parts.entries[part_idx];
 		printf("Partition %d, id=%s, type=%s, flag=%d, start_lba=0x%08x, n_sectors=0x%08x, acl=0x%08x, unused=0x%08x\n", part_idx, part_id(p->id), part_type(p->type), p->flag, p->start_lba, p->n_sectors, p->acl, p->unused);
-		if (p->flag == 0 && memcmp(part_id(p->id), "empty", 5) != 0){
+		if (memcmp(part_id(p->id), "empty", 5) != 0){
 			printf("Unpacking partition %s active=%d start_lba 0x%08x n_sectors 0x%08x...\n", part_id(p->id), p->flag, p->start_lba, p->n_sectors);
 			unsigned char *buffer = (unsigned char *) malloc (p->n_sectors * SECTOR_SIZE);
 			fseek(in, p->start_lba * SECTOR_SIZE, SEEK_SET);
 			fread(buffer, 1, p->n_sectors * SECTOR_SIZE, in);
-			snprintf(outpath, 256, "%s/%s", dirname, part_id(p->id));
+			snprintf(outpath, 256, "%s/%s%s", dirname, part_id(p->id), p->flag == 0 ? "" : "_active");
 			FILE *out;
 			if ((out = fopen(outpath, "wb")) == NULL) {
 				perror("open");
