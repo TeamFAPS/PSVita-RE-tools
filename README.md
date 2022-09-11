@@ -157,10 +157,6 @@ psvitalibdoc
 ---
 Some lists of functions names / NIDs / libraries / modules to be used with vitadump IDA plugin, vitaldr IDA plugin, VitaDecompilerMod or prxtool for PS Vita.
 
-psp2-emmc-extract - by @CelesteBlue-dev
----
-A PC program that extracts partitions from a PS Vita eMMC dump.
-
 --------------------------------------------------------------------------------
 
 ## Using the Tools
