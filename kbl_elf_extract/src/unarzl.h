@@ -1,1 +1,0 @@
-void *unarzl(const void *inbuf, uint32_t *size);
