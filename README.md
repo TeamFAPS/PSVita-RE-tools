@@ -1,5 +1,5 @@
 # PS Vita Reverse Engineering Tools
-by @dots-tb and @CelesteBlue-dev (and other devs if they add their tools there)
+by FAPS Team (and other developers if they add their tools there)
 
 Every tool provided here will be licensed under GPLv3.0 unless stated otherwise.
 
@@ -7,13 +7,9 @@ What is this?
 
 This toolkit provides tools that aid in the development of PS Vita homebrews and plugins, as well as PC tools and even emulators, by providing tools that speed up development through automation of processes and gives a more friendly view into complex things of PS Vita OS.
 
-These tools aided in the development of plugins such as: ReStore and ReNpDrm, repatch, reF00D, NoAVLS, rebgdl.
+These tools heavily contribute to Wiki and open source SDK improvements.
 
-These tools also heavily contribute to Wiki and vitasdk improvements.
-
-What this will not do:
-
-These tools are solely used to aid in homebrew / plugins / hacks development. It probably will not produce a major hack. It will not magically make you a PS Vita god. It will not automatically hack the vita.
+These tools aided in the development of plugins such as: ReStore, ReNpDrm, repatch, reF00D, NoAVLS, rebgdl.
 
 *** Remember: IF YOU DO NOT UNDERSTAND WHAT THESE TOOLS DO, IT MAY NOT BE FOR YOU! ***
 
@@ -148,10 +144,6 @@ Credits: TheFloW for the kernel exploits, CelesteBlue for the many improvements,
 kdump-extract - by @dots-tb
 ---
 A PC program that finds and extracts segment 0 of a kernel module from a continous kernel memory dump. It outputs a .elf that can be used for RE (see vitadecompiler), for extracting NIDs (see nids-extract). It is to be used in conjunction with Kdumper on PS Vita side.
-
-nids-extract - by @dots-tb
----
-A PC program that extracts a list in .yml format of exported NIDs from a PS Vita ELF.
 
 psvitalibdoc
 ---
@@ -584,28 +576,6 @@ Obtain a kernel dump from Kdumper. Be sure that the vaddr of SceSysmem seg0 is a
 Run:
 
 	kdump_extract kdump.bin
-	
---------------------------------------------------------------------------------
-
-nids-extract usage
----
-A db yaml will be generated to stdout using the exports of a specified ELF. You will need to specify a version to be inserted to yaml such as "3.60", which is shown in the following example.
-
-#### For a single file:
-
-	nids-extract <FW version> <binary name>.elf > <output filename>.yml
-
-Example:
-
-	nids-extract.exe 3.65 kd/acmgr.elf > acmgr.yml
-	
-#### For multiple files in one command in terminal:
-
-	./nids-extract 3.60 $(find decrypted -name '*.elf' -not -path "./app/*") > db_lookup.yml`
-
-or better:
-
-	./nids-extract 3.60 $(find 360_fw/fs_dec -type f -name '*.elf' ! -name eboot.elf ! -path '*/sm/*.elf') > db_lookup.yml
 
 --------------------------------------------------------------------------------
 
