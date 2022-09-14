@@ -125,9 +125,9 @@ kernel_bootimage_extract - by @CelesteBlue-dev and @zecoxao
 ---
 A PC program that extracts embedded kernel modules ELFs from bootimage.elf or embedded ePSP flash files from pcff.elf.
 
-kbl_elf_extract - by @CelesteBlue-dev and @dots-tb
+psp2-kbl-elf-extract - by @CelesteBlue-dev and @dots-tb
 ---
-A PC program that extracts embedded secure kernel modules ELFs from kernel_boot_loader.elf.seg1.
+A PC program that extracts embedded secure kernel modules ELF files from kernel_boot_loader.elf.seg1. TODO: support directly kernel_boot_loader.elf.
 
 unarzl - by @TeamMolecule
 ---
@@ -535,14 +535,14 @@ Then you can look in the new folder named "outdir" that now embeds ePSP flash fi
 
 --------------------------------------------------------------------------------
 
-kbl_elf_extract usage
+psp2-kbl-elf-extract usage
 ---
 
 Obtain kernel_boot_loader.elf.seg1 using sceutils.
 
 Run:
 
-	./kbl_elf_extract kernel_boot_loader.elf.seg1
+	./psp2-kbl-elf-extract kernel_boot_loader.elf.seg1
 
 Then you can look in the current folder that now embeds the extracted secure kernel modules ELF files.
 
