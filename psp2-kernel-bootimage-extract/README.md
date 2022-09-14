@@ -1,6 +1,6 @@
 # psp2-kernel-bootimage-extract
 
-A PC tool that extracts kernel modules ELF files from bootimage.elf or PSPemu flash files from pcff.elf.
+A PC program that extracts kernel modules ELF files from bootimage.elf or PSPemu flash files from pcff.elf.
 
 ## Usage
 
@@ -25,4 +25,4 @@ Run:
 Then you can look in the new folder named "outdir" that now embeds PSPemu flash files.
 
 ## Credits
-CelesteBlue, zecoxao, dots-tb
+CelesteBlue, zecoxao
