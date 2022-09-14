@@ -21,7 +21,6 @@ Disable a Address Space Layout Randomization of PS Vita
 
 * Credits: Princess-of-Sleeping
 
-
 Princess Silly Mini Log USB (PSMLogUSB) - by dots_tb
 ---
 A modified version of PrincessLog to use the USB serial drivers provided by the PSM SDK. This allows for serial stdout without hardware modification.
@@ -29,7 +28,6 @@ A modified version of PrincessLog to use the USB serial drivers provided by the 
 * Credits: dots_tb, SilicaAndPina (idea), Sysie
 
 * Req: Yifan Lu, SonicMastr, teakhanirons
-
 
 Codename PrincessLog - by @Princess-of-Sleeping 
 ---
@@ -121,9 +119,9 @@ PSVita-error-code-resolver - by @SilicaAndPina and @Princess-of-Sleeping
 ---
 A PC program that can use the PS Vita error_table.bin to translate error codes.
 
-kernel_bootimage_extract - by @CelesteBlue-dev and @zecoxao
+psp2-kernel-bootimage-extract - by @CelesteBlue-dev and @zecoxao
 ---
-A PC program that extracts embedded kernel modules ELFs from bootimage.elf or embedded ePSP flash files from pcff.elf.
+A PC program that extracts kernel modules ELF files from bootimage.elf or PSPemu flash files from pcff.elf.
 
 psp2-kbl-elf-extract - by @CelesteBlue-dev and @dots-tb
 ---
@@ -161,6 +159,8 @@ noASLR Usage
 2. Most modules map to a fixed address, making development easier
 3. enjoy
 
+--------------------------------------------------------------------------------
+
 Princess Silly Mini Log USB Usage
 ---
 
@@ -196,7 +196,8 @@ Why use PrincessLog over this:
 
 	If you are working with USB or are using a Linux dev enviroment (have not checked if Linux has drivers), you may still want to consider PrincessLog.
 
-	
+--------------------------------------------------------------------------------
+
 PrincessLog Usage
 ---
 
@@ -228,7 +229,8 @@ Note:
 	Each application must built individually with cmake.
 	When building the kernel plugin, use "make install" to automatically install the stubs. This must be done before building the manager app.
 	The PC app does not have a dependency on order.
-	
+
+--------------------------------------------------------------------------------
 
 ShipLog v2.0 usage (Obsolete - Please use PrincessLog)
 ---
@@ -298,6 +300,7 @@ Options:
 
 VitaDecompilerMod usage
 ---
+
 Dependencies:
 
 VitaDecompiler requires capstone (a disassembler) libraries and libyaml. (On Windows, capstone must be compiled from sources). Make sure you install the *.a and header files to the right directories.
@@ -386,6 +389,7 @@ Dependencies: zlib
 	make
 
 --------------------------------------------------------------------------------
+
 PSVita-error-code-resolver usage
 ---
 
@@ -415,10 +419,12 @@ would return 80102601 as this is the hex code for C2-9779-2.
 Dependencies: none
 
 	make all
+
 --------------------------------------------------------------------------------
 
 FAGDec usage
 ---
+
 Install the .vpk on a PS Vita.
 
 ### Controls:
@@ -454,6 +460,7 @@ Install the .vpk on a PS Vita.
 
 PSVita-ELF-builder usage
 ---
+
 To reverse PS Vita OS, you need some dumps of the PS Vita modules. These dumps are either memory dumps (St4rk's vitadump) or decrypted SELF (vitaDecrypt).
 
 Now you also have a ALL IN ONE solution: vDump. But in case you want to decrypt quickly a lot of SELFs, you will keep using vitaDecrypt.
@@ -478,6 +485,7 @@ You can also hexedit as you want the ELFs then transform them into SELFs.
 
 ioPlus 0.1/0.2 usage
 ---
+
 ### Installation:
 
 This is a kernel plugin and so it must be added to the taihen config.txt under the *KERNEL section. Once installed, you may use the standard sceIo functions such as sceIoOpen in user plugins and applications as normal.
@@ -501,6 +509,7 @@ NOTE: an opened device with the file decrypted must be currently opened in order
 
 physmem_dumper usage
 ---
+
 ### How to get a dump:
 Put physmem_dumper.skprx in ur0:tai/. You have 3 ways to start this kernel module:
 1. EARLY KERNEL INIT. If you have enso, add this line at the start of ur0:tai/boot_config.txt:
@@ -512,26 +521,12 @@ ur0:tai/physmem_dumper.skprx
 ### How to use the dump:
 The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA PRO using https://github.com/xyzz/vita-ida-physdump.
 
-kernel_bootimage_extract usage
+--------------------------------------------------------------------------------
+
+psp2-kernel-bootimage-extract usage
 ---
 
-#### PS Vita kernel bootimage mode
-Obtain os0:/bootimage.elf using sceutils or FAGDec in ELF mode or by other means.
-
-Run:
-
-	./kernel_bootimage_extract bootimage.elf outdir
-
-Then you can look in the new folder named "outdir" that now embeds many .elf files.
-
-#### ePSP flash image mode
-Obtain vs0:/app/NPXS10028/pcff.elf using sceutils or FAGDec in ELF mode or by other means.
-
-Run:
-
-	./kernel_bootimage_extract pcff.elf outdir -p
-
-Then you can look in the new folder named "outdir" that now embeds ePSP flash files.
+See README.md.
 
 --------------------------------------------------------------------------------
 
