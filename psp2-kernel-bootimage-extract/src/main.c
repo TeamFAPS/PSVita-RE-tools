@@ -149,7 +149,6 @@ int main(int argc, char **argv) {
 		printf("This file does not embed a kernel bootimage.\n");
 		return -3;
 	}
-	rmdir(out_dir);
 	mkdir(out_dir, 777);
 	Elf32_Phdr *phdrs = (Elf32_Phdr *) (elf_header_chunk + ehdr->e_phoff);
 	uint32_t text_seg_offset = phdrs[0].p_offset;
