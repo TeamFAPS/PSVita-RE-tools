@@ -127,6 +127,10 @@ psp2-kbl-elf-extract - by @CelesteBlue-dev and @dots-tb
 ---
 A PC program that extracts embedded secure kernel modules ELF files from kernel_boot_loader.elf.seg1. TODO: support directly kernel_boot_loader.elf.
 
+psp2-syslibtrace-nids-extract - by @CelesteBlue-dev
+---
+A PC program that extracts the functions NIDs-names table from syslibtrace.elf to stdout.
+
 unarzl - by @TeamMolecule
 ---
 A PC program that extracts ARZL compressed file.
@@ -526,7 +530,7 @@ The output dump stored in ur0:dump/physmem-dump.bin is aimed to be loaded in IDA
 psp2-kernel-bootimage-extract usage
 ---
 
-See README.md.
+See README.md in the psp2-kernel-bootimage-extract folder.
 
 --------------------------------------------------------------------------------
 
@@ -540,6 +544,19 @@ Run:
 	./psp2-kbl-elf-extract kernel_boot_loader.elf.seg1
 
 Then you can look in the current folder that now embeds the extracted secure kernel modules ELF files.
+
+--------------------------------------------------------------------------------
+
+psp2-syslibtrace-nids-extract usage
+---
+
+Obtain syslibtrace.elf using sceutils.
+
+Run:
+
+	./psp2-syslibtrace-nids-extract syslibtrace.elf > out.txt
+
+Then you can look in the current folder that now embeds out.txt file with the extracted functions NIDs-names table.
 
 --------------------------------------------------------------------------------
 
@@ -562,7 +579,7 @@ Then you can look in the current folder that now embeds the extracted file.
 
 Kdumper usage
 ---
-Before compiling, you have to change IP address to the one of your PC in main.c. After compiling, install the app on activated testkit/devkit <3.68. On PC listen TCP on port 9023. Run the PS Vita application. Follow the instructions on screen. The kernel dump is sent to PC through socket.
+Before compiling, you have to change IP address to the one of your PC in main.c. After compiling, install the application on an activated TestKit/DevKit running a System Software on version stricly lower than 3.68. On PC listen TCP on port 9023. Run the PS Vita application. Follow the instructions on screen. The kernel dump is sent to PC through socket.
 
 kdump-extract usage
 ---
@@ -570,10 +587,10 @@ Obtain a kernel dump from Kdumper. Be sure that the vaddr of SceSysmem seg0 is a
 
 Run:
 
-	kdump_extract kdump.bin
+	./kdump_extract kdump.bin
 
 --------------------------------------------------------------------------------
 
 ## Further thanks
 
-zecoxao, xerpi, Team_molecule (yifanlu, Davee, Proxima, xyz), Hykem, St4rk, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys (yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad (wargio), SKFU, Vita3K, devnoname120, LemonHaze, SocraticBliss, PrincessOfSleeping, Sorvigolova, 173210, qwikrazor87, ColdBird, Princess of Sleeping
+zecoxao, xerpi, Team_molecule (yifanlu, Davee, Proxima, xyz), Hykem, St4rk, mr.gas, MajorTom, TheFloW, Rinnegatamante, cpasjuste, Freakler, sys (yasen), Nkekev, SilicaAndPina, motoharu, mathieulh, aerosoul, SKGleba, frangarcj, velocity, der0ad (wargio), SKFU, Vita3K, devnoname120, LemonHaze, SocraticBliss, PrincessOfSleeping, Sorvigolova, 173210, qwikrazor87, ColdBird
