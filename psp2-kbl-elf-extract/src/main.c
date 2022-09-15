@@ -2,15 +2,16 @@
 #include <string.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <sys/stat.h>
 
 #include "elf.h"
 #include "sce_module_info.h"
+#include "module_info_parser.h"
 #include "unarzl.h"
 
-#define ET_SCE_RELEXEC 0xFE04
-#define ET_SCE_EXEC 0xFE00
-#define ET_SCE_UNK 0xFFA5
-#define ET_SCE_UNK_EXEC 0x0002
+#if (defined(_WIN32) || defined(__WIN32__))
+#define mkdir(A, B) mkdir(A)
+#endif
 
 #define PATH_BUFFER_MAX_SIZE 256
 
@@ -24,7 +25,7 @@ int extract_file(char* output_path, void *addr, uint32_t size) {
 }
 
 void print_usage(char *argv_0) {
-	printf("\n\nUsage: %s kernel_boot_loader.elf.seg1\n", argv_0);
+	printf("\n\nUsage: %s kernel_boot_loader.elf.seg1 [out_dir]\n", argv_0);
 }
 
 int main(int argc, char **argv) {
@@ -44,36 +45,31 @@ int main(int argc, char **argv) {
 	// TODO: get kernel_boot_loader's first segment directly from kernel_boot_loader ELF
 
 	char output_path[PATH_BUFFER_MAX_SIZE];
+	char tmp_path[PATH_BUFFER_MAX_SIZE];
+	if (argc == 2)
+		sprintf(output_path, "kbl_elf_out");
+	else
+		sprintf(output_path, "%s", argv[2]);
+	mkdir(output_path, 777);
 
-	for (uint32_t offset = 0; offset < filesize-8; ++offset) {
+	unsigned int size = 1;
+	for (unsigned int offset = 0; offset < filesize-8; offset += size) {
 		//printf("%X\n", offset);
-		uint32_t size = 0;
 		void *current_addr = buffer + offset;
-		Elf32_Ehdr *ehdr = current_addr;
+		Elf32_Ehdr* ehdr = (Elf32_Ehdr*) current_addr;
 		if (!memcmp(ehdr->e_ident, "\177ELF\1\1\1", 8)) {
 extract_elf:
 			printf("Found ELF at file offset 0x%X\n", offset);
 			
-			// Get module info address
-			SceModuleInfo_common *mod_info = 0;
-			if (ehdr->e_shnum > 0) {
-				Elf32_Shdr *shdrs = current_addr + ehdr->e_shoff;
-				for (uint32_t i = 0; i < ehdr->e_shnum; i++) {
-					char *sh_name = current_addr + shdrs[ehdr->e_shstrndx].sh_offset + shdrs[i].sh_name;
-					if (!strcmp(".sceModuleInfo.rodata", sh_name))
-						mod_info = current_addr + shdrs[i].sh_offset;
-				}
+			// Get module info
+			unsigned int module_info_offset = get_module_info_offset(current_addr);
+			if (module_info_offset == 0) {
+				printf("Could not get module info!\n");
+				size = 1;
+				continue;
 			}
-			if (mod_info == 0) {
-				if (ehdr->e_type == ET_SCE_RELEXEC || (ehdr->e_type == ET_SCE_EXEC && ehdr->e_entry)) {
-					Elf32_Phdr *phdrs = current_addr + ehdr->e_phoff;
-					mod_info = current_addr + phdrs[0].p_offset + ehdr->e_entry;
-				} else {
-					Elf32_Phdr *phdrs = current_addr + ehdr->e_phoff;
-					mod_info = current_addr + phdrs[0].p_paddr;
-				}
-			}
-			printf("Module info base at file offset 0x%X\n", mod_info);
+			SceModuleInfo_common* mod_info_common = (SceModuleInfo_common*) (current_addr + module_info_offset);
+			printf("%s module detected.\n", mod_info_common->modname);
 			
 			// Get ELF size
 			if (ehdr->e_shnum > 0) {
@@ -89,9 +85,10 @@ extract_elf:
 						size = new_size;
 				}
 			}
+			printf("ELF size: %i\n", size);
 			
-			snprintf(output_path, PATH_BUFFER_MAX_SIZE, "%s.elf", mod_info->modname);
-			extract_file(output_path, current_addr, size);
+			snprintf(tmp_path, PATH_BUFFER_MAX_SIZE, "%s/%s.elf", output_path, mod_info_common->modname);
+			extract_file(tmp_path, current_addr, size);
 		} else if (!strncmp((char *)current_addr, "ARZL", 4)) {
 			printf("Found ARZL compressed data at file offset 0x%X\n", offset);
 			size = filesize - offset; // Since actual decompressed size is unknown, better keep too much than not enough
@@ -100,8 +97,8 @@ extract_elf:
 			if (!memcmp(ehdr->e_ident, "\177ELF\1\1\1", 8)) {
 				goto extract_elf;
 			} else {
-				snprintf(output_path, PATH_BUFFER_MAX_SIZE, "arzl_decompressed_data_0x%X.bin", offset);
-				extract_file(output_path, current_addr, size);
+				snprintf(tmp_path, PATH_BUFFER_MAX_SIZE, "%s/arzl_decompressed_data_0x%X.bin", output_path, offset);
+				extract_file(tmp_path, current_addr, size);
 			}
 		}
 	}

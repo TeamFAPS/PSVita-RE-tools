@@ -184,3 +184,8 @@ typedef struct _scelibstub_34 { // size is 0x34
 	Elf32_Addr tls_nid_table;
 	Elf32_Addr tls_entry_table;
 } SceLibStubTable_34;
+
+#define ET_SCE_RELEXEC 0xFE04
+#define ET_SCE_EXEC 0xFE00
+#define ET_SCE_UNK 0xFFA5
+#define ET_SCE_UNK_EXEC 0x0002

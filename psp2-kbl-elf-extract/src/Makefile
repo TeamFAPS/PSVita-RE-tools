@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-static -Os -s
 LDFLAGS=
-SOURCES=main.c unarzl.c
+SOURCES=main.c module_info_parser.c unarzl.c
 EXECUTABLE=psp2-kbl-elf-extract
 
 all:
