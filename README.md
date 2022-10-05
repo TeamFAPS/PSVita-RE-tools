@@ -123,7 +123,7 @@ psp2-kernel-bootimage-extract - by @CelesteBlue-dev and @zecoxao
 ---
 A PC program that extracts kernel modules ELF files from bootimage.elf or PSPemu flash files from pcff.elf.
 
-psp2-kbl-elf-extract - by @CelesteBlue-dev and @dots-tb
+psp2-kbl-elf-extract - by @CelesteBlue-dev
 ---
 A PC program that extracts embedded secure kernel modules ELF and Kernel Boot Loader (Non-secure) files from kernel_boot_loader.elf.
 
