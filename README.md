@@ -125,7 +125,7 @@ A PC program that extracts kernel modules ELF files from bootimage.elf or PSPemu
 
 psp2-kbl-elf-extract - by @CelesteBlue-dev and @dots-tb
 ---
-A PC program that extracts embedded secure kernel modules ELF files from kernel_boot_loader.elf.seg1. TODO: support directly kernel_boot_loader.elf.
+A PC program that extracts embedded secure kernel modules ELF and Kernel Boot Loader (Non-secure) files from kernel_boot_loader.elf.
 
 psp2-syslibtrace-nids-extract - by @CelesteBlue-dev
 ---
@@ -537,13 +537,13 @@ See README.md in the psp2-kernel-bootimage-extract folder.
 psp2-kbl-elf-extract usage
 ---
 
-Obtain kernel_boot_loader.elf.seg1 using sceutils.
+Obtain kernel_boot_loader.elf file using sceutils.
 
 Run:
 
-	./psp2-kbl-elf-extract kernel_boot_loader.elf.seg1
+	./psp2-kbl-elf-extract kernel_boot_loader.elf
 
-Then you can look in the current folder that now embeds the extracted secure kernel modules ELF files.
+Then you can look in the current folder as it now embeds the extracted secure kernel modules ELF and Kernel Boot Loader (Non-secure) files.
 
 --------------------------------------------------------------------------------
 
