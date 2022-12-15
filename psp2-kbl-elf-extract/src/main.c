@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 		sprintf(output_path, "kbl_elf_out");
 	else
 		sprintf(output_path, "%s", argv[2]);
-	mkdir(output_path, 777);
+	mkdir(output_path, 0777);
 
 	for (unsigned int offset = 0; offset < filesize-8; offset += 1) {
 		void *current_addr = buffer + offset;
