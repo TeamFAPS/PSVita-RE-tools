@@ -12,7 +12,19 @@
 #include "elf.h"
 #include "sha256.h"
 
-static void usage(char *argv[])
+typedef struct {
+        uint8_t *compressed_section;
+        long section_offset;
+        long section_size;
+        int section_index;
+} SectionDescr_t;
+
+int section_descr_compare( const void *arg1, const void *arg2)
+{
+        return ((const SectionDescr_t *)arg1)->section_offset - ((const SectionDescr_t *)arg2)->section_offset;
+}
+
+static void usage(const char **argv)
 {
 	printf("%s <.elf/.bin> <.elf/.bin>",argv[0]);
 }
@@ -97,40 +109,54 @@ int main(int argc, const char **argv)
 		fprintf(stderr, "Section headers number mismatch\n");
 		goto error;
 	}
-	
 
-	
 	Elf32_Phdr *phdrs = (Elf32_Phdr*)(elf_file + ehdr->e_phoff);
 	segment_info *sinfo = (segment_info *)(self_file + shdr->section_info_offset);
-	
-	size_t offset_correction = 0;
+	SectionDescr_t *sections = (SectionDescr_t *)malloc(ehdr->e_phnum*sizeof(SectionDescr_t));
+
 	for(int i = 0; i < ehdr->e_phnum; i++) {
-		size_t seg_sz = phdrs[i].p_filesz; 
-		uint8_t *dest = (uint8_t *)malloc(phdrs[i].p_filesz);
-		sinfo[i].offset += offset_correction;
-		if(!dest) {
-			fprintf(stderr, "Could not allocate memory for compression!\n");
+		sections[i].compressed_section = (uint8_t *)malloc(phdrs[i].p_filesz);
+                sections[i].section_offset = sinfo[i].offset;
+                sections[i].section_size = phdrs[i].p_filesz;
+                sections[i].section_index = i;
+		if(!sections[i].compressed_section) {
+			fprintf(stderr, "Could not allocate memory for compression for section %i!\n", i);
 			goto error;
 		}
-		int ret = compress(dest, (long unsigned int *)&seg_sz, elf_file + phdrs[i].p_offset, phdrs[i].p_filesz);
+		int ret = compress(sections[i].compressed_section, (long unsigned int *)&sections[i].section_size, elf_file + phdrs[i].p_offset, phdrs[i].p_filesz);
 		if(ret != Z_OK) {
-			fprintf(stderr, "Error compressing %i\n", ret);
-			free(dest);
+			fprintf(stderr, "Compressing error: %i\n", ret);
+			free(sections[i].compressed_section);
 			continue;
 		}
-		if(sinfo[i].length != seg_sz) {
-			fprintf(stderr, "Compressed to diff size %x - %x\n", sinfo[i].length, seg_sz);
-			if(sinfo[i].length < seg_sz) {
+	}
+
+        qsort( sections, ehdr->e_phnum, sizeof(SectionDescr_t), section_descr_compare);
+
+        size_t offset_correction = 0;
+        for(int i = 0; i < ehdr->e_phnum; i++) {
+                int init_index = sections[i].section_index;
+                size_t seg_sz = sections[i].section_size;
+
+                sinfo[init_index].offset += offset_correction;
+                if(sinfo[init_index].length != seg_sz) {
+			fprintf(stderr, "Compressed %d to diff size %lx - %lx\n", init_index, sinfo[init_index].length, seg_sz);
+			if(sinfo[init_index].length < seg_sz) {
 				fprintf(stderr, "Compressed size too big!\n");
-				offset_correction += seg_sz - sinfo[i].length;
-				fprintf(stderr, "Offset correction set: %x\n", offset_correction);
-				sinfo[i].length = seg_sz;
+				offset_correction += seg_sz - sinfo[init_index].length;
+				fprintf(stderr, "Offset correction set: %lx\n", offset_correction);
+				sinfo[init_index].length = seg_sz;
 			}				
 		}
-		fseek(fout, sinfo[i].offset, SEEK_SET);
-		fwrite(dest, sinfo[i].length, 1, fout);
-		free(dest);
-	}
+
+        }
+        for(int i = 0; i < ehdr->e_phnum; i++) {
+                int init_index = sections[i].section_index;
+
+		fseek(fout, sinfo[init_index].offset, SEEK_SET);
+		fwrite(sections[i].compressed_section, sinfo[init_index].length, 1, fout);
+		free(sections[i].compressed_section);
+        }
 	
 	uint8_t elf_digest[0x20];
 	
