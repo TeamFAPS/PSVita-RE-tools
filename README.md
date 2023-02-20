@@ -15,7 +15,7 @@ These tools aided in the development of plugins such as: ReStore, ReNpDrm, repat
 
 ## Description of the tools
 
-noASLR - by Princess-of-Sleeping
+noASLR - by @Princess-of-Sleeping
 ---
 Disable a Address Space Layout Randomization of PS Vita
 
@@ -29,35 +29,15 @@ A modified version of PrincessLog to use the USB serial drivers provided by the 
 
 * Req: Yifan Lu, SonicMastr, teakhanirons
 
-Codename PrincessLog - by @Princess-of-Sleeping 
+PrincessLog - by @Princess-of-Sleeping 
 ---
-A complete logging solution for any homebrew, user plugin, kernel plugin. It is more efficient and overall nicer than ShipLog.
+A complete logging solution for any homebrew, user plugin, kernel plugin.
 
-Princess of Sleeping has allowed us to release their logger which has must better performance (in memory management and speed) to finally replace the terrible ShipLog. This logger works similarly to ShipLog in that it captures all stdout with ease (with better accuracy also). Please upgrade to this if you have been using ShipLog.
-
-Usage instructions:
-1. Install NetLoggingMgrSettings.vpk.
-2. Launch the application and configure your settings. Be sure to save.
-3. Add net_logging_mgr.skprx to your config.txt
-4. Run
-Code: [Select]
-NetDbgLogPc.exe <port>
-NOTE: If no port is specified (just double clicking the app, for example), 8080 will be used by default.
-
-4.5. To use on linux, cuevavirus has provided the following netcat command:
-Code: [Select]
-nc -kl <port>
-5. Reboot Vita.
-
-Note: If the plugin is already installed and you wish to update the configuration, you may use Update Configuration (along with saving it) without rebooting your system.
-
-Note: While being much faster than ShipLog, if there is massive amounts of logs the logger may not be able to process them completely and will freeze (ex: taiHEN hexdump). This is unlikely in normal usage.
-
-Download: https://github.com/CelesteBlue-dev/PSVita-RE-tools/tree/master/PrincessLog/build
+It is more efficient and overall nicer than ShipLog. This logger works similarly to ShipLog in that it captures all stdout with ease (with better accuracy also). Please upgrade to this if you have been using ShipLog. While being much faster than ShipLog, if there is massive amounts of logs the logger may not be able to process them completely and will freeze (ex: taiHEN hexdump). This is unlikely in normal usage.
 
 * Credits: Princess-of-Sleeping, cuevavirus
 
-ShipLog v2.0 - by @dots-tb (Obsolete, use PrincessLog) 
+ShipLog v2.0 - by @dots-tb (obsolete, use PrincessLog) 
 ---
 A complete logging solution for any homebrew, user plugin, kernel plugin. It can use network or file logging.
 
@@ -66,7 +46,7 @@ A complete logging solution for any homebrew, user plugin, kernel plugin. It can
 	- Removed all user plugin dependency
 	- USB removed because it causes problem with Shell and CMA (Content Manager Assistant), it is fast but not stable
 
-* Credits: xerpi, psxdev for their works on logging solutions.  Cpasjuste for net.
+* Credits: xerpi, psxdev for their works on logging solutions. Cpasjuste for net driver.
 
 That Hooker Got NIDS – by @dots-tb
 ---
@@ -76,7 +56,7 @@ A PC tool that hooks specified NIDS automatically.
 
 VitaDecompilerMod – by @dots-tb - based on vitadecompiler by TheFloW, itself based on prxtool by TyRaNiD
 ---
-A FREE alternative to IDA. It has a great pseudo-C decompilation that offers a quick view thanks to text file exporting.
+A free alternative to IDA PRO. It has a great pseudo-C decompilation that offers a quick view thanks to text file exporting.
 
 Compared to original @TheFlow's version we added a few features such as:
 
@@ -229,13 +209,14 @@ PrincessLog Usage
 
 ### Usage:
 
-1. Install NetLoggingMgrSettings.vpk.
+1. On PS Vita, install NetLoggingMgrSettings.vpk.
 2. Launch the application and configure your settings. Be sure to save.
-3. Add net_logging_mgr.skprx to your config.txt
+3. Add net_logging_mgr.skprx to your config.txt.
 4. Run `NetDbgLogPc.exe <port>`
-	- NOTE: If no port is specified, 8080 will be used by default.
+	- NOTE: If no port is specified (just double clicking the program, for example), 8080 will be used by default.
 	- To use on other platforms, use netcat or similar. Example netcat command: `nc -kl -w 3 <port>`.
-5. Reboot.
+4.5. To use on Linux, cuevavirus has provided the following netcat command: `nc -kl <port>`
+5. Reboot PS Vita.
 Note: If the plugin is already installed and you wish to update the configuration, you may use Update Configuration (along with saving it) without rebooting your system.
 	
 In the application you wish to log use:
@@ -249,7 +230,6 @@ QAF Settings:
 Note:
 	While being much faster than ShipLog, if there is massive amounts of logs the logger may not be able to process them completely and will freeze (ex: taiHEN hexdump). This is unlikely in normal usage.
 
-	
 ### Building:
 
 	Each application must built individually with cmake.
@@ -258,42 +238,10 @@ Note:
 
 --------------------------------------------------------------------------------
 
-ShipLog v2.0 usage (Obsolete - Please use PrincessLog)
+ShipLog v2.0 usage
 ---
 
-### Usage:
-
-Install backdoor_exe.skprx in taiHEN config.txt under *KERNEL and install ShipLog.vpk. You must reboot the Vita with the kernel plugin installed to open the configuration app. Logs are stored in a buffer and must be obtained using one of the following methods:
-
-- Network:
-
-	1. Open the ShipLog application and configure the network configuration. Make sure you enable net logging. Be sure to save your configuration.
-	2. Type the command mentioned on the network configuration page.
-	3. Reboot the vita.
-	4. The netcat instance should show logs when the vita initializes shell/connects to network.
-
-- File:
-	
-	1. Open the ShipLog application and enable file logging. Make sure you save the configuration.
-	2. Reboot the vita.
-	3. Check ux0:data/logger.txt for new logs.
-	
-	NOTE: This method may ware down your memory card and is slow. This method is only recommended when tested material may crash the system, preventing the dumping of logs.
-	
-- Dumping the buffer
-
-	1. Open the ShipLog application and select dump logs to disk.
-	2. Check ux0:data/logs.txt for new logs.
-	
-In the application you wish to log use:
-
-	ksceDebugPrintf, printf (when SceLibc is included such as in games), or sceClibPrintf
-
-### Building:
-
-	./build.sh
-
-It builds ShipLog.skprx and ShipLog.vpk.
+ShipLog v2.0 is obsolete. Please use PrincessLog instead.
 
 --------------------------------------------------------------------------------
 
