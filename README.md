@@ -32,7 +32,29 @@ A modified version of PrincessLog to use the USB serial drivers provided by the 
 Codename PrincessLog - by @Princess-of-Sleeping 
 ---
 A complete logging solution for any homebrew, user plugin, kernel plugin. It is more efficient and overall nicer than ShipLog.
-	
+
+Princess of Sleeping has allowed us to release their logger which has must better performance (in memory management and speed) to finally replace the terrible ShipLog. This logger works similarly to ShipLog in that it captures all stdout with ease (with better accuracy also). Please upgrade to this if you have been using ShipLog.
+
+Usage instructions:
+1. Install NetLoggingMgrSettings.vpk.
+2. Launch the application and configure your settings. Be sure to save.
+3. Add net_logging_mgr.skprx to your config.txt
+4. Run
+Code: [Select]
+NetDbgLogPc.exe <port>
+NOTE: If no port is specified (just double clicking the app, for example), 8080 will be used by default.
+
+4.5. To use on linux, cuevavirus has provided the following netcat command:
+Code: [Select]
+nc -kl <port>
+5. Reboot Vita.
+
+Note: If the plugin is already installed and you wish to update the configuration, you may use Update Configuration (along with saving it) without rebooting your system.
+
+Note: While being much faster than ShipLog, if there is massive amounts of logs the logger may not be able to process them completely and will freeze (ex: taiHEN hexdump). This is unlikely in normal usage.
+
+Download: https://github.com/CelesteBlue-dev/PSVita-RE-tools/tree/master/PrincessLog/build
+
 * Credits: Princess-of-Sleeping, cuevavirus
 
 ShipLog v2.0 - by @dots-tb (Obsolete, use PrincessLog) 
