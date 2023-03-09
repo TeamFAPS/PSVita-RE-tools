@@ -88,7 +88,7 @@ void generateFolders(const char *path, const char *dest_path) {
 		*end_path = 0;
 		snprintf(current_path, PATH_BUFFER_MAX_SIZE, "%s/%s", current_path, folder);
 		printf("Creating folder %s\n", current_path);
-		mkdir(current_path, 777);
+		mkdir(current_path, 0777);
 		folder = end_path + 1;
 	}
 }
@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
 		printf("This file does not embed a kernel bootimage.\n");
 		return -3;
 	}
-	mkdir(out_dir, 777);
+	mkdir(out_dir, 0777);
 	Elf32_Phdr *phdrs = (Elf32_Phdr *) (elf_header_chunk + ehdr->e_phoff);
 	uint32_t text_seg_offset = phdrs[0].p_offset;
 	printf("Text segment offset: %x\n", text_seg_offset);
